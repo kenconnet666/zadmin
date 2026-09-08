@@ -13,7 +13,6 @@
 		type MonthPeriod,
 		type PeriodRangeValue,
 		type QuarterPeriod,
-		type WeekPeriod,
 		type YearPeriod
 	} from '../src/runtime/period.js';
 
@@ -175,7 +174,7 @@
 		/>
 		<button type="reset">Reset period pickers</button>
 	</form>
-	{#each sizes as size}
+	{#each sizes as size (size)}
 		<ZPeriodPicker
 			data-testid={`period-picker-size-${size}`}
 			granularity="month"

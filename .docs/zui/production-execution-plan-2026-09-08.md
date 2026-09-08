@@ -124,12 +124,13 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 ## 9. 执行记录
 
-| 批次 | 状态                   | 内容/证据                                                                                                                                                              |
-| ---- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P00  | 已提交                 | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                                                |
-| P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断                       |
-| P02  | 本地通过，CI待验收     | HMR消费边界、AsyncCollectionQuery重入、生成类型优先级、确定性综合回归及Button/DataTable演示落地；见下节与[试点清单执行记录](./docs-demo-pilot-inventory-2026-09-08.md) |
-| P03+ | 待执行                 | 依赖闭合后按G2–G4与D主线继续，不重复历史数量                                                                                                                           |
+| 批次 | 状态                   | 内容/证据                                                                                                                                        |
+| ---- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| P00  | 已提交                 | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                          |
+| P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断 |
+| P02  | 已提交，CI发现后续阻断 | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
+| P03  | 集成收口中             | Rating帧释放、Splitter键盘路径、完整SSR拆分、静态合同/局部lint、日期偏好和action默认值验收；Transfer仅纯事务内核，不算E19完成                    |
+| P04+ | 待执行                 | 依赖闭合后按G2–G4与D主线继续，下一步Transfer组件接入；不重复历史数量                                                                             |
 
 ### P01 集成记录
 
@@ -157,6 +158,36 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 P02运行时修复单独提交为`76c1f82`；Docs/类型显示/CI诊断与同步记录在随后提交，最终CI验证两者组成的完整候选。
 
-下一批先核对P02修复提交CI；随后推进日期族RTL/reduced/reset演示验收、API默认值/动画公共实现收敛及Transfer E19。G2–G4接受范围不缩减，不把本批修复当作M0/M1或生产完成。
+### P03 集成记录
+
+**精确CI取证。** [34190193018](https://github.com/kenconnet666/zadmin/actions/runs/34190193018) 对应 `8375bfe27a87adf02a3ccdf6c5966f607cf2e61e`，最终 failure。Workspace组件行为、构建、外部包、Windows C# WebView2、Drizzle和Docs Firefox通过；Static的workspace类型已通过，后续lint和系统审计失败；Coverage为1433通过/1失败，唯一失败是单一全量Docs SSR测试超过5秒；Docs Chromium/WebKit各218通过/1失败。执行汇总仍不可当作全候选绿灯。
+
+- Rating：发现真实RAF未取消，新增同owner Window帧取消、替代版本和销毁保护。真实native selection回归验证重复调度、过期回调、当前修复和卸载取消；Chromium 6项通过。
+- Splitter：抽取Home/End边界resize，键盘路径改为明确switch，保留水平RTL、垂直方向、百分比step/Shift step、collapse恢复和约束；unit/SSR/Chromium合计11项通过。不是仅为lint改写交互。
+- SSR：保留全部600个物理示例及原glob，独立文件集合对账与逐项SSR共601项通过。没有降低范围或提高全局timeout；完整Coverage阈值仍交新SHA CI。
+- 静态基础设施：正确识别返回disposer的DragDropManager monitor；共享recipe追踪实际消费与本地export，避免把抽取后的focus/border-box判成缺失；Form busy覆盖validating和submitting，日期段导航保留owner realm和非循环合同。静态AST正/负自测不替代真实浏览器行为。
+- Docs图标：Calendar/MiniCalendar/PeriodCalendar自定义页头替换字符图标为Lucide，并保持RTL/按钮语义。审计区分控件图标和正常范围、尺寸、键位文本，避免误删正文。
+- Docs复用与资源：4个既有演示的8个裸button改用ZButton，AppShell演示保留h2语义改用ZHeading；原生表单示范仍保留form所有权。Form schema演示补140ms校验和500ms提交timer卸载清理，并结算等待中的Promise、阻止卸载后写结果。测试明确断言同document的实际clearTimeout调用，不以等待timer自然结束代替清理证据；与日期偏好合计2项最终Chromium通过。
+- Lint：修正误删type import、未用fixture参数/导入、稳定key和错误Svelte-ignore格式。命令式Map/Set仅对具体声明/预提交scratch保留窄例外，不改为响应式集合以免破坏事务发布；FormRegistry补原子重排观察者回归，Form unit 37项通过。
+- Action默认值：metadata补delegated Toolbar层，新增实例/Field/Toolbar/专属/基础默认冲突的真实组合测试；外层Segmented专属值不被Toolbar基础fallback覆盖，非默认danger tone实际继承而CopyButton仍neutral。Chromium 2项通过，包含实际height/font-size，详见[局部审计](./action-family-defaults-audit-2026-09-08.md)。
+- 日期偏好：现有DateTimePicker family demo增加RTL/full/reduced、外部清空和native reset；确认前后owner、草稿和实际CSS motion/方向回归1项Chromium通过。异步Docs pilot显式pause clock后5项通过；Slider的WebKit键盘FormData流程改为真实Enter提交并保留全部值/reset断言，不宣称发现Slider运行时缺陷。
+- Transfer：新增不可变membership candidate/snapshot和共同结果词汇，typed key、disabled、orphan/order、过期快照与只读getter读取边界有20项mutation/transfer/reorder unit通过。尚未接入ZTransfer请求、取消、状态、locale、公开entrypoint与Docs，E19仍pending。
+
+阶段提交已完成：`2858e37`（Rating/Splitter）和`2e8495a`（mutation/Transfer内核）。ZUI与Docs类型均0 errors/0 warnings，产物/token刷新和完整`audit-system.mjs`通过；最终全库ESLint与串联门禁仍在后台收口，日志见`.codex/production-p03-*.json`及对应log。
+
+本地完整`pnpm lint`因历史CRLF工作树失败，不能记为原命令通过：Git索引与`.gitattributes`均为LF，工作树保留CRLF/混合换行。使用本地auto-EOL格式检查后，剩余32个warning文件逐个以原Prettier配置格式化结果对账，LF归一化后全部完全相同。未放宽仓库Prettier/CI配置，未批量重排849个历史文件；提交索引继续遵循LF。整库ESLint独立执行，远端仍执行标准`pnpm lint`。
+
+### P04 接入前的关键边界
+
+继续按W4计划落地Transfer E19A，先写下会影响实现的边界，不能只完成表面pending状态：
+
+1. request pending允许原始value或预期nextValue两种快照，避免调用方先写回、Promise后resolve时误判stale；items key/order/disabled变化仍需过期。
+2. pending时禁止重复membership写入，但不禁止筛选/浏览；不能提前按新membership裁剪来源勾选，accepted后才清理来源侧。调用方真实外部写入不能被拒绝结果回滚。
+3. abort前预留终态，处理同步signal listener重入；所有旧请求收尾只修改自己的session，onMoveEnd可开始新请求而不被旧收尾覆盖。
+4. reset先终止请求再完成唯一value owner、临时选择和草稿复位；卸载只释放，不发卸载后的公告/回调/焦点请求。
+5. 焦点恢复使用语义key、现有MountedElements/ActiveDescendant与generation；等待期间用户主动移至其他控件时不抢焦点，virtual item需等待真实挂载或退回listbox。
+6. immediate保持一次onValueChange；request由显式判别模式和外部精确回声确认，不再写第二次canonical value。最终公共Props/locale/entrypoint和正负类型测试一起定稿，纯candidate是否公开须由真实消费需求决定。
+
+后续仍推进动画公共owner和Docs其余家族整理；G2–G4接受范围不缩减。新提交绑定精确SHA CI，不以以上定向结果代替M0。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

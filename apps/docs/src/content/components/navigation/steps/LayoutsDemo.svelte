@@ -18,13 +18,14 @@
 		<ZSteps {items} currentKey="configuration" aria-label="RTL配置流程" />
 	</ZProvider>
 	<ZSteps {items} currentKey="configuration" orientation="vertical" aria-label="纵向配置流程">
-		{#snippet indicator(_item, context)}
+		{#snippet indicator(item, context)}
 			<ZIcon
-				name={context.status === 'complete'
-					? 'check'
-					: context.status === 'error'
-						? 'warning'
-						: 'arrowRight'}
+				name={item.icon ??
+					(context.status === 'complete'
+						? 'check'
+						: context.status === 'error'
+							? 'warning'
+							: 'arrowRight')}
 				size="medium"
 			/>
 		{/snippet}

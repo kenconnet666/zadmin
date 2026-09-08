@@ -325,7 +325,7 @@ describe('FormArrayController', () => {
 	});
 
 	it('does not corrupt row identity when keys or a controlled owner reject an operation', () => {
-		let owner = { rows: [{ key: 1 }, { key: 2 }] };
+		const owner = { rows: [{ key: 1 }, { key: 2 }] };
 		const model = createFormModel({
 			defaultValues: owner,
 			read: () => owner,

@@ -4,8 +4,7 @@
 	import type {
 		NavigationMenuEntry,
 		NavigationMenuItem,
-		NavigationMenuNavigateRequest,
-		NavigationMenuPanelContext
+		NavigationMenuNavigateRequest
 	} from '../src/runtime/collection/navigation-menu.js';
 	import type { NavigationMenuItemContext } from '../src/components/compound/navigation-menu/context.js';
 
@@ -204,19 +203,13 @@
 )}
 	<span id={`consumer-item-${String(item.key)}`} data-depth={context.depth}>{item.label}</span>
 {/snippet}
-{#snippet consumerStart(
-	item: NavigationMenuItem<ConsumerKey>,
-	_context: NavigationMenuItemContext<ConsumerKey>
-)}
+{#snippet consumerStart(item: NavigationMenuItem<ConsumerKey>)}
 	<span id={`consumer-start-${String(item.key)}`} aria-hidden="true">S</span>
 {/snippet}
-{#snippet consumerEnd(
-	item: NavigationMenuItem<ConsumerKey>,
-	_context: NavigationMenuItemContext<ConsumerKey>
-)}
+{#snippet consumerEnd(item: NavigationMenuItem<ConsumerKey>)}
 	<span id={`consumer-end-${String(item.key)}`} aria-hidden="true">E</span>
 {/snippet}
-{#snippet consumerPanel(_context: NavigationMenuPanelContext<ConsumerKey>)}
+{#snippet consumerPanel()}
 	<button id="consumer-panel-fixed" type="button">Custom panel action</button>
 {/snippet}
 

@@ -252,7 +252,7 @@ export class FormArrayController<T, TValues> {
 				prepared?.commit();
 			}
 		};
-		let accepted = false;
+		let accepted: boolean;
 		try {
 			accepted = this.#model.setField(path, Object.freeze(values), 'array', acceptedWrite);
 			// Structural models written against the earlier narrow contract may ignore the hook.
@@ -306,6 +306,7 @@ export class FormArrayController<T, TValues> {
 		if (!this.#options.getRowKey) return;
 		const keys = values.map(this.#options.getRowKey);
 		for (const key of keys) assertSelectionKey(key, 'ZForm array row');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Per-call key uniqueness scratch.
 		if (new Set(keys).size !== keys.length)
 			throw new TypeError('ZForm array row keys must be unique.');
 	}
@@ -318,6 +319,7 @@ export class FormArrayController<T, TValues> {
 		}
 		this.#assertKeys(values);
 		if (this.#options.getRowKey) {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Baseline identity reconciliation snapshot.
 			const ids = new Map<string | number, string>();
 			for (let index = 0; index < this.#keys.length; index += 1)
 				ids.set(this.#keys[index]!, this.#ids[index]!);
@@ -345,6 +347,7 @@ export class FormArrayController<T, TValues> {
 			return;
 		}
 		if (this.#options.getRowKey) {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Current identity lookup used before #revision publishes.
 			const prior = new Map(this.#keys.map((key, index) => [key, this.#ids[index]!]));
 			this.#keys = values.map(this.#options.getRowKey);
 			this.#ids = this.#keys.map((key) => prior.get(key) ?? this.#id());

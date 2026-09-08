@@ -26,7 +26,6 @@
 		ZPopoverContent,
 		ZPopoverTrigger,
 		ZStack,
-		ZText,
 		useZui
 	} from '@zadmin/zui';
 

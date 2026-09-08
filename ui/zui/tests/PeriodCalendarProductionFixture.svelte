@@ -9,8 +9,7 @@
 		type MonthPeriod,
 		type PeriodRangeValue,
 		type QuarterPeriod,
-		type WeekPeriod,
-		type YearPeriod
+		type WeekPeriod
 	} from '../src/runtime/period.js';
 
 	const initialMonth = monthPeriod(2026, 5);

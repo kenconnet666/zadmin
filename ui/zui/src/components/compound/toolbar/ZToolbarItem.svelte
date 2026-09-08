@@ -4,6 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import type { ToolbarItemAttributes, ToolbarKeyPolicy } from './context.svelte.js';
+	// eslint-disable-next-line no-import-assign -- Type-only re-exports have no runtime assignments.
 	export type { ToolbarItemAttributes, ToolbarKeyPolicy } from './context.svelte.js';
 
 	export interface ZToolbarItemProps {

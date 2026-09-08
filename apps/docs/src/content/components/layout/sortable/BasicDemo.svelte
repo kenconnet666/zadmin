@@ -46,7 +46,7 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		{#each controlSizes as option}
+		{#each controlSizes as option (option)}
 			<ZButton
 				size="small"
 				variant={size === option ? 'solid' : 'outline'}

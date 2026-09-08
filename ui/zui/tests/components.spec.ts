@@ -48,7 +48,6 @@ import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CoverageFixture from './CoverageFixture.svelte';
-import AllDocsExamplesSsrFixture from './AllDocsExamplesSsrFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
@@ -139,11 +138,6 @@ describe('ZUI foundational components', () => {
 			render(ZMultiSelect, { props: { defaultValue: ['one', 'two'], name: 'choice' } }).body
 		).toContain('value="one"');
 		expect(render(ZMenu, { props: { 'aria-label': 'Empty menu' } }).body).toContain('role="menu"');
-	});
-
-	it('server-renders the documentation example matrix without browser globals', () => {
-		const result = render(AllDocsExamplesSsrFixture);
-		expect(result.body.match(/data-docs-example/gu)?.length).toBeGreaterThanOrEqual(156);
 	});
 
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {

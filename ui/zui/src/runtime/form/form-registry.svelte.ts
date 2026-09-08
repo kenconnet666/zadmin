@@ -115,29 +115,25 @@ function compareDocumentOrder(left: HTMLElement, right: HTMLElement): number {
 
 export class FormRegistry {
 	// Registration and DOM nodes are imperative metadata; #states is the reactive public surface.
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Adjacent registration, listener, and version indexes are imperative metadata; #states below is the reactive publication owner. */
 	readonly #fields = new Map<string, RegisteredField>();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #pathInstances = new Map<string, Set<string>>();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #paths = new Map<string, FieldPath>();
 	// Preserved unmounted state remains addressable for list remap and explicit removal.
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #retainedPaths = new Map<string, FieldPath>();
 	readonly #states = new SvelteMap<string, FormFieldState>();
 	// Subscribers observe immutable state snapshots; the registry remains the only state owner.
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #listeners = new Map<string, Set<FormFieldStateListener>>();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #validationVersions = new Map<string, number>();
 	readonly #validationScopes = new Map<string, FieldPath>();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #unmountVersions = new Map<string, number>();
+	/* eslint-enable svelte/prefer-svelte-reactivity */
 	readonly #onPathUnmount?: (path: FieldPath, preserve: boolean) => void;
 	readonly #onMembershipChange?: (field: FormFieldRegistration) => void;
 	#errors: FormErrors = Object.freeze({});
 	#order = 0;
 	#batchDepth = 0;
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Batch notification buffer flushes only after the outer transaction commits.
 	readonly #pendingNotifications = new Map<string, FormFieldState>();
 	batch(update: () => void): void {
 		this.#batchDepth += 1;
@@ -191,8 +187,8 @@ export class FormRegistry {
 			}
 		}
 		// Field dependencies are registration metadata; #states publishes reactive changes.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const dependencies = Object.freeze((registration.dependencies ?? []).map(normalizeFieldPath));
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Frozen registration dependency lookup.
 		const dependencyKeys = new Set(dependencies.map(fieldPathKey));
 		const preserve = registration.preserve ?? false;
 		for (const instanceId of this.#pathInstances.get(key) ?? []) {
@@ -216,7 +212,7 @@ export class FormRegistry {
 		this.#paths.set(key, path);
 		this.#retainedPaths.delete(key);
 		// Instance membership is imperative registration bookkeeping.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Registration membership changes publish through #states.
 		const instances = this.#pathInstances.get(key) ?? new Set<string>();
 		this.#unmountVersions.set(key, (this.#unmountVersions.get(key) ?? 0) + 1);
 		instances.add(field.instanceId);
@@ -283,7 +279,7 @@ export class FormRegistry {
 			throw new TypeError('Form field listener must be a function.');
 		const key = fieldPathKey(path);
 		// Listener membership is imperative lifecycle state and never drives rendering.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Imperative field-state subscriber membership.
 		const listeners = this.#listeners.get(key) ?? new Set<FormFieldStateListener>();
 		listeners.add(listener);
 		this.#listeners.set(key, listeners);
@@ -314,7 +310,7 @@ export class FormRegistry {
 
 	formDataPaths(): ReadonlyMap<string, FieldPath> {
 		// Callers receive a fresh read-only snapshot, not a reactive registry.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Fresh return-value snapshot.
 		const result = new Map<string, FieldPath>();
 		for (const field of this.#fields.values()) result.set(field.htmlName, field.path);
 		return result;
@@ -324,7 +320,7 @@ export class FormRegistry {
 		const source = this.#fields.get(instanceId);
 		if (!source) return [];
 		// Graph traversal membership is local to this query.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Local dependency-graph traversal scratch.
 		const affected = new Set([source.key]);
 		const pending = [source.key];
 		while (pending.length > 0) {
@@ -344,6 +340,7 @@ export class FormRegistry {
 	}
 	/** Model updates can address several paths without a native input event. */
 	affectedPathsFor(paths: readonly FieldPath[]): readonly FieldPath[] {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Local affected-path deduplication snapshot.
 		const affected = new Map<string, FieldPath>();
 		for (const field of this.#fields.values()) {
 			if (
@@ -396,6 +393,7 @@ export class FormRegistry {
 	}
 
 	beginValidation(paths: readonly FieldPath[]): FormValidationTicket {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Validation ticket construction scratch.
 		const requested = new Map(paths.map((path) => [fieldPathKey(path), path]));
 		for (const path of this.#paths.values()) {
 			if (
@@ -466,13 +464,16 @@ export class FormRegistry {
 		}
 		this.#errors = mergeErrorsForPaths(this.#errors, {}, [scope]);
 		this.batch(() => {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Stable union snapshot before batched resets.
 			for (const [key, registered] of new Map([...this.#retainedPaths, ...this.#paths]))
 				if (fieldPathStartsWith(registered, scope)) this.#setState(key, INITIAL_STATE);
 		});
 	}
 
 	prepareList(change: FormListReconcile): FormRegistryPreparedListMutation {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared pre-commit path snapshot.
 		const previousPaths = new Map([...this.#retainedPaths, ...this.#paths]);
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared registration snapshot; committed atomically below.
 		const nextFields = new Map<string, RegisteredField>();
 		for (const field of this.#fields.values()) {
 			const path = remapFormListPath(field.path, change);
@@ -485,6 +486,7 @@ export class FormRegistry {
 			nextFields.set(field.instanceId, {
 				...field,
 				dependencies,
+				// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared dependency lookup within the registration snapshot.
 				dependencyKeys: new Set(dependencies.map(fieldPathKey)),
 				htmlName: field.htmlNameFollowsPath ? fieldPathToString(path) : field.htmlName,
 				key: fieldPathKey(path),
@@ -516,16 +518,21 @@ export class FormRegistry {
 			}
 		}
 		const nextErrors = remapFormListErrors(this.#errors, change);
+		/* eslint-disable svelte/prefer-svelte-reactivity -- Prepared instance/path indexes committed together below. */
 		const nextInstances = new Map<string, Set<string>>();
 		const nextPaths = new Map<string, FieldPath>();
+		/* eslint-enable svelte/prefer-svelte-reactivity */
 		for (const field of nextFields.values()) {
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Membership bucket inside the prepared index.
 			const instances = nextInstances.get(field.key) ?? new Set<string>();
 			instances.add(field.instanceId);
 			nextInstances.set(field.key, instances);
 			nextPaths.set(field.key, field.path);
 		}
+		/* eslint-disable svelte/prefer-svelte-reactivity -- Prepared affected-key and state snapshots prevent half-committed notifications. */
 		const affectedKeys = new Set<string>();
 		const movedStates = new Map<string, FormFieldState>();
+		/* eslint-enable svelte/prefer-svelte-reactivity */
 		for (const [key, path] of previousPaths) {
 			const remapped = remapFormListPath(path, change);
 			if (fieldPathStartsWith(path, change.listPath)) affectedKeys.add(key);
@@ -541,16 +548,19 @@ export class FormRegistry {
 				);
 			}
 		}
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared retained-path snapshot.
 		const nextRetainedPaths = new Map<string, FieldPath>();
 		for (const path of this.#retainedPaths.values()) {
 			const remapped = remapFormListPath(path, change);
 			if (remapped) nextRetainedPaths.set(fieldPathKey(remapped), remapped);
 		}
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared validation-version snapshot.
 		const nextValidationVersions = new Map(this.#validationVersions);
 		for (const key of this.#validationScopes.keys())
 			nextValidationVersions.set(key, (nextValidationVersions.get(key) ?? 0) + 1);
 		for (const key of this.#paths.keys())
 			nextValidationVersions.set(key, (nextValidationVersions.get(key) ?? 0) + 1);
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Prepared unmount-version snapshot.
 		const nextUnmountVersions = new Map(this.#unmountVersions);
 		for (const key of affectedKeys)
 			nextUnmountVersions.set(key, (nextUnmountVersions.get(key) ?? 0) + 1);

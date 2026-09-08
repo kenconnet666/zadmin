@@ -123,7 +123,7 @@
 	</ZCheckboxGroupItem>
 </ZCheckboxGroup>
 
-{#each ['xsmall', 'small', 'medium', 'large', 'xlarge'] as checkboxSize}
+{#each ['xsmall', 'small', 'medium', 'large', 'xlarge'] as checkboxSize (checkboxSize)}
 	<ZCheckboxGroup
 		aria-label={`${checkboxSize} group`}
 		data-testid={`checkbox-group-${checkboxSize}`}

@@ -7,6 +7,7 @@
 	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 	import type { ToolbarOrientation } from './context.svelte.js';
+	// eslint-disable-next-line no-import-assign -- Type-only re-export has no runtime assignment.
 	export type { ToolbarOrientation } from './context.svelte.js';
 
 	export interface ZToolbarProps extends Omit<
@@ -420,6 +421,7 @@
 			const tree = ancestor.getRootNode();
 			ancestor = ancestor.parentElement ?? (isDomShadowRoot(tree) ? tree.host : null);
 		}
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- This refresh only deduplicates observer targets; registrations own reactive state.
 		const shadowRoots = new Set<ShadowRoot>();
 		for (const { element } of registrations) {
 			const tree = element.getRootNode();

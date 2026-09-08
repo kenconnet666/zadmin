@@ -10,7 +10,10 @@ const props = {
 	history: false,
 	behavior: false,
 	orientation: 'horizontal',
-	getTarget: (_item: AnchorItem<'alpha'>) => null
+	getTarget: (item: AnchorItem<'alpha'>) => {
+		void item;
+		return null;
+	}
 } satisfies ZAnchorProps<'alpha'>;
 // @ts-expect-error Active keys belong to the declared item domain.
 const wrongKey = { items, activeKey: 'beta' } satisfies ZAnchorProps<'alpha'>;

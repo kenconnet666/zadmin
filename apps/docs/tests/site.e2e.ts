@@ -1532,7 +1532,7 @@ test('keeps Slider keyboard, value text, FormData and reset synchronized', async
 	await slider.press('ArrowRight');
 	await expect(slider).toHaveValue('40');
 	await expect(sliderDemo.getByText(/value = 40% · 用户变更次数 = 1/u)).toBeVisible();
-	await sliderDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
+	await sliderDemo.getByRole('button', { name: '读取FormData', exact: true }).press('Enter');
 	await expect(sliderDemo.getByText(/ · 40$/u)).toBeVisible();
 	await setDisplayPreference(page, '方向', '从右到左');
 	await slider.press('ArrowRight');

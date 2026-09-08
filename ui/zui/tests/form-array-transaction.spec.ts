@@ -106,7 +106,6 @@ describe('FormArray mutation transactions', () => {
 		const publications: string[] = [];
 		const commits: string[] = [];
 		let nested = false;
-		let rows!: FormArrayController<{ name: string }, { rows: { name: string }[] }>;
 		const model = createFormModel({
 			defaultValues: { rows: [{ name: 'first' }, { name: 'second' }] },
 			onValuesChange(detail) {
@@ -116,7 +115,7 @@ describe('FormArray mutation transactions', () => {
 				expect(rows.move(0, 2)).toBe(true);
 			}
 		});
-		rows = new FormArrayController(model, 'rows', {}, undefined, {
+		const rows = new FormArrayController(model, 'rows', {}, undefined, {
 			prepareList(change) {
 				const identity = change.next.map((row) => row.id).join(',');
 				return { commit: () => commits.push(identity) };

@@ -140,6 +140,50 @@ export type JsonbTypeContracts = [
 	Expect<Equal<Result<typeof jsonPrimitive>, 42 | null>>
 ];
 
+void [
+	name,
+	enabled,
+	sku,
+	stringIndex,
+	tupleLast,
+	tupleFirst,
+	unionBranch,
+	numericKey,
+	numericDictionaryValue,
+	root,
+	textValue,
+	unknownValue,
+	customValue,
+	customMappedValue,
+	customMappedText,
+	dateValue,
+	bigintValue,
+	nonJsonRoot,
+	nonJsonText,
+	sqlValue,
+	sqlAliasValue,
+	sqlMappedValue,
+	sqlMappedAliasValue,
+	sqlMappedText,
+	aliasValue,
+	columnAliasValue,
+	dynamicValue,
+	dynamicArrayIndex,
+	dynamicObjectKey,
+	depthEight,
+	dateRoot,
+	optionalTupleLast,
+	optionalTupleIndex,
+	restTupleFirst,
+	restTupleLast,
+	dictionaryValue,
+	nullableUnionValue,
+	unionKeyValue,
+	untypedValue,
+	jsonNull,
+	jsonPrimitive
+];
+
 // @ts-expect-error Scalar columns are not JSONB sources.
 jsonbValue(records.label, []);
 // @ts-expect-error Scalar columns are not JSONB sources, even for text extraction.

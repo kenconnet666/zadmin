@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZAppShell, ZButton, ZCard, ZGroup, ZStack, ZText } from '@zadmin/zui';
+	import { ZAppShell, ZButton, ZCard, ZGroup, ZHeading, ZStack, ZText } from '@zadmin/zui';
 	import AppShellRegion from './AppShellRegion.svelte';
 
 	const activity = [
@@ -61,7 +61,7 @@
 >
 	<AppShellRegion fill>
 		<ZStack gap="medium">
-			<h2>项目概览</h2>
+			<ZHeading level={2}>项目概览</ZHeading>
 			{#each activity as item (item)}
 				<ZCard bodyPadding="small" variant="outlined"><ZText>{item}</ZText></ZCard>
 			{/each}

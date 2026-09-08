@@ -60,11 +60,23 @@ export const dateTimePickerDoc = defineComponentDoc(dateTimePickerMetadata, {
 		},
 		{
 			id: 'date-time-picker-family',
-			title: '五档尺寸、状态与表单',
+			title: '五档尺寸、表单与偏好轴',
 			component: FamilyDemo,
 			source: familySource,
-			covers: ['density', 'disabled', 'readonly', 'form-data', 'form-reset'],
-			description: '内部字段、触发操作和面板共享尺寸；一项日期时间仅序列化一个 FormData 条目。'
+			covers: [
+				'controlled',
+				'density',
+				'disabled',
+				'external-clear',
+				'form-data',
+				'form-reset',
+				'keyboard',
+				'readonly',
+				'reduced-motion',
+				'rtl'
+			],
+			description:
+				'内部字段、触发操作和面板共享尺寸；Form model是唯一值owner，外部清空/reset重建confirm草稿，Provider切换RTL与reduced motion。'
 		}
 	]
 });

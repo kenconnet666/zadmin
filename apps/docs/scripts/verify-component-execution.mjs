@@ -1,6 +1,6 @@
 import { lstat, readFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 
 import {
 	artifactPath,
@@ -13,7 +13,6 @@ import {
 	validateIdentity
 } from './compose-component-execution.mjs';
 
-const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
 const isMain = process.argv[1]
 	? pathToFileURL(resolve(process.argv[1])).href === import.meta.url
 	: false;

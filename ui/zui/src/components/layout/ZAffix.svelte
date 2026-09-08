@@ -360,6 +360,7 @@
 		const schedule = () => {
 			if (!frame) frame = ownerWindow.requestAnimationFrame(update);
 		};
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Local listener targets for this attachment, not UI state.
 		const eventSources = new Set<EventTarget>(getOverflowAncestors(root));
 		if (isDomHtmlElement(scrollTarget)) {
 			eventSources.add(scrollTarget);

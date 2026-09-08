@@ -297,6 +297,7 @@
 		if (maxVisibleItems !== undefined) assertOverflowCount(maxVisibleItems, 'maxVisibleItems', 0);
 		if (!['div', 'ol', 'ul'].includes(as) || !['start', 'end'].includes(collapseFrom))
 			throw new TypeError('Invalid OverflowList layout configuration.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Temporary identity validation for the current item projection.
 		const keys = new Set<TKey>();
 		for (const key of pinnedKeys) assertSelectionKey(key, 'OverflowList pinned');
 		return items.map((value, index) => {

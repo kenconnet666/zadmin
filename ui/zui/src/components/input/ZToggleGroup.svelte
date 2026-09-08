@@ -74,7 +74,8 @@
 			{
 				name: 'size',
 				type: 'ZControlSize',
-				default: 'Field → componentDefaults.toggleGroup → button → Provider density',
+				default:
+					'Field → delegated Toolbar → componentDefaults.toggleGroup → button → Provider density',
 				description: '五档控制尺寸，Toolbar内默认继承工具栏尺寸。'
 			},
 			{

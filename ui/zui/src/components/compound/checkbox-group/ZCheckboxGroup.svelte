@@ -309,7 +309,6 @@
 	import ZCheckboxGroupItem from './ZCheckboxGroupItem.svelte';
 	import {
 		provideZCheckboxGroup,
-		type CheckboxGroupCollectionItem,
 		type CheckboxGroupLogicalItem,
 		type ZCheckboxGroupContext
 	} from './context.svelte.js';

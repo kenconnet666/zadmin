@@ -215,6 +215,8 @@ export function setFormValue<T>(values: T, pathInput: FieldPathInput, value: unk
 export function getChangedFormPaths(left: unknown, right: unknown): readonly FieldPath[] {
 	if (equal(left, right)) return [];
 	if (left && right && typeof left === 'object' && typeof right === 'object') {
+		// Structural diff scratch is returned as an immutable path snapshot, never rendered directly.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
 		const rootArray = Array.isArray(left) || Array.isArray(right);
 		const segment = (key: string): string | number => {
@@ -237,6 +239,7 @@ export function getChangedFormPaths(left: unknown, right: unknown): readonly Fie
 export class FormModel<T> {
 	#baseline: T;
 	#current: T;
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Imperative listener membership; #revision publishes committed values. */
 	readonly #listeners = new Set<(detail: FormValuesChange<T>) => void>();
 	readonly #pathListeners = new Map<
 		string,
@@ -245,6 +248,7 @@ export class FormModel<T> {
 			readonly listeners: Map<FormValueListener, unknown>;
 		}
 	>();
+	/* eslint-enable svelte/prefer-svelte-reactivity */
 	readonly #publications: {
 		readonly detail: FormValuesChange<T>;
 		readonly paths: readonly FieldPath[];
@@ -259,6 +263,7 @@ export class FormModel<T> {
 	#globalResetVersion = 0;
 	#nextResetVersion = 0;
 	#resetRevision = $state(0);
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Reset-version metadata is published through #resetRevision.
 	readonly #resetVersions = new Map<
 		string,
 		{ readonly path: FieldPath; readonly version: number }
@@ -342,6 +347,7 @@ export class FormModel<T> {
 	): boolean {
 		const current = untrack(() => this.values);
 		let next = current;
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Per-call changed-path deduplication snapshot.
 		const paths = new Map<string, FieldPath>();
 		for (const update of updates) {
 			const path = normalizeFieldPath(update.path);
@@ -457,6 +463,7 @@ export class FormModel<T> {
 		const normalized = normalizeFieldPath(path);
 		const entry = this.#pathListeners.get(key) ?? {
 			path: normalized,
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Imperative subscribers retain their last published value.
 			listeners: new Map<FormValueListener, unknown>()
 		};
 		entry.listeners.set(listener, getFormValue(this.values, normalized));
@@ -477,7 +484,7 @@ export class FormModel<T> {
 			acceptedWrite?.commit();
 			return true;
 		}
-		let accepted = false;
+		let accepted: boolean;
 		try {
 			accepted = this.#accept(current, next);
 		} catch (error) {

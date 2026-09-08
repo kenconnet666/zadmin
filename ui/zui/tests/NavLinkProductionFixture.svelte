@@ -91,7 +91,7 @@
 />
 
 <div data-testid="nav-link-sizes">
-	{#each sizes as size}
+	{#each sizes as size (size)}
 		<ZNavLink data-testid={`size-${size}`} href={`#${size}`} label={size} {size} />
 		<ZNavLink
 			data-testid={`description-${size}`}

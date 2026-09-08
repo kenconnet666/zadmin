@@ -7,9 +7,10 @@ import ZToolbarItem, {
 import type { ToolbarItemAttributes } from '../src/components/compound/toolbar/context.svelte.js';
 
 const children = (() => undefined) as unknown as Snippet;
-const itemChildren = ((_attributes: ToolbarItemAttributes) => undefined) as unknown as Snippet<
-	[ToolbarItemAttributes]
->;
+const itemChildren = ((attributes: ToolbarItemAttributes) => {
+	void attributes;
+	return undefined;
+}) as unknown as Snippet<[ToolbarItemAttributes]>;
 
 const toolbar = {
 	'aria-label': 'Editor toolbar',

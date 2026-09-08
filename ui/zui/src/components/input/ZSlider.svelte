@@ -715,7 +715,8 @@
 		<span class={classes.rail} data-slot="rail"></span>
 		<span class={classes.fill} data-slot="fill"></span>
 		{#if marks.length}<span aria-hidden="true" class={classes.marks} data-slot="marks"
-				>{#each marks as entry, index}<span
+				><!-- Marks may share a value and expose no key API; preserve their positional ownership. -->
+				{#each marks as entry, index (index)}<span
 						class={classes.mark}
 						data-edge={markEdge(entry.value)}
 						style={orientation === 'horizontal'

@@ -126,7 +126,7 @@
 		scrollContainer={backTopScroller}
 		visibilityHeight={100}
 	/>
-	{#each sizes as size, index}
+	{#each sizes as size, index (size)}
 		<ZBackTop
 			data-testid={`back-top-${size}`}
 			insetBlockEnd={80 + index * 64}

@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 382
+		"testFiles": 387
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -9187,7 +9187,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "bc54e92b18dbc1425cad3ac8f98da4e3cd361d851282a7a8d1269aecb48e4638 API snapshot entry"
+						"detail": "8a1d97b6714dd8095e52c8cb2c23269d28ff7ec2a5359ef11518ea24cdc56ec5 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9308,7 +9308,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ab88e2befaa3e2d8c502daef680d272c7c827a2cb46bf3edacef9746a489c38e API snapshot entry"
+						"detail": "ea25c2a97b2692c10086c438830163b1076567c2b8ec0b59349dd9598afd6627 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11802,7 +11802,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "bd7771b444c40554d9a09d33a9a886c48f70fec928da6090d8c47613d97ee52b API snapshot entry"
+						"detail": "4553eae308b6e1ba92c471189fcafcc30f46929ae09fbae7558cf53db0f34060 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -18662,7 +18662,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/rating-production.browser.spec.ts",
-						"detail": "ZRating authored visual contract: uses five Theme sizes and exposes frozen custom item contexts (line 129)"
+						"detail": "ZRating authored visual contract: uses five Theme sizes and exposes frozen custom item contexts (line 178)"
 					},
 					{
 						"path": "ui/zui/tests/RatingFixture.svelte",
@@ -18671,16 +18671,16 @@
 				],
 				"ProductionContractsDeclared": [
 					{
-						"path": "ui/zui/tests/rating-production.spec.ts",
-						"detail": "ZRating production assertions"
-					},
-					{
 						"path": "ui/zui/tests/rating-production.browser.spec.ts",
 						"detail": "ZRating production assertions"
 					},
 					{
 						"path": "ui/zui/tests/RatingFixture.svelte",
 						"detail": "ZRating explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/rating-production.spec.ts",
+						"detail": "ZRating production assertions"
 					}
 				],
 				"SsrContractsDeclared": [
@@ -19546,7 +19546,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "1345b1a2dcf5f3c7fbc8ea9cb9f1a5f65858abdb078ef95c38e247527cfacc41 API snapshot entry"
+						"detail": "9e36885dde3bd37c987ac09f2280d5a8ceeab865cc1d4d9c0bdbda065234603e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -19748,7 +19748,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "790ba466bd52a820ecd4ad30185dde4e434b1c73a5fd5a8c14676cc558cf3584 API snapshot entry"
+						"detail": "07bef6cb2877d61bc4b92469405b1d33efa88f1ca9399f52400a39bc112a04e4 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -19858,7 +19858,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "6131c2bd8b4b524e5aa90bc086efbc287b376ca260cb42e4231aa1f8f603f16b API snapshot entry"
+						"detail": "eda8e63616872df05607e06fb7657fe06763d2d78d75097dcaaffd254a5911fa API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -21791,7 +21791,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "33bcfe2e84941a3231d7283e4c1ae21c6c8e7afb8fc8988ca647d829f2c40d70 API snapshot entry"
+						"detail": "7642c232d20b9c4bcc3aa21640f7bd0bf965544080ad11ce679372226054b335 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

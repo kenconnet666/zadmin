@@ -1,5 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { DEFAULT_THEME_SCHEMA } from '../../../ui/zui/src/theme/schema.js';
+
+async function openPausedDemo(page: Page, component: 'button' | 'data-table', demoId: string) {
+	// install() alone still lets timers advance with wall time. Freeze only after the
+	// page loads, so slow CI assertions cannot race the 280ms simulated response.
+	await page.clock.install({ time: new Date('2026-09-08T00:00:00Z') });
+	await page.goto(`/#/components/${component}`);
+	const demo = page.getByTestId(`demo-${demoId}`);
+	await expect(demo).toBeVisible();
+	await page.clock.pauseAt(new Date('2026-09-08T02:00:00Z'));
+	return demo;
+}
 
 test('Button teaches variants once and keeps all five size contracts in the state demo', async ({
 	page
@@ -33,9 +44,7 @@ test('Button teaches variants once and keeps all five size contracts in the stat
 test('Button async demo blocks repeat activation, reports a rejected task and can retry', async ({
 	page
 }) => {
-	await page.clock.install();
-	await page.goto('/#/components/button');
-	const demo = page.getByTestId('demo-button-async');
+	const demo = await openPausedDemo(page, 'button', 'button-async');
 	const run = demo.getByTestId('button-async-run');
 	await demo.getByRole('button', { name: '模拟失败', exact: true }).click();
 	await run.click();
@@ -55,9 +64,7 @@ test('Button async demo blocks repeat activation, reports a rejected task and ca
 test('DataTable keeps its last successful rows during loading and failure, then retries and accepts empty results', async ({
 	page
 }) => {
-	await page.clock.install();
-	await page.goto('/#/components/data-table');
-	const demo = page.getByTestId('demo-data-table-async-states');
+	const demo = await openPausedDemo(page, 'data-table', 'data-table-async-states');
 	const table = demo.getByRole('table', { name: '服务状态' });
 	await expect(table.getByRole('row')).toHaveCount(3);
 	await demo.getByRole('button', { name: '保留旧数据刷新', exact: true }).click();
@@ -82,9 +89,7 @@ test('DataTable keeps its last successful rows during loading and failure, then 
 test('DataTable cancellation and later requests prevent an old snapshot from becoming current', async ({
 	page
 }) => {
-	await page.clock.install();
-	await page.goto('/#/components/data-table');
-	const demo = page.getByTestId('demo-data-table-async-states');
+	const demo = await openPausedDemo(page, 'data-table', 'data-table-async-states');
 	const table = demo.getByRole('table', { name: '服务状态' });
 	await demo.getByRole('button', { name: '启动慢请求', exact: true }).click();
 	await demo.getByRole('button', { name: '取消当前请求', exact: true }).click();
@@ -105,8 +110,7 @@ test('leaving async demos releases their tasks without late page errors or state
 }) => {
 	const errors: string[] = [];
 	page.on('pageerror', (error) => errors.push(error.message));
-	await page.clock.install();
-	await page.goto('/#/components/button');
+	await openPausedDemo(page, 'button', 'button-async');
 	await page.getByTestId('button-async-run').click();
 	await page.evaluate(() => {
 		location.hash = '#/components/data-table';

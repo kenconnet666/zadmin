@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { CalendarDate } from '@internationalized/date';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import {
 		ZButton,
 		ZMiniCalendar,
@@ -23,13 +25,15 @@
 {/snippet}
 
 {#snippet header(context: CalendarHeaderContext)}
+	{@const PreviousIcon = context.direction === 'rtl' ? ChevronRight : ChevronLeft}
+	{@const NextIcon = context.direction === 'rtl' ? ChevronLeft : ChevronRight}
 	<ZButton
 		aria-label="上一组日期"
 		disabled={context.previousDisabled}
 		onclick={context.goToPreviousPage}
 		shape="square"
 		size={context.size}
-		variant="ghost">{context.direction === 'rtl' ? '›' : '‹'}</ZButton
+		variant="ghost"><PreviousIcon aria-hidden="true" size="1em" /></ZButton
 	>
 	<ZText weight="semibold">{context.label}</ZText>
 	<ZButton
@@ -38,7 +42,7 @@
 		onclick={context.goToNextPage}
 		shape="square"
 		size={context.size}
-		variant="ghost">{context.direction === 'rtl' ? '‹' : '›'}</ZButton
+		variant="ghost"><NextIcon aria-hidden="true" size="1em" /></ZButton
 	>
 {/snippet}
 

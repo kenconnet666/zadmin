@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZNavLink, ZProvider, ZStack, ZText } from '@zadmin/zui';
+	import { ZButton, ZNavLink, ZProvider, ZStack, ZText } from '@zadmin/zui';
 
 	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 	const tones = ['primary', 'neutral', 'info', 'success', 'warning', 'danger'] as const;
@@ -11,9 +11,11 @@
 <ZProvider direction="rtl" motion={reduced ? 'reduced' : 'full'}>
 	<ZStack gap="medium" style="max-width: 100%;">
 		<ZStack direction="row" gap="small" wrap>
-			<button type="button" onclick={() => (compact = !compact)}>compact={compact}</button>
-			<button type="button" onclick={() => (reduced = !reduced)}
-				>motion={reduced ? 'reduced' : 'full'}</button
+			<ZButton type="button" variant="outline" onclick={() => (compact = !compact)}
+				>compact={compact}</ZButton
+			>
+			<ZButton type="button" variant="outline" onclick={() => (reduced = !reduced)}
+				>motion={reduced ? 'reduced' : 'full'}</ZButton
 			>
 		</ZStack>
 		<ZText weight="semibold">五档 size（固定tone=primary、variant=subtle）</ZText>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
+	import { onDestroy } from 'svelte';
 	import {
 		createFormModel,
 		ZButton,
@@ -46,9 +47,31 @@
 	let result = $state('尚未提交');
 	let submitError = $state('无');
 	let processingCount = $state(0);
+	let disposed = false;
+	const pendingDelays = new Set<{ readonly resolve: () => void; readonly timer: number }>();
+
 	function delay(milliseconds: number): Promise<void> {
-		return new Promise((resolve) => setTimeout(resolve, milliseconds));
+		if (disposed) return Promise.resolve();
+		return new Promise((resolve) => {
+			const pending = {
+				resolve: () => {
+					pendingDelays.delete(pending);
+					resolve();
+				},
+				timer: 0
+			};
+			pending.timer = window.setTimeout(pending.resolve, milliseconds);
+			pendingDelays.add(pending);
+		});
 	}
+
+	onDestroy(() => {
+		disposed = true;
+		for (const pending of [...pendingDelays]) {
+			window.clearTimeout(pending.timer);
+			pending.resolve();
+		}
+	});
 	$effect(() => {
 		const current = controller;
 		if (!current) return;
@@ -65,6 +88,7 @@
 	onValidSubmit={async ({ data, formData }) => {
 		processingCount += 1;
 		await delay(500);
+		if (disposed) return;
 		if (data.canonicalEmail.endsWith('@blocked.example')) throw new Error('服务端拒绝该域名');
 		result = `typed age=${data.age} (${typeof data.age})；FormData age=${formData.get('age')} (${typeof formData.get('age')})`;
 	}}

@@ -360,6 +360,7 @@
 		step = 1,
 		style,
 		thumbLabels,
+		// eslint-disable-next-line no-useless-assignment -- The bindable output default is observable by its parent before attachment and during SSR.
 		thumbRefs = $bindable<RangeSliderThumbRefs>([null, null]),
 		tone,
 		value = $bindable(),
@@ -657,7 +658,8 @@
 		<span class={classes.fill} data-slot="fill"></span>
 		{#if marks.length}
 			<span aria-hidden="true" class={classes.marks} data-slot="marks">
-				{#each marks as entry, markIndex}
+				<!-- Marks may share a value and expose no key API; preserve their positional ownership. -->
+				{#each marks as entry, markIndex (markIndex)}
 					<span
 						class={classes.mark}
 						data-edge={markEdge(entry.value)}
@@ -672,7 +674,7 @@
 				{/each}
 			</span>
 		{/if}
-		{#each sliderThumbIndices as index}
+		{#each sliderThumbIndices as index (index)}
 			<span
 				class={classes.thumb}
 				data-slot="thumb"

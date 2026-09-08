@@ -440,6 +440,7 @@
 	const resolvedHandles = $derived.by((): readonly ZResizableHandle[] => {
 		const values = handles ?? defaultHandleSet;
 		if (!Array.isArray(values)) throw new TypeError('ZResizable handles must be an array.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Per-call handle uniqueness scratch, not retained state.
 		const seen = new Set<ZResizableHandle>();
 		for (const value of values) {
 			if (!handleValues.includes(value)) throw new TypeError('Invalid ZResizable handle.');

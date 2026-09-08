@@ -226,8 +226,10 @@
 	let previousView: LogicalCollectionView<SelectionKey, MenubarCollectionItem> = untrack(
 		() => view
 	);
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Imperative child focus callbacks; entries do not drive rendering and are released on unregister/destroy. */
 	const prepareByValue = new Map<SelectionKey, (strategy: DropdownMenuFocusStrategy) => void>();
 	const restoreByValue = new Map<SelectionKey, (target: HTMLElement | null) => void>();
+	/* eslint-enable svelte/prefer-svelte-reactivity */
 	const navigation = new CollectionNavigation<SelectionKey, MenubarCollectionItem>({
 		direction: () => getElementDirection(ref, zui.direction),
 		disabled: () => disabled,

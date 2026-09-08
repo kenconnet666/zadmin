@@ -11,6 +11,7 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { ZLinkTone } from '../gene/ZLink.svelte';
 	import { defineSlotRecipe } from '../../recipes/slots.js';
+	// eslint-disable-next-line no-import-assign -- Type-only re-exports have no runtime assignments.
 	export type { AnchorItem, AnchorNavigateRequest, ScrollContainer };
 	export interface ZAnchorProps<TKey extends SelectionKey = SelectionKey> extends Omit<
 		HTMLAttributes<HTMLElement>,
@@ -462,6 +463,7 @@
 				});
 		};
 		const resize = view.ResizeObserver ? new view.ResizeObserver(schedule) : undefined;
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Observer attachment bookkeeping, released by this effect's cleanup.
 		const observed = new Set<Element>();
 		const refreshTargets = () => {
 			const targets = new Set<Element>([

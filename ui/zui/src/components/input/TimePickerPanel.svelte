@@ -12,6 +12,7 @@
 
 	type TimePickerPanelDirection = NonNullable<HTMLAttributes<HTMLElement>['dir']>;
 
+	// eslint-disable-next-line no-import-assign -- Type-only re-export has no runtime assignment.
 	export type { TimePickerPreset } from '../../runtime/time-picker.js';
 
 	export interface TimePickerPanelController {

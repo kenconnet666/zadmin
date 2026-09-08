@@ -285,6 +285,10 @@ describe('FormRegistry', () => {
 		registerRow('b-name', ['users', 1, 'name']);
 		registry.markTouched('a-name');
 		registry.syncErrors({ 'users[0].name': ['A error'], 'users[1].name': ['B error'] });
+		const firstPathState = vi.fn();
+		const secondPathState = vi.fn();
+		registry.subscribeField(['users', 0, 'name'], firstPathState);
+		registry.subscribeField(['users', 1, 'name'], secondPathState);
 
 		registry.reconcileList(
 			createFormListReconcile(
@@ -306,6 +310,14 @@ describe('FormRegistry', () => {
 		});
 		expect(registry.state(['users', 0, 'name']).errors).toEqual(['B error']);
 		expect(registry.affectedPaths('a-role')).toContainEqual(['users', 1, 'name']);
+		expect(firstPathState).toHaveBeenCalledOnce();
+		expect(firstPathState).toHaveBeenLastCalledWith(
+			expect.objectContaining({ errors: ['B error'], touched: false })
+		);
+		expect(secondPathState).toHaveBeenCalledOnce();
+		expect(secondPathState).toHaveBeenLastCalledWith(
+			expect.objectContaining({ errors: ['A error'], touched: true })
+		);
 
 		stopAName();
 		const stopAgain = registerRow('a-name', ['users', 1, 'name'], [['users', 1, 'role']]);

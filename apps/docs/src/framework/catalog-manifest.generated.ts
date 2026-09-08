@@ -2472,7 +2472,9 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'density',
 			'disabled',
-			'readonly'
+			'readonly',
+			'reduced-motion',
+			'rtl'
 		],
 		demoCount: 5,
 		publicComponentCount: 1

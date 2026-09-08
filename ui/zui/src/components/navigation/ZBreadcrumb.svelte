@@ -268,6 +268,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
 	const validatedItems = $derived.by(() => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Temporary uniqueness validation, not retained UI state.
 		const keys = new Set<SelectionKey>();
 		let currentCount = 0;
 		for (const entry of items) {

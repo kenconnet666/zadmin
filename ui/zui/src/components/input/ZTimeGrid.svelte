@@ -10,6 +10,7 @@
 
 	export type TimeGridFormParticipation = 'auto' | 'none';
 	export type TimeGridSize = ZControlSize;
+	// eslint-disable-next-line no-import-assign -- Type-only re-exports have no runtime assignments.
 	export type { TimeGridGranularity, TimeGridSlot } from '../../runtime/time-grid.js';
 
 	export interface ZTimeGridProps extends Omit<

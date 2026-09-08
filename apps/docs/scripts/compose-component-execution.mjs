@@ -534,8 +534,7 @@ export function composeComponentExecution({
 	docsReports,
 	reportInputs,
 	gates,
-	gatesInput,
-	executionPath = 'test-results/component-execution/component-execution.json'
+	gatesInput
 }) {
 	validateIdentity(identity);
 	if (baseMaturity?.schemaVersion !== 3 || !Array.isArray(baseMaturity.components))

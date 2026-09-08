@@ -6,7 +6,6 @@ import {
 	fromDate,
 	toCalendar,
 	toCalendarDateTime,
-	toTime,
 	toTimeZone,
 	type Disambiguation
 } from '@internationalized/date';

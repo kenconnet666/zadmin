@@ -15,7 +15,7 @@
 </ZBox>
 
 <ZVisuallyHidden data-testid="visually-hidden" role="status">Hidden status</ZVisuallyHidden>
-{#each directions as direction}
+{#each directions as direction (direction)}
 	<div
 		dir={direction}
 		data-testid={`hidden-boundary-${direction}`}

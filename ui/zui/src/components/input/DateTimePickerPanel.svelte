@@ -15,11 +15,13 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { CalendarCellContext, CalendarHeaderContext } from './ZCalendar.svelte';
 
+	/* eslint-disable no-import-assign -- Type-only re-exports have no runtime writes; the Svelte scope analyzer marks their references as assignments. */
 	export type {
 		DateTimePickerDirection,
 		DateTimePickerPreset,
 		DateTimePickerValue
 	} from '../../runtime/date-time-picker.js';
+	/* eslint-enable no-import-assign */
 
 	export interface DateTimePickerPanelController {
 		readonly firstFocusableElement: HTMLElement | null;

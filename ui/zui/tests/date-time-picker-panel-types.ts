@@ -22,9 +22,18 @@ const props = {
 	nextLabel: 'Next month',
 	noAvailableTimeLabel: 'No available time',
 	nowLabel: 'Now',
-	onConfirm: (_value: CalendarDateTime | ReturnType<typeof toZoned>) => undefined,
-	onControllerChange: (_controller: DateTimePickerPanelController | null) => undefined,
-	onValueChange: (_value: CalendarDateTime | ReturnType<typeof toZoned>) => undefined,
+	onConfirm: (value: CalendarDateTime | ReturnType<typeof toZoned>) => {
+		void value;
+		return undefined;
+	},
+	onControllerChange: (controller: DateTimePickerPanelController | null) => {
+		void controller;
+		return undefined;
+	},
+	onValueChange: (value: CalendarDateTime | ReturnType<typeof toZoned>) => {
+		void value;
+		return undefined;
+	},
 	placeholderValue: new CalendarDateTime(2026, 9, 7, 9),
 	presets: [
 		{ label: 'Local', value: new CalendarDateTime(2026, 9, 7, 9, 30) },

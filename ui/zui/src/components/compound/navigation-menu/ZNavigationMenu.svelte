@@ -386,6 +386,7 @@
 	});
 	function validateKeys(keys: readonly TKey[]): readonly TKey[] {
 		if (!Array.isArray(keys)) throw new TypeError('NavigationMenu openKeys must be an array.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Temporary uniqueness validation, not retained component state.
 		const seen = new Set<SelectionKey>();
 		for (const key of keys) {
 			assertSelectionKey(key, 'NavigationMenu openKeys');

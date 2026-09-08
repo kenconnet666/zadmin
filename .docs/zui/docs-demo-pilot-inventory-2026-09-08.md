@@ -117,3 +117,11 @@ DataTable 当前最明确的差异是：`data-table-async-states` 只有本地�
 - 演示复用时同步发现并修复query的abort监听器重入问题：最新请求不会再被外层load/cancel覆盖。该基础设施行为由独立unit验证，而不是只看demo文案。
 - 新增 [`docs-demo-pilot.e2e.ts`](../../apps/docs/tests/docs-demo-pilot.e2e.ts)：五档真实几何/字号、失败重试、旧快照保留、取消/覆盖、路由卸载与重新挂载。5项本地Chromium测试已通过；其他浏览器及production build结果仍以提交SHA对应CI为准。
 - 日期族RTL/reduced-motion、DataTable边界说明迁移与其余组件族整理仍待执行；本批没有将这些剩余项记成完成。
+
+## P03 落地记录
+
+- 保留 `date-time-picker-family` ID，在已有 FormModel/确认提交演示中增加真实 Provider RTL/full/reduced 切换、外部清空和原生 reset。没有复制第二套日期 owner，也没有新增同目的 demo。
+- 新增 [`date-time-preferences.e2e.ts`](../../apps/docs/tests/date-time-preferences.e2e.ts)：RTL 逻辑方向键、实际 computed direction/transition/animation、外部清空、未确认草稿不提交、reset 后重建、确认后唯一提交。现有 WebStorm/Vite 站点 Chromium 1 项通过；其他浏览器与 production build 交 P03 精确 SHA CI。
+- P02 新增的异步 Demo 测试在负载较高的远端发现 clock 安装后仍自然推进，导致 loading 观察与响应计时竞态。改为导航完成后明确 pause，再逐段 runFor；旧数据保留、失败重试、取消/覆盖和卸载 5 项断言完整保留，Chromium 5 项通过。
+- 600 个物理 Svelte 示例仍保留原 glob 范围，SSR 从单一大测试拆成逐项 render，并独立对账物理文件集合；601 项通过。不提高全局 timeout，不把 inventory 对账代替真实 render。
+- 日期范围家族偏好扩展、DataTable 边界说明迁移、Form/Sortable 复制性验收与其他家族整理仍待执行；当前只闭合这个 DateTimePicker 演示的明确缺口。

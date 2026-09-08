@@ -1,7 +1,8 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'svelte/compiler';
+import ts from 'typescript';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -82,9 +83,131 @@ function auditSvelte5(source, filename) {
 	}
 }
 
+function importedDragDropManagerNames(ast) {
+	const names = new Set();
+	for (const statement of ast.statements) {
+		if (
+			!ts.isImportDeclaration(statement) ||
+			statement.moduleSpecifier.text !== '@dnd-kit/dom' ||
+			!statement.importClause?.namedBindings ||
+			!ts.isNamedImports(statement.importClause.namedBindings)
+		)
+			continue;
+		for (const specifier of statement.importClause.namedBindings.elements) {
+			if ((specifier.propertyName ?? specifier.name).text === 'DragDropManager')
+				names.add(specifier.name.text);
+		}
+	}
+	return names;
+}
+
+function enclosingFunction(node) {
+	for (let current = node.parent; current; current = current.parent)
+		if (ts.isFunctionLike(current)) return current;
+	return undefined;
+}
+
+function hasManagerParameter(owner, name, managerTypeNames) {
+	return owner?.parameters.some(
+		(parameter) =>
+			ts.isIdentifier(parameter.name) &&
+			parameter.name.text === name &&
+			parameter.type &&
+			ts.isTypeReferenceNode(parameter.type) &&
+			ts.isIdentifier(parameter.type.typeName) &&
+			managerTypeNames.has(parameter.type.typeName.text)
+	);
+}
+
+function callsIdentifier(node, name) {
+	let found = false;
+	const visit = (current) => {
+		if (found) return;
+		if (
+			ts.isCallExpression(current) &&
+			ts.isIdentifier(current.expression) &&
+			current.expression.text === name
+		)
+			found = true;
+		else ts.forEachChild(current, visit);
+	};
+	visit(node);
+	return found;
+}
+
+function returnedCleanupCalls(owner, name) {
+	let found = false;
+	const visit = (node) => {
+		if (found) return;
+		if (node !== owner && ts.isFunctionLike(node)) return;
+		if (
+			ts.isReturnStatement(node) &&
+			node.expression &&
+			(ts.isArrowFunction(node.expression) || ts.isFunctionExpression(node.expression)) &&
+			callsIdentifier(node.expression.body, name)
+		) {
+			found = true;
+			return;
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(owner);
+	return found;
+}
+
+function auditTypeScriptEventListeners(source, filename) {
+	const ast = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+	const managerTypeNames = importedDragDropManagerNames(ast);
+	let nativeListeners = 0;
+	let nativeRemovals = 0;
+	const visit = (node) => {
+		if (ts.isCallExpression(node) && ts.isIdentifier(node.expression)) {
+			if (node.expression.text === 'addEventListener') nativeListeners += 1;
+			if (node.expression.text === 'removeEventListener') nativeRemovals += 1;
+		}
+		if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
+			const method = node.expression.name.text;
+			if (method === 'removeEventListener') nativeRemovals += 1;
+			if (method === 'addEventListener') {
+				const receiver = node.expression.expression;
+				const owner = enclosingFunction(node);
+				const monitorReceiver =
+					ts.isPropertyAccessExpression(receiver) &&
+					receiver.name.text === 'monitor' &&
+					ts.isIdentifier(receiver.expression) &&
+					hasManagerParameter(owner, receiver.expression.text, managerTypeNames);
+				if (!monitorReceiver) nativeListeners += 1;
+				else {
+					const declaration = node.parent;
+					if (
+						!ts.isVariableDeclaration(declaration) ||
+						declaration.initializer !== node ||
+						!ts.isIdentifier(declaration.name)
+					)
+						fail(`${filename} must bind the DragDropManager.monitor addEventListener disposer.`);
+					const disposer = declaration.name.text;
+					if (!returnedCleanupCalls(owner, disposer))
+						fail(`${filename} does not call monitor disposer ${disposer} in its returned cleanup.`);
+				}
+			}
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(ast);
+	if (nativeListeners > 0 && nativeRemovals === 0)
+		fail(`${filename} creates addEventListener( without removeEventListener(.`);
+}
+
+function auditEventListenerLifecycle(source, filename) {
+	if (!source.includes('addEventListener')) return;
+	if (filename.endsWith('.ts')) auditTypeScriptEventListeners(source, filename);
+	else if (!source.includes('removeEventListener('))
+		fail(`${filename} creates addEventListener( without removeEventListener(.`);
+}
+
 function auditResourceLifecycle(source, filename) {
+	auditEventListenerLifecycle(source, filename);
 	const pairs = [
-		['addEventListener(', 'removeEventListener('],
 		['setTimeout(', 'clearTimeout('],
 		['setInterval(', 'clearInterval('],
 		['requestAnimationFrame(', 'cancelAnimationFrame('],
@@ -97,6 +220,583 @@ function auditResourceLifecycle(source, filename) {
 			fail(`${filename} creates ${create} without ${cleanup}.`);
 		}
 	}
+}
+
+function expectResourceLifecycleFailure(source, detail) {
+	try {
+		auditResourceLifecycle(source, 'resource-lifecycle-self-test.ts');
+	} catch (error) {
+		if (String(error).includes(detail)) return;
+		throw error;
+	}
+	fail(`Resource lifecycle self-test accepted ${detail}.`);
+}
+
+function resourceLifecycleSelfTest() {
+	const managerImport = "import type { DragDropManager } from '@dnd-kit/dom';";
+	auditResourceLifecycle(
+		`${managerImport}\nfunction connect(manager: DragDropManager) {\n const stop = manager.monitor.addEventListener('dragmove', () => {});\n return () => stop();\n}`,
+		'resource-lifecycle-valid-self-test.ts'
+	);
+	expectResourceLifecycleFailure(
+		`${managerImport}\nfunction connect(manager: DragDropManager) {\n const stop = manager.monitor.addEventListener('dragmove', () => {});\n return () => undefined;\n}`,
+		'does not call monitor disposer stop'
+	);
+	expectResourceLifecycleFailure(
+		"function connect(node: HTMLElement) {\n const unsubscribe = node.addEventListener('click', () => {});\n return () => unsubscribe;\n}",
+		'without removeEventListener('
+	);
+	expectResourceLifecycleFailure(
+		"function connect() { addEventListener('click', () => {}); }",
+		'without removeEventListener('
+	);
+	expectResourceLifecycleFailure(
+		`${managerImport}\nfunction connect(manager: DragDropManager) {\n const stopMove = manager.monitor.addEventListener('dragmove', () => {});\n const stopEnd = manager.monitor.addEventListener('dragend', () => {});\n return () => stopMove();\n}`,
+		'does not call monitor disposer stopEnd'
+	);
+}
+
+function hasActiveTransition(source) {
+	// A literal null/false engine option explicitly disables that transition. Do not
+	// mistake it for CSS motion, or exempt expressions that can still enable an animation.
+	const withoutDisabledOptions = source.replace(
+		/\btransition\s*:\s*(?:null|false)\s*(?=[,;}])/gu,
+		''
+	);
+	return /transition(?:Property|Duration)|transition\s*:/u.test(withoutDisabledOptions);
+}
+
+function hasFocusStyles(source) {
+	return /styleInternalFocus|_focusVisible|:focus-(?:within|visible)/u.test(source);
+}
+
+function walkProgram(node, visit) {
+	if (!node || typeof node !== 'object') return;
+	visit(node);
+	for (const value of Object.values(node)) {
+		if (Array.isArray(value)) value.forEach((child) => walkProgram(child, visit));
+		else if (value && typeof value === 'object' && typeof value.type === 'string')
+			walkProgram(value, visit);
+	}
+}
+
+function importedRecipeUses(source, filename) {
+	let ast;
+	try {
+		ast = parse(source, { modern: true });
+	} catch (error) {
+		fail(`${filename} cannot be parsed for shared focus recipe auditing: ${error.message}`);
+	}
+	const programs = [ast.module?.content, ast.instance?.content].filter(Boolean);
+	const imports = new Map();
+	const useZuiNames = new Set();
+	for (const program of programs) {
+		walkProgram(program, (node) => {
+			if (node.type !== 'ImportDeclaration' || typeof node.source?.value !== 'string') return;
+			for (const specifier of node.specifiers ?? []) {
+				if (specifier.type !== 'ImportSpecifier') continue;
+				const imported = specifier.imported?.name ?? specifier.imported?.value;
+				if (imported === 'useZui') useZuiNames.add(specifier.local.name);
+				imports.set(specifier.local.name, {
+					imported,
+					source: node.source.value
+				});
+			}
+		});
+	}
+	const zuiOwners = new Set();
+	for (const program of programs) {
+		walkProgram(program, (node) => {
+			if (
+				node.type === 'VariableDeclarator' &&
+				node.id?.type === 'Identifier' &&
+				node.init?.type === 'CallExpression' &&
+				node.init.callee?.type === 'Identifier' &&
+				useZuiNames.has(node.init.callee.name)
+			)
+				zuiOwners.add(node.id.name);
+		});
+	}
+	const used = new Map();
+	for (const program of programs) {
+		walkProgram(program, (node) => {
+			if (
+				node.type !== 'CallExpression' ||
+				node.callee?.type !== 'MemberExpression' ||
+				node.callee.computed ||
+				node.callee.object?.type !== 'Identifier' ||
+				!zuiOwners.has(node.callee.object.name) ||
+				node.callee.property?.type !== 'Identifier' ||
+				(node.callee.property.name !== 'recipe' && node.callee.property.name !== 'slots') ||
+				node.arguments?.[0]?.type !== 'Identifier'
+			)
+				return;
+			const local = node.arguments[0].name;
+			const imported = imports.get(local);
+			if (!imported || !imported.source.startsWith('.') || typeof imported.imported !== 'string')
+				return;
+			used.set(`${imported.source}\0${imported.imported}`, imported);
+		});
+	}
+	return [...used.values()];
+}
+
+function syntaxTreeContains(root, predicate) {
+	let found = false;
+	const visit = (node) => {
+		if (found) return;
+		if (predicate(node)) found = true;
+		else ts.forEachChild(node, visit);
+	};
+	visit(root);
+	return found;
+}
+
+function recipeInitializerHasFocus(initializer) {
+	return syntaxTreeContains(initializer, (node) => {
+		if (!ts.isCallExpression(node) || !ts.isPropertyAccessExpression(node.expression)) return false;
+		if (node.expression.name.text === '_focusVisible') return true;
+		return (
+			node.expression.name.text === '_selector' &&
+			Boolean(node.arguments[0]) &&
+			ts.isStringLiteralLike(node.arguments[0]) &&
+			/:focus-(?:visible|within)/u.test(node.arguments[0].text)
+		);
+	});
+}
+
+function recipeInitializerHasBorderBox(initializer) {
+	return syntaxTreeContains(
+		initializer,
+		(node) =>
+			ts.isPropertyAccessExpression(node) &&
+			node.name.text === 'borderBox' &&
+			ts.isPropertyAccessExpression(node.expression) &&
+			node.expression.name.text === 'boxSizing'
+	);
+}
+
+function exportedRecipeMatches(
+	source,
+	exportedName,
+	filename = 'shared-recipe.ts',
+	initializerMatches
+) {
+	let moduleSource = source;
+	if (filename.endsWith('.svelte')) {
+		let ast;
+		try {
+			ast = parse(source, { modern: true });
+		} catch (error) {
+			fail(`${filename} cannot be parsed for exported focus recipe auditing: ${error.message}`);
+		}
+		const script = ast.module ?? ast.instance;
+		if (!script) return false;
+		moduleSource = source.slice(script.content.start, script.content.end);
+	}
+	const output = ts.transpileModule(moduleSource, {
+		compilerOptions: {
+			module: ts.ModuleKind.ESNext,
+			removeComments: true,
+			target: ts.ScriptTarget.ESNext
+		}
+	}).outputText;
+	const ast = ts.createSourceFile('shared-focus-recipe.ts', output, ts.ScriptTarget.Latest, true);
+	const recipeFactories = new Set();
+	for (const statement of ast.statements) {
+		const moduleName = ts.isImportDeclaration(statement)
+			? statement.moduleSpecifier.text
+			: undefined;
+		const factoryName = moduleName?.endsWith('/recipes/define.js')
+			? 'defineRecipe'
+			: moduleName?.endsWith('/recipes/slots.js')
+				? 'defineSlotRecipe'
+				: undefined;
+		if (
+			!ts.isImportDeclaration(statement) ||
+			!factoryName ||
+			!statement.importClause?.namedBindings ||
+			!ts.isNamedImports(statement.importClause.namedBindings)
+		)
+			continue;
+		for (const specifier of statement.importClause.namedBindings.elements)
+			if ((specifier.propertyName ?? specifier.name).text === factoryName)
+				recipeFactories.add(specifier.name.text);
+	}
+	for (const statement of ast.statements) {
+		if (
+			!ts.isVariableStatement(statement) ||
+			!statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)
+		)
+			continue;
+		for (const declaration of statement.declarationList.declarations) {
+			if (
+				ts.isIdentifier(declaration.name) &&
+				declaration.name.text === exportedName &&
+				declaration.initializer &&
+				ts.isCallExpression(declaration.initializer) &&
+				ts.isIdentifier(declaration.initializer.expression) &&
+				recipeFactories.has(declaration.initializer.expression.text) &&
+				initializerMatches(declaration.initializer)
+			)
+				return true;
+		}
+	}
+	return false;
+}
+
+function exportedRecipeHasFocus(source, exportedName, filename) {
+	return exportedRecipeMatches(source, exportedName, filename, recipeInitializerHasFocus);
+}
+
+function exportedRecipeHasBorderBox(source, exportedName, filename) {
+	return exportedRecipeMatches(source, exportedName, filename, recipeInitializerHasBorderBox);
+}
+
+async function readLocalRecipeModule(componentPath, specifier) {
+	const requested = resolve(dirname(componentPath), specifier);
+	const candidates = requested.endsWith('.js')
+		? [
+				`${requested.slice(0, -3)}.ts`,
+				`${requested.slice(0, -3)}.svelte.ts`,
+				`${requested.slice(0, -3)}.svelte`,
+				requested
+			]
+		: [requested, `${requested}.ts`, `${requested}.svelte.ts`, `${requested}.svelte`];
+	for (const candidate of candidates) {
+		const workspacePath = relative(workspaceRoot, candidate);
+		if (
+			workspacePath === '..' ||
+			workspacePath.startsWith('../') ||
+			workspacePath.startsWith('..\\') ||
+			isAbsolute(workspacePath)
+		)
+			continue;
+		try {
+			return { path: candidate, source: await readFile(candidate, 'utf8') };
+		} catch (error) {
+			if (error?.code !== 'ENOENT') throw error;
+		}
+	}
+	return undefined;
+}
+
+async function hasImportedRecipeContract(source, componentPath, filename, matchesExport) {
+	for (const recipe of importedRecipeUses(source, filename)) {
+		const module = await readLocalRecipeModule(componentPath, recipe.source);
+		if (module && matchesExport(module.source, recipe.imported, module.path)) return true;
+	}
+	return false;
+}
+
+function hasImportedFocusRecipe(source, componentPath, filename) {
+	return hasImportedRecipeContract(source, componentPath, filename, exportedRecipeHasFocus);
+}
+
+function hasImportedBorderBoxRecipe(source, componentPath, filename) {
+	return hasImportedRecipeContract(source, componentPath, filename, exportedRecipeHasBorderBox);
+}
+
+function focusRecipeSelfTest() {
+	const component = `<script lang="ts">
+		import { useZui } from './context.js';
+		import { focusRecipe, unusedFocusRecipe } from './recipe.js';
+		const zui = useZui();
+		const className = zui.recipe(focusRecipe);
+	</script><input class={className} />`;
+	const used = importedRecipeUses(component, 'shared-focus-self-test.svelte');
+	if (used.length !== 1 || used[0].imported !== 'focusRecipe' || used[0].source !== './recipe.js')
+		fail('Shared focus recipe audit did not resolve the recipe actually consumed by zui.recipe.');
+	if (
+		!exportedRecipeHasFocus(
+			`import { defineRecipe } from './recipes/define.js';
+			export const focusRecipe = defineRecipe({ base: (s) => s._focusVisible(focusStyle) });`,
+			'focusRecipe'
+		)
+	)
+		fail('Shared focus recipe audit rejected an exported recipe with focus-visible styles.');
+	if (
+		!exportedRecipeHasFocus(
+			`<script module lang="ts">
+				import { defineSlotRecipe } from './recipes/slots.js';
+				export const focusSlots = defineSlotRecipe({ slots: ['root'], base: { root: (s) => s._selector('&:focus-visible', focusStyle) } });
+			</script>`,
+			'focusSlots',
+			'shared-focus-slots-self-test.svelte'
+		)
+	)
+		fail('Shared focus recipe audit rejected a Svelte module slot recipe with focus styles.');
+	if (
+		exportedRecipeHasFocus(
+			`import { defineRecipe } from './recipes/define.js';
+			// s._focusVisible(fake)
+			export const focusRecipe = defineRecipe({ base: (s) => s.color._text });`,
+			'focusRecipe'
+		)
+	)
+		fail('Shared focus recipe audit accepted a comment or an unfocused exported recipe.');
+	if (
+		exportedRecipeHasFocus(
+			`import { defineRecipe } from './recipes/define.js';
+			export const focusRecipe = defineRecipe({ base: () => '_focusVisible' });`,
+			'focusRecipe'
+		)
+	)
+		fail('Shared focus recipe audit accepted a focus-looking string without an ICSS focus call.');
+	if (
+		importedRecipeUses(
+			component.replace('zui.recipe(focusRecipe)', 'helper.recipe(focusRecipe)'),
+			'shared-focus-negative-self-test.svelte'
+		).length > 0
+	)
+		fail('Shared focus recipe audit accepted a recipe not consumed by the useZui owner.');
+	if (
+		!exportedRecipeHasBorderBox(
+			`import { defineRecipe } from './recipes/define.js';
+			export const inputRecipe = defineRecipe({ base: (s) => { s.boxSizing.borderBox; } });`,
+			'inputRecipe'
+		)
+	)
+		fail('Shared recipe audit rejected an exported recipe with border-box sizing.');
+	if (
+		exportedRecipeHasBorderBox(
+			`import { defineRecipe } from './recipes/define.js';
+			// s.boxSizing.borderBox
+			export const inputRecipe = defineRecipe({ base: () => 'boxSizing.borderBox' });`,
+			'inputRecipe'
+		)
+	)
+		fail('Shared recipe audit accepted a border-box comment or string without an ICSS call.');
+}
+
+function logicalOrIdentifiers(expression) {
+	if (expression?.type === 'Identifier') return new Set([expression.name]);
+	if (expression?.type !== 'LogicalExpression' || expression.operator !== '||') return undefined;
+	const left = logicalOrIdentifiers(expression.left);
+	const right = logicalOrIdentifiers(expression.right);
+	if (!left || !right) return undefined;
+	return new Set([...left, ...right]);
+}
+
+function hasAriaBusyFallback(source, filename, elementName, internalOwners) {
+	let ast;
+	try {
+		ast = parse(source, { modern: true });
+	} catch (error) {
+		fail(`${filename} cannot be parsed for aria-busy auditing: ${error.message}`);
+	}
+	const aliases = new Set();
+	walkProgram(ast.instance?.content, (node) => {
+		if (
+			node.type !== 'VariableDeclarator' ||
+			node.id?.type !== 'ObjectPattern' ||
+			node.init?.type !== 'CallExpression' ||
+			node.init.callee?.type !== 'Identifier' ||
+			node.init.callee.name !== '$props'
+		)
+			return;
+		for (const property of node.id.properties)
+			if (
+				property.type === 'Property' &&
+				(property.key?.value ?? property.key?.name) === 'aria-busy' &&
+				property.value?.type === 'Identifier'
+			)
+				aliases.add(property.value.name);
+	});
+	let matched = false;
+	const walk = (node) => {
+		if (!node || typeof node !== 'object' || matched) return;
+		if (node.type === 'RegularElement' && node.name === elementName) {
+			const expression = attribute(node, 'aria-busy')?.value?.expression;
+			const owners = logicalOrIdentifiers(expression?.test);
+			if (
+				expression?.type === 'ConditionalExpression' &&
+				expression.consequent?.type === 'Literal' &&
+				expression.consequent.value === true &&
+				expression.alternate?.type === 'Identifier' &&
+				aliases.has(expression.alternate.name) &&
+				owners?.size === internalOwners.length &&
+				internalOwners.every((owner) => owners.has(owner))
+			)
+				matched = true;
+		}
+		for (const value of Object.values(node)) {
+			if (Array.isArray(value)) value.forEach(walk);
+			else if (value && typeof value === 'object' && value.type) walk(value);
+		}
+	};
+	walk(ast.fragment);
+	return matched;
+}
+
+function hasOwnerRealmHorizontalNavigation(source, filename) {
+	let ast;
+	try {
+		ast = parse(source, { modern: true });
+	} catch (error) {
+		fail(`${filename} cannot be parsed for field navigation auditing: ${error.message}`);
+	}
+	const imports = new Map();
+	walkProgram(ast.instance?.content, (node) => {
+		if (node.type !== 'ImportDeclaration') return;
+		for (const specifier of node.specifiers ?? [])
+			if (specifier.type === 'ImportSpecifier')
+				imports.set(specifier.imported?.name ?? specifier.imported?.value, specifier.local.name);
+	});
+	const useZui = imports.get('useZui');
+	const navigationIntent = imports.get('navigationIntent');
+	const getElementDirection = imports.get('getElementDirection');
+	const moveIndex = imports.get('moveIndex');
+	if (!useZui || !navigationIntent || !getElementDirection || !moveIndex) return false;
+	const zuiOwners = new Set();
+	walkProgram(ast.instance?.content, (node) => {
+		if (
+			node.type === 'VariableDeclarator' &&
+			node.id?.type === 'Identifier' &&
+			node.init?.type === 'CallExpression' &&
+			node.init.callee?.type === 'Identifier' &&
+			node.init.callee.name === useZui
+		)
+			zuiOwners.add(node.id.name);
+	});
+	const horizontalCalls = [];
+	walkProgram(ast.instance?.content, (node) => {
+		if (
+			node.type === 'CallExpression' &&
+			node.callee?.type === 'Identifier' &&
+			node.callee.name === navigationIntent &&
+			node.arguments?.[1]?.type === 'Literal' &&
+			node.arguments[1].value === 'horizontal'
+		)
+			horizontalCalls.push(node);
+	});
+	let nonLoopingMove = false;
+	let verticalCycleSwitch = false;
+	walkProgram(ast.instance?.content, (node) => {
+		if (
+			node.type === 'CallExpression' &&
+			node.callee?.type === 'Identifier' &&
+			node.callee.name === moveIndex &&
+			node.arguments?.[3]?.type === 'Literal' &&
+			node.arguments[3].value === false
+		)
+			nonLoopingMove = true;
+		if (
+			node.type === 'SwitchStatement' &&
+			node.discriminant?.type === 'MemberExpression' &&
+			!node.discriminant.computed &&
+			node.discriminant.property?.type === 'Identifier' &&
+			node.discriminant.property.name === 'key'
+		) {
+			const cases = new Set(
+				(node.cases ?? [])
+					.map((entry) => entry.test)
+					.filter((test) => test?.type === 'Literal')
+					.map((test) => test.value)
+			);
+			if (cases.has('ArrowUp') && cases.has('ArrowDown')) verticalCycleSwitch = true;
+		}
+	});
+	return (
+		nonLoopingMove &&
+		verticalCycleSwitch &&
+		horizontalCalls.length > 0 &&
+		horizontalCalls.every((call) => {
+			const key = call.arguments[0];
+			const direction = call.arguments[2];
+			return (
+				key?.type === 'MemberExpression' &&
+				!key.computed &&
+				key.property?.type === 'Identifier' &&
+				key.property.name === 'key' &&
+				direction?.type === 'CallExpression' &&
+				direction.callee?.type === 'Identifier' &&
+				direction.callee.name === getElementDirection &&
+				direction.arguments?.[1]?.type === 'MemberExpression' &&
+				!direction.arguments[1].computed &&
+				direction.arguments[1].object?.type === 'Identifier' &&
+				zuiOwners.has(direction.arguments[1].object.name) &&
+				direction.arguments[1].property?.type === 'Identifier' &&
+				direction.arguments[1].property.name === 'direction'
+			);
+		})
+	);
+}
+
+function structuralContractSelfTest() {
+	const busy = (expression) => `<script>let { 'aria-busy': forwarded } = $props();</script>
+		<form aria-busy={${expression} ? true : forwarded}></form>`;
+	if (
+		!hasAriaBusyFallback(busy('validating || submitting'), 'busy-valid.svelte', 'form', [
+			'validating',
+			'submitting'
+		])
+	)
+		fail('aria-busy audit rejected combined internal owners with the forwarded fallback.');
+	if (
+		hasAriaBusyFallback(busy('validating'), 'busy-invalid.svelte', 'form', [
+			'validating',
+			'submitting'
+		])
+	)
+		fail('aria-busy audit accepted a form that omitted one internal busy owner.');
+	if (
+		hasAriaBusyFallback(
+			busy('validating || submitting').replace('$props()', "{ 'aria-busy': false }"),
+			'busy-not-forwarded.svelte',
+			'form',
+			['validating', 'submitting']
+		)
+	)
+		fail('aria-busy audit accepted an unrelated object instead of forwarded component props.');
+	const navigation = (direction) => `<script>
+		import { moveIndex, navigationIntent } from './collection-navigation.js';
+		import { getElementDirection } from './dom-realm.js';
+		import { useZui } from './context.js';
+		const zui = useZui();
+		const intent = navigationIntent(event.key, 'horizontal', ${direction});
+		const target = moveIndex(3, 0, intent, false);
+		switch (event.key) { case 'ArrowUp': case 'ArrowDown': break; }
+	</script>`;
+	if (
+		!hasOwnerRealmHorizontalNavigation(
+			navigation('getElementDirection(ref, zui.direction)'),
+			'navigation-valid.svelte'
+		)
+	)
+		fail('Field navigation audit rejected owner-realm direction resolution.');
+	if (hasOwnerRealmHorizontalNavigation(navigation('zui.direction'), 'navigation-invalid.svelte'))
+		fail('Field navigation audit accepted Provider direction without owner-element resolution.');
+}
+
+resourceLifecycleSelfTest();
+focusRecipeSelfTest();
+structuralContractSelfTest();
+characterIconSelfTest();
+if (
+	!hasFocusStyles("s._selector('&:not([data-group]):focus-within', focusStyle)") ||
+	hasFocusStyles('input.focus()')
+)
+	fail('Focus audit must recognize compound pseudo selectors, not imperative focus calls.');
+for (const [source, expected] of [
+	['createSortable({ transition: null });', false],
+	['createSortable({ transition: false, index: 0 });', false],
+	['createSortable({ transition: null ?? { duration: 100 } });', true],
+	['s.transitionDuration._fast;', true],
+	['const style = { transition: "opacity 100ms" };', true]
+]) {
+	if (hasActiveTransition(source) !== expected) fail(`Motion audit self-test failed: ${source}`);
+}
+auditRawButtons(
+	'<button onclick={() => run()} type="button">Run</button>',
+	'raw-button-valid-self-test.svelte',
+	true
+);
+expectRawButtonFailure('<button onclick={() => run()}>Run</button>', 'without an explicit type');
+expectRawButtonFailure('<button type="button"><Icon /></button>', 'without an accessible name');
+if (process.argv.includes('--self-test')) {
+	console.log('Resource lifecycle, motion and shared focus recipe audit self-tests passed.');
+	process.exit(0);
 }
 
 function auditBindableControllerIdentity(source, filename) {
@@ -155,6 +855,97 @@ function literalAttribute(node, name) {
 	return undefined;
 }
 
+function auditRawButtons(source, filename, hasFocusContract) {
+	let ast;
+	try {
+		ast = parse(source, { modern: true });
+	} catch (error) {
+		fail(`${filename} cannot be parsed for raw button auditing: ${error.message}`);
+	}
+	const buttons = [];
+	const walk = (node) => {
+		if (!node || typeof node !== 'object') return;
+		if (node.type === 'RegularElement' && node.name === 'button') buttons.push(node);
+		for (const value of Object.values(node)) {
+			if (Array.isArray(value)) value.forEach(walk);
+			else if (value && typeof value === 'object' && value.type) walk(value);
+		}
+	};
+	walk(ast.fragment);
+	if (buttons.length === 0) return false;
+	if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
+	for (const button of buttons) {
+		if (!attribute(button, 'type')) fail(`${filename} has a raw button without an explicit type.`);
+		const content = (button.fragment?.nodes ?? []).filter(
+			(node) => node.type !== 'Text' || node.data.trim() !== ''
+		);
+		if (
+			content[0]?.type === 'Component' &&
+			!attribute(button, 'aria-label') &&
+			!attribute(button, 'aria-labelledby')
+		)
+			fail(`${filename} has an icon-only raw button without an accessible name.`);
+	}
+	return true;
+}
+
+function expectRawButtonFailure(source, detail) {
+	try {
+		auditRawButtons(source, 'raw-button-self-test.svelte', true);
+	} catch (error) {
+		if (String(error).includes(detail)) return;
+		throw error;
+	}
+	fail(`Raw button audit self-test accepted ${detail}.`);
+}
+
+function auditCharacterIcons(source, filename) {
+	const ast = parse(source, { modern: true });
+	const glyph = /[×‹›✓←→↑↓↕✕✖]/u;
+	const controls = new Set(['button', 'a', 'ZButton', 'ZToggleButton', 'ZLink', 'ZIcon']);
+	const visit = (node, iconContext = false) => {
+		if (!node || typeof node !== 'object') return;
+		const inspect =
+			iconContext || controls.has(node.name) || literalAttribute(node, 'aria-hidden') === 'true';
+		if (
+			inspect &&
+			((node.type === 'Text' && glyph.test(node.data)) ||
+				(node.type === 'Literal' && typeof node.value === 'string' && glyph.test(node.value)))
+		)
+			fail(`${filename} contains a character UI icon instead of Lucide.`);
+		// Attributes contain accessible names and textual keyboard help, not drawn icons.
+		for (const [key, value] of Object.entries(node)) {
+			if (key === 'attributes') continue;
+			if (Array.isArray(value)) value.forEach((child) => visit(child, inspect));
+			else if (value && typeof value === 'object' && value.type) visit(value, inspect);
+		}
+	};
+	visit(ast.fragment);
+}
+
+function characterIconSelfTest() {
+	for (const source of [
+		'<ZButton aria-label="Next">›</ZButton>',
+		"<ZButton>{rtl ? '‹' : '›'}</ZButton>",
+		'<span aria-hidden="true">✓</span>'
+	]) {
+		let rejected = false;
+		try {
+			auditCharacterIcons(source, 'character-icon-invalid.svelte');
+		} catch (error) {
+			if (!String(error).includes('character UI icon')) throw error;
+			rejected = true;
+		}
+		if (!rejected) fail('Character icon audit accepted a text-drawn control icon.');
+	}
+	auditCharacterIcons(
+		`<script>const width = 40; const height = 60;</script>
+		<ZText>{width} × {height}; 23:00 → 01:00; 按↑调整</ZText>
+		<ZButton aria-label="Next"><ZIcon name="arrowRight" /></ZButton>`,
+		'character-icon-prose-valid.svelte'
+	);
+}
+
 function auditDocsLayout(source, filename) {
 	let ast;
 	try {
@@ -204,7 +995,6 @@ auditDocsLayout(
 	'<ZStack align="center" direction="row"><ZButton size="small"/><ZButton size="large"/></ZStack>',
 	'layout-audit-valid-self-test.svelte'
 );
-
 const zuiSourceFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src'), ['.svelte', '.ts']);
 for (const path of zuiSourceFiles) {
 	const source = await readFile(path, 'utf8');
@@ -223,33 +1013,28 @@ const longEventKeyChains = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
-	auditTabOrder(source, filename);
-	auditSvelte5(source, filename);
-	auditLucideImports(source, filename);
-	if (/<button\b/u.test(source)) {
-		rawButtonFiles.push(filename);
-		const hasFocusContract =
-			/styleInternalAction|styleInternalFocusRing|_focusVisible|&:focus-within/u.test(source) ||
-			(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
-				/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
-		if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
-		for (const match of source.matchAll(/<button\b[^>]*>/gu)) {
-			if (!/(?:\btype\s*=|\{type\})/u.test(match[0])) {
-				fail(`${filename} has a raw button without an explicit type.`);
-			}
-		}
-		for (const match of source.matchAll(/<button\b[^>]*>\s*<[A-Z][A-Za-z0-9]*/gu)) {
-			if (!/aria-(?:label|labelledby)\s*=/u.test(match[0])) {
-				fail(`${filename} has an icon-only raw button without an accessible name.`);
-			}
-		}
-	}
+	const hasRawButtonMarkup = /<button\b/u.test(source);
 	const hasVisibleRawControl =
 		/<(?:input|textarea)\b(?![^>]*(?:\shidden(?:\s|=|>)|\stype\s*=\s*["']hidden["']))[^>]*>/u.test(
 			source
 		);
+	const focusContract =
+		hasFocusStyles(source) ||
+		((hasRawButtonMarkup || hasVisibleRawControl) &&
+			(await hasImportedFocusRecipe(source, path, filename)));
+	auditTabOrder(source, filename);
+	auditSvelte5(source, filename);
+	auditLucideImports(source, filename);
+	const rawButtonFocusContract =
+		/styleInternalAction/u.test(source) ||
+		focusContract ||
+		(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
+			/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
+	if (hasRawButtonMarkup && auditRawButtons(source, filename, rawButtonFocusContract)) {
+		rawButtonFiles.push(filename);
+	}
 	if (hasVisibleRawControl) rawControlFiles.push(filename);
-	if (hasVisibleRawControl && !/styleInternalFocus|_focusVisible|&:focus-within/u.test(source)) {
+	if (hasVisibleRawControl && !focusContract) {
 		fail(`${filename} has a visible raw input without a focus contract.`);
 	}
 	const eventKeyBranches = [...source.matchAll(/(?:if|else if)\s*\(event\.key\b/gu)].length;
@@ -263,7 +1048,7 @@ for (const path of componentFiles) {
 	)?.[1];
 	if (id) metadata.push({ id, source: filename });
 	else internalComponents.push(filename);
-	if (/transition(?:Property|Duration)|transition:/u.test(source)) {
+	if (hasActiveTransition(source)) {
 		transitionFiles.push(filename);
 		if (!/\bmotion\b/u.test(source))
 			fail(`${filename} defines a transition without a motion contract.`);
@@ -279,8 +1064,20 @@ if (new Set(metadata.map(({ id }) => id)).size !== metadata.length) {
 	fail('ZUI component metadata ids must be globally unique.');
 }
 const expectedInternal = [
+	// Explicitly reviewed owner helpers, not a blanket exemption for missing metadata.
+	'ui/zui/src/components/compound/navigation-menu/NavigationInlinePanel.svelte',
+	'ui/zui/src/components/compound/navigation-menu/NavigationList.svelte',
+	'ui/zui/src/components/compound/navigation-menu/NavigationNode.svelte',
+	'ui/zui/src/components/compound/navigation-menu/NavigationRow.svelte',
+	'ui/zui/src/components/compound/sortable/SortableItem.svelte',
+	'ui/zui/src/components/compound/sortable/SortableRow.svelte',
 	'ui/zui/src/components/feedback/QueuedToast.svelte',
+	'ui/zui/src/components/gene/CopyStatusIcon.svelte',
 	'ui/zui/src/components/input/CascaderColumn.svelte',
+	'ui/zui/src/components/input/DateTimePickerPanel.svelte',
+	'ui/zui/src/components/input/PickerInlineSurface.svelte',
+	'ui/zui/src/components/input/TimePickerColumn.svelte',
+	'ui/zui/src/components/input/TimePickerPanel.svelte',
 	'ui/zui/src/components/input/TransferPane.svelte',
 	'ui/zui/src/components/input/ZMentionEditor.svelte'
 ];
@@ -328,10 +1125,8 @@ const formSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZForm.svelte'),
 	'utf8'
 );
-const inputSource = await readFile(
-	resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte'),
-	'utf8'
-);
+const inputPath = resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte');
+const inputSource = await readFile(inputPath, 'utf8');
 const textareaSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTextarea.svelte'),
 	'utf8'
@@ -392,17 +1187,26 @@ const cascaderColumnSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/CascaderColumn.svelte'),
 	'utf8'
 );
-if (!inputSource.includes('s.boxSizing.borderBox')) {
+if (
+	!(await hasImportedBorderBoxRecipe(
+		inputSource,
+		inputPath,
+		'ui/zui/src/components/input/ZInput.svelte'
+	))
+) {
 	fail(
 		'ZInput must preserve border-box sizing so width and inline-size include its padding and border.'
 	);
 }
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
-	!buttonSource.includes("'aria-busy': ariaBusy") ||
-	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
-	!formSource.includes("'aria-busy': ariaBusy") ||
-	!formSource.includes('aria-busy={validating ? true : ariaBusy}')
+	!hasAriaBusyFallback(buttonSource, 'ui/zui/src/components/gene/ZButton.svelte', 'button', [
+		'loading'
+	]) ||
+	!hasAriaBusyFallback(formSource, 'ui/zui/src/components/input/ZForm.svelte', 'form', [
+		'validating',
+		'submitting'
+	])
 ) {
 	fail('ZButton and ZForm must preserve native aria-busy unless internal state owns it.');
 }
@@ -515,17 +1319,14 @@ if (
 	fail('ZPinInput must preserve its explicit navigation and deletion key switch.');
 }
 if (
-	![dateFieldSource, timeFieldSource].every((source) => {
-		const normalized = source.replace(/\r\n?/gu, '\n');
-		return (
-			normalized.includes(
-				"const intent = navigationIntent(event.key, 'horizontal', zui.direction)"
-			) &&
-			normalized.includes('const target = moveIndex(') &&
-			normalized.includes('intent, false)') &&
-			normalized.includes("case 'ArrowUp':\n\t\t\tcase 'ArrowDown':")
-		);
-	})
+	!hasOwnerRealmHorizontalNavigation(
+		dateFieldSource,
+		'ui/zui/src/components/input/ZDateField.svelte'
+	) ||
+	!hasOwnerRealmHorizontalNavigation(
+		timeFieldSource,
+		'ui/zui/src/components/input/ZTimeField.svelte'
+	)
 ) {
 	fail('ZDateField and ZTimeField must share non-looping horizontal segment navigation.');
 }
@@ -629,7 +1430,6 @@ if (!workspaceZuiEntrypoints.every((entrypoint) => optimizeExclude.includes(`'${
 }
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
-const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
 let docsRawInteractiveElements = 0;
 const docsViewComponents = new Map();
 for (const path of docsSvelteFiles) {
@@ -651,8 +1451,7 @@ for (const path of docsSvelteFiles) {
 	}
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
-	if (forbiddenGlyph.test(source))
-		fail(`${filename} contains a character UI icon instead of Lucide.`);
+	auditCharacterIcons(source, filename);
 	if (/<h[1-6]\b/u.test(source))
 		fail(`${filename} hand-builds a heading instead of dogfooding ZHeading.`);
 	for (const link of source.matchAll(/<ZLink\b[\s\S]*?>/gu)) {
@@ -670,7 +1469,17 @@ for (const path of docsSvelteFiles) {
 }
 const docsUiOwnership = [
 	['DemoBlock', ['<ZCard', '<ZAccordion', '<ZCode', 'copyable']],
-	['ApiTable', ['<ZTable', 'scrollLabelledBy', 'scrollDescribedBy']],
+	[
+		'ApiTable',
+		[
+			'<ZTable',
+			'caption=',
+			'captionHidden',
+			'scroll="none"',
+			'aria-describedby=',
+			'data-api-layout="stack"'
+		]
+	],
 	['AppSidebar', ['<ZLink', 'appearance="navigation"', 'aria-current']],
 	['HomePage', ['<ZCard', '<ZStatistic']],
 	['ThemeLabPage', ['<ZCard']]
@@ -792,11 +1601,7 @@ if (missingSearchContracts.length > 0) {
 }
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
-	if (forbiddenGlyph.test(source)) {
-		fail(
-			`${portable(relative(workspaceRoot, path))} contains a character UI icon instead of Lucide.`
-		);
-	}
+	auditCharacterIcons(source, portable(relative(workspaceRoot, path)));
 }
 
 const svgCandidates = [

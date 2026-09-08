@@ -105,7 +105,7 @@
 </ZProvider>
 
 <section data-testid="menubar-sizes">
-	{#each sizes as size}
+	{#each sizes as size (size)}
 		<ZMenubar aria-label={`Menubar ${size}`} {size}>
 			<ZMenubarMenu value={size}>
 				<ZMenubarTrigger data-testid={`menubar-size-${size}`}>{size}</ZMenubarTrigger>

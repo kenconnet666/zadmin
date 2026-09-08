@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		ZButton,
 		ZMenuItem,
 		ZMenubar,
 		ZMenubarContent,
@@ -28,6 +29,8 @@
 			</ZMenubarContent>
 		</ZMenubarMenu>
 	</ZMenubar>
-	<button type="button" onclick={() => (cancel = !cancel)}>cancel={cancel}</button>
+	<ZButton type="button" variant="outline" onclick={() => (cancel = !cancel)}
+		>cancel={cancel}</ZButton
+	>
 	<ZText tone="muted">{output}；取消action会保留菜单与焦点。</ZText>
 </ZStack>

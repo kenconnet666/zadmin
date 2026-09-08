@@ -3,7 +3,7 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 1070,
+		"files": 1072,
 		"registeredProperties": 166,
 		"themeGroups": 18,
 		"themeTokens": 185,
@@ -3922,21 +3922,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 111,
+			"line": 112,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 112,
+			"line": 113,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 113,
+			"line": 114,
 			"property": "maxWidth",
 			"method": "percent",
 			"expression": "s.maxWidth.percent(100)",
@@ -3944,7 +3944,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 114,
+			"line": 115,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -3952,21 +3952,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 118,
+			"line": 119,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.row",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 120,
+			"line": 121,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 121,
+			"line": 122,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
@@ -10987,63 +10987,63 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 78,
+			"line": 80,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 79,
+			"line": 81,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 80,
+			"line": 82,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 86,
+			"line": 88,
 			"property": "display",
 			"expression": "s.display.grid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 87,
+			"line": 89,
 			"property": "gap",
 			"expression": "s.gap._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 93,
+			"line": 95,
 			"property": "color",
 			"expression": "s.color._danger",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 94,
+			"line": 96,
 			"property": "marginTop",
 			"expression": "s.marginTop._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 100,
+			"line": 102,
 			"property": "position",
 			"expression": "s.position.sticky",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 101,
+			"line": 103,
 			"property": "insetBlockEnd",
 			"method": "px",
 			"expression": "s.insetBlockEnd.px(0)",
@@ -11051,70 +11051,70 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 102,
+			"line": 104,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._canvas",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 103,
+			"line": 105,
 			"property": "borderTopColor",
 			"expression": "s.borderTopColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 104,
+			"line": 106,
 			"property": "borderTopStyle",
 			"expression": "s.borderTopStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 105,
+			"line": 107,
 			"property": "borderTopWidth",
 			"expression": "s.borderTopWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 106,
+			"line": 108,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 107,
+			"line": 109,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 108,
+			"line": 110,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.end",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 109,
+			"line": 111,
 			"property": "marginTop",
 			"expression": "s.marginTop._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 110,
+			"line": 112,
 			"property": "paddingTop",
 			"expression": "s.paddingTop._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 229,
+			"line": 231,
 			"property": "width",
 			"method": "raw",
 			"expression": "s.width.raw(`calc(${height} * 15)`)",
@@ -11122,14 +11122,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 230,
+			"line": 232,
 			"property": "maxWidth",
 			"expression": "s.maxWidth._full",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 231,
+			"line": 233,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw(`repeat(auto-fit, minmax(min(100%, calc(${height} * 7)), 1fr))`)",
@@ -11393,140 +11393,140 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 52,
+			"line": 53,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 53,
+			"line": 54,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 54,
+			"line": 55,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 55,
+			"line": 56,
 			"property": "marginBottom",
 			"expression": "s.marginBottom._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 61,
+			"line": 62,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 62,
+			"line": 63,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 63,
+			"line": 64,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 69,
+			"line": 70,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 70,
+			"line": 71,
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 71,
+			"line": 72,
 			"property": "textAlign",
 			"expression": "s.textAlign.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 77,
+			"line": 78,
 			"property": "color",
 			"expression": "s.color._danger",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 78,
+			"line": 79,
 			"property": "marginTop",
 			"expression": "s.marginTop._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 84,
+			"line": 85,
 			"property": "borderTopColor",
 			"expression": "s.borderTopColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 85,
+			"line": 86,
 			"property": "borderTopStyle",
 			"expression": "s.borderTopStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 86,
+			"line": 87,
 			"property": "borderTopWidth",
 			"expression": "s.borderTopWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 87,
+			"line": 88,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 88,
+			"line": 89,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 89,
+			"line": 90,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.end",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 90,
+			"line": 91,
 			"property": "marginTop",
 			"expression": "s.marginTop._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 91,
+			"line": 92,
 			"property": "paddingTop",
 			"expression": "s.paddingTop._large",
 			"kind": "theme-accessor"
@@ -20070,21 +20070,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 230,
+			"line": 231,
 			"property": "display",
 			"expression": "s.display.grid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 231,
+			"line": 232,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 232,
+			"line": 233,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -20092,42 +20092,42 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 233,
+			"line": 234,
 			"property": "maxWidth",
 			"expression": "s.maxWidth._full",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 240,
+			"line": 241,
 			"property": "borderColor",
 			"expression": "s.borderColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 241,
+			"line": 242,
 			"property": "color",
 			"expression": "s.color._text",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 242,
+			"line": 243,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._mono",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 243,
+			"line": 244,
 			"property": "width",
 			"expression": "s.width._full",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 244,
+			"line": 245,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -20135,63 +20135,63 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 245,
+			"line": 246,
 			"property": "whiteSpace",
 			"expression": "s.whiteSpace.normal",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 246,
+			"line": 247,
 			"property": "overflowWrap",
 			"expression": "s.overflowWrap.anywhere",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 252,
+			"line": 253,
 			"property": "cursor",
 			"expression": "s.cursor.notAllowed",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 253,
+			"line": 254,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 256,
+			"line": 257,
 			"property": "cursor",
 			"expression": "s.cursor.default",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 260,
+			"line": 261,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._primarySubtle",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 261,
+			"line": 262,
 			"property": "borderColor",
 			"expression": "s.borderColor._primary",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 262,
+			"line": 263,
 			"property": "color",
 			"expression": "s.color._primary",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 485,
+			"line": 486,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw(`repeat(${resolvedColumns}, minmax(0, 1fr))`)",
@@ -20214,42 +20214,42 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 441,
+			"line": 443,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 442,
+			"line": 444,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 443,
+			"line": 445,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 444,
+			"line": 446,
 			"property": "marginBottom",
 			"expression": "s.marginBottom._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 450,
+			"line": 452,
 			"property": "color",
 			"expression": "s.color._danger",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 451,
+			"line": 453,
 			"property": "marginBottom",
 			"expression": "s.marginBottom._small",
 			"kind": "theme-accessor"
@@ -20278,21 +20278,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 212,
+			"line": 213,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 213,
+			"line": 214,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 214,
+			"line": 215,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -20300,7 +20300,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 215,
+			"line": 216,
 			"property": "maxInlineSize",
 			"method": "percent",
 			"expression": "s.maxInlineSize.percent(100)",
@@ -20308,21 +20308,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 216,
+			"line": 217,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 220,
+			"line": 221,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.row",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 221,
+			"line": 222,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
@@ -21619,14 +21619,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 490,
+			"line": 491,
 			"property": "columnGap",
 			"expression": "s.columnGap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 491,
+			"line": 492,
 			"property": "rowGap",
 			"expression": "s.rowGap._small",
 			"kind": "theme-accessor"
@@ -22831,7 +22831,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 211,
+			"line": 212,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -22839,7 +22839,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 212,
+			"line": 213,
 			"property": "maxInlineSize",
 			"method": "percent",
 			"expression": "s.maxInlineSize.percent(100)",
@@ -22847,28 +22847,28 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 215,
+			"line": 216,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 216,
+			"line": 217,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 217,
+			"line": 218,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 218,
+			"line": 219,
 			"property": "padding",
 			"method": "px",
 			"expression": "s.padding.px(0)",
@@ -22876,7 +22876,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 219,
+			"line": 220,
 			"property": "margin",
 			"method": "px",
 			"expression": "s.margin.px(0)",
@@ -22884,14 +22884,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 220,
+			"line": 221,
 			"property": "listStyleType",
 			"expression": "s.listStyleType.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 221,
+			"line": 222,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -22899,21 +22899,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 223,
+			"line": 224,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 224,
+			"line": 225,
 			"property": "paddingInlineStart",
 			"expression": "s.paddingInlineStart._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 228,
+			"line": 229,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -22921,7 +22921,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 229,
+			"line": 230,
 			"property": "maxInlineSize",
 			"method": "percent",
 			"expression": "s.maxInlineSize.percent(100)",
@@ -22929,28 +22929,28 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 230,
+			"line": 231,
 			"property": "overflowWrap",
 			"expression": "s.overflowWrap.anywhere",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 237,
+			"line": 238,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.row",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 238,
+			"line": 239,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 239,
+			"line": 240,
 			"property": "alignItems",
 			"expression": "s.alignItems.start",
 			"kind": "system-keyword"
@@ -35684,67 +35684,67 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 80,
+			"line": 82,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 87,
+			"line": 89,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 93,
+			"line": 95,
 			"token": "color.danger",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 94,
+			"line": 96,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 102,
+			"line": 104,
 			"token": "color.canvas",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 103,
+			"line": 105,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 105,
+			"line": 107,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 107,
+			"line": 109,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 109,
+			"line": 111,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 110,
+			"line": 112,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/DateTimePickerPanel.svelte",
-			"line": 230,
+			"line": 232,
 			"token": "size.full",
 			"via": "icss-accessor"
 		},
@@ -35876,73 +35876,73 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 54,
+			"line": 55,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 55,
+			"line": 56,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 63,
+			"line": 64,
 			"token": "space.small",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 69,
-			"token": "color.textMuted",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
 			"line": 70,
-			"token": "space.large",
+			"token": "color.textMuted",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 77,
-			"token": "color.danger",
+			"line": 71,
+			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
 			"line": 78,
+			"token": "color.danger",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
+			"line": 79,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 84,
+			"line": 85,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 86,
+			"line": 87,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 88,
+			"line": 89,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 90,
+			"line": 91,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TimePickerPanel.svelte",
-			"line": 91,
+			"line": 92,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
@@ -40118,61 +40118,61 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 231,
+			"line": 232,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 233,
+			"line": 234,
 			"token": "size.full",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 240,
-			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
 			"line": 241,
-			"token": "color.text",
+			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
 			"line": 242,
-			"token": "fontFamily.mono",
+			"token": "color.text",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
 			"line": 243,
+			"token": "fontFamily.mono",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
+			"line": 244,
 			"token": "size.full",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 253,
+			"line": 254,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 260,
+			"line": 261,
 			"token": "color.primarySubtle",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 261,
+			"line": 262,
 			"token": "color.primary",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 262,
+			"line": 263,
 			"token": "color.primary",
 			"via": "icss-accessor"
 		},
@@ -40184,25 +40184,25 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 443,
+			"line": 445,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 444,
+			"line": 446,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 450,
+			"line": 452,
 			"token": "color.danger",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeRangePicker.svelte",
-			"line": 451,
+			"line": 453,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
@@ -40214,7 +40214,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 213,
+			"line": 214,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
@@ -40544,13 +40544,13 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 490,
+			"line": 491,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 491,
+			"line": 492,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
@@ -40706,7 +40706,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1092,
+			"line": 1098,
 			"token": "borderWidth.hairline",
 			"via": "direct-theme-read"
 		},
@@ -40718,13 +40718,13 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 217,
+			"line": 218,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 224,
+			"line": 225,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
@@ -44006,7 +44006,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte",
-			"line": 722
+			"line": 721
 		},
 		{
 			"path": "ui/zui/src/components/compound/combobox/ZComboboxContent.svelte",
@@ -44058,7 +44058,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
-			"line": 480
+			"line": 482
 		},
 		{
 			"path": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
@@ -44070,7 +44070,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 914
+			"line": 915
 		},
 		{
 			"path": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
@@ -44118,7 +44118,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
-			"line": 516
+			"line": 518
 		},
 		{
 			"path": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
@@ -44246,7 +44246,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZTimeValue.svelte",
-			"line": 203
+			"line": 204
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZTimeline.svelte",
@@ -44390,7 +44390,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZForm.svelte",
-			"line": 1296
+			"line": 1298
 		},
 		{
 			"path": "ui/zui/src/components/input/ZInput.svelte",
@@ -44426,35 +44426,35 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
-			"line": 618
+			"line": 619
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
-			"line": 664
+			"line": 666
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
-			"line": 680
+			"line": 682
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
-			"line": 701
+			"line": 703
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
-			"line": 740
+			"line": 742
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRating.svelte",
-			"line": 640
+			"line": 662
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRating.svelte",
-			"line": 671
+			"line": 693
 		},
 		{
 			"path": "ui/zui/src/components/input/ZRating.svelte",
-			"line": 683
+			"line": 705
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
@@ -44466,15 +44466,15 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSlider.svelte",
-			"line": 721
+			"line": 722
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSlider.svelte",
-			"line": 732
+			"line": 733
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSlider.svelte",
-			"line": 741
+			"line": 742
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSwitch.svelte",
@@ -44494,11 +44494,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
-			"line": 556
+			"line": 557
 		},
 		{
 			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
-			"line": 555
+			"line": 556
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
@@ -44506,15 +44506,15 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAffix.svelte",
-			"line": 400
+			"line": 401
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAffix.svelte",
-			"line": 412
+			"line": 413
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 443
+			"line": 444
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAspectRatio.svelte",
@@ -44538,15 +44538,15 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 510
+			"line": 511
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZResizable.svelte",
-			"line": 1025
+			"line": 1026
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
-			"line": 329
+			"line": 330
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
@@ -44558,11 +44558,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1109
+			"line": 1115
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1132
+			"line": 1138
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
@@ -44570,11 +44570,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
-			"line": 584
+			"line": 586
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
-			"line": 337
+			"line": 338
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZCommand.svelte",
@@ -44602,7 +44602,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZSteps.svelte",
-			"line": 585
+			"line": 586
 		},
 		{
 			"path": "ui/zui/src/components/overlay/ZTour.svelte",

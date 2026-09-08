@@ -3,7 +3,6 @@
 	import { tick } from 'svelte';
 	import ZForm, {
 		type FormState,
-		type FormSubmitDetail,
 		type FormValidationResult,
 		type ZFormController
 	} from '../src/components/input/ZForm.svelte';
@@ -223,7 +222,7 @@
 	}}
 	onStateChange={(state) => (formStates = [...formStates, state])}
 	onSubmitError={() => (submitErrors += 1)}
-	onValidSubmit={(_detail: FormSubmitDetail<Values>) => {
+	onValidSubmit={() => {
 		submitCalls += 1;
 		return new Promise<void>((resolve, reject) => {
 			pendingSubmit = { reject, resolve };

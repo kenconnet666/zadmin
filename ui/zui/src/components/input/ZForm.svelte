@@ -490,6 +490,7 @@
 	const nativeBaseline = new NativeFormBaseline();
 	let nativeValueEpoch = 0;
 	const valueControls = new FormValueControls();
+	/* eslint-disable svelte/prefer-svelte-reactivity -- These collections are validation/list registration, transient move, dirty-work, and subscriber bookkeeping. Form runes, FormRegistry.#states, and explicit publication functions own observable state. */
 	const validatedControls = new Set<string>();
 	let draftRevision = $state(0);
 	const lists = new Map<symbol, FormListRegistration>();
@@ -503,6 +504,7 @@
 	let submissionId = 0;
 	let pendingReset: Event | undefined;
 	const stateListeners = new Set<(state: FormState) => void>();
+	/* eslint-enable svelte/prefer-svelte-reactivity */
 	let errorLayers = createFormErrorLayers({ server: untrack(() => errors) });
 	let publishedErrors = untrack(() => errors);
 	const registry = new FormRegistry(

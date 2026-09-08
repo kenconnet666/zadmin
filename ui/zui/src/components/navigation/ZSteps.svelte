@@ -480,6 +480,7 @@
 			throw new TypeError('ZSteps size must be one of the five control sizes.');
 		if (orientation !== 'horizontal' && orientation !== 'vertical')
 			throw new TypeError('ZSteps orientation must be horizontal or vertical.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Rebuilt for each validated item projection.
 		const keys = new Set<TKey>();
 		return items.map((entry, index) => {
 			assertKey(entry.key);

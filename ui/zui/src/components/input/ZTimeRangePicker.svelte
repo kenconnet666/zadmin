@@ -14,11 +14,13 @@
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
+	/* eslint-disable no-import-assign -- Type-only re-exports have no runtime writes; the Svelte scope analyzer marks their references as assignments. */
 	export type {
 		TimeRangeMode,
 		TimeRangePickerPreset,
 		TimeRangeValue
 	} from '../../runtime/time-range.js';
+	/* eslint-enable no-import-assign */
 	export type TimeRangePickerGranularity = TimeFieldGranularity;
 
 	export interface ZTimeRangePickerProps extends Omit<
@@ -475,7 +477,6 @@
 	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
 		initialTimePickerReference,
-		sameTimeValue,
 		type TimePickerConstraints
 	} from '../../runtime/time-picker.js';
 	import {
@@ -485,7 +486,6 @@
 		resolveTimeRangePreset,
 		sameTimeRangeValue,
 		timeRangeEndpointAvailable,
-		timeRangeValue,
 		validateTimeRangeValue,
 		type TimeRangeConstraints
 	} from '../../runtime/time-range.js';

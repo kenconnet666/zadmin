@@ -13,6 +13,7 @@
 	} from '../gene/typography.js';
 	import type { TimeValueGranularity } from '../../runtime/time-value.js';
 
+	// eslint-disable-next-line no-import-assign -- Type-only re-export has no runtime assignment.
 	export type { TimeValueGranularity } from '../../runtime/time-value.js';
 	export type TimeValueLineHeight = TypographyLineHeight;
 	export type TimeValueSize = TypographySize;

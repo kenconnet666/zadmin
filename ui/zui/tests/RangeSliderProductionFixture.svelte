@@ -99,7 +99,7 @@
 	thumbLabels={['Vertical lower', 'Vertical upper']}
 />
 
-{#each ['xsmall', 'small', 'medium', 'large', 'xlarge'] as sliderSize}
+{#each ['xsmall', 'small', 'medium', 'large', 'xlarge'] as sliderSize (sliderSize)}
 	<ZRangeSlider
 		data-testid={`range-${sliderSize}`}
 		defaultValue={[30, 70]}

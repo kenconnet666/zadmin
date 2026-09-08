@@ -197,10 +197,8 @@
 		onValueChange={() => (readonlyChanges += 1)}
 		readonly
 	>
-		{#snippet children()}
-			<option value="fixed">Fixed</option>
-			<option value="mutable">Mutable</option>
-		{/snippet}
+		<option value="fixed">Fixed</option>
+		<option value="mutable">Mutable</option>
 	</ZNativeSelect>
 </form>
 <output data-testid="native-select-readonly-output">{readonlyChoice}:{readonlyChanges}</output>
@@ -223,12 +221,10 @@
 		data-testid="native-select-children"
 		name="children-choice"
 	>
-		{#snippet children()}
-			<option value="first">First native default</option>
-			<optgroup label="More native choices">
-				<option value="second">Second</option>
-			</optgroup>
-		{/snippet}
+		<option value="first">First native default</option>
+		<optgroup label="More native choices">
+			<option value="second">Second</option>
+		</optgroup>
 	</ZNativeSelect>
 </form>
 <output data-testid="native-select-children-output"

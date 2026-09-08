@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZPasswordInput, ZText } from '@zadmin/zui';
+	import { ZButton, ZPasswordInput, ZText } from '@zadmin/zui';
 	let form = $state<HTMLFormElement | null>(null);
 	let value = $state('initial-secret');
 	let visible = $state(true);
@@ -18,7 +18,7 @@
 		defaultValue="initial-secret"
 		defaultVisible={true}
 	/>
-	<button type="button" onclick={inspect}>读取FormData</button>
-	<button type="reset">Reset</button>
+	<ZButton type="button" variant="outline" onclick={inspect}>读取FormData</ZButton>
+	<ZButton type="reset" variant="ghost">Reset</ZButton>
 </form>
 <ZText>FormData password: {output || '—'}；visible={visible ? 'true' : 'false'}</ZText>

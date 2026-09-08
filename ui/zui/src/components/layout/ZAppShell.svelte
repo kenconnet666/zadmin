@@ -435,7 +435,8 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_tabindex -- the active scroll owner is a named keyboard region -->
+<!-- The active scroll owner is a named keyboard region. -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	{...rest}
 	bind:this={ref}
@@ -458,7 +459,7 @@
 			{@render navbar()}
 		</nav>
 	{/if}
-	<!-- svelte-ignore a11y_no_noninteractive_tabindex -- the main scroll owner is keyboard accessible -->
+	<!-- The dynamic main scroll owner remains keyboard accessible. -->
 	<svelte:element
 		this={resolvedMainAs}
 		data-region="main"
