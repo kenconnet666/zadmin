@@ -388,5 +388,6 @@ P10后续收口：
 - 最终定向Chromium14项通过；原有8项保留，新增4项pointer身份/终态回归和2项真实鼠标LTR/RTL。浏览器事件派发不是物理多触点设备验收，其他引擎和完整coverage仍交新SHA CI。首轮失败记录、类型/资源审计/生成收尾结果见`.codex/p16-datatable-recheck-final.json`与交接。
 - 04:10主周额度剩33%，仅完成此批已确认问题的必要收尾，不派新代理或开启DatePicker/其他组件族修复；保留新CI与WebKit失败入口，30%停止线不变。
 - 04:15本地收尾全部通过：14项Chromium、ZUI/Docs类型0 errors/0 warnings、生成/token同步、lifecycle、lint/format和audit:system；其余验证交新SHA CI，不以旧轮绿任务代替本批完整验收。
+- P16已推送`f0e71706e5eda473682c216834c3c777108eba84`，[CI 34273892722](https://github.com/kenconnet666/zadmin/actions/runs/34273892722) 的Chromium主套件323文件2133项与独立触屏17项通过；DataTable14项实际执行通过。Coverage同样全过测试，但global1560/456/2921/3734、components1290/374/2432/3094仍超原门槛，其余任务尚需终态。只补交接证据，不再开启新组件族；P15 WebKit trace的点击拦截/坐标变化线索已保留在交接，未冒称根因修复。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
