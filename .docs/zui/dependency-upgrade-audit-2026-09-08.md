@@ -213,7 +213,9 @@ This document is an audit snapshot and upgrade planning input; it does not mean 
 
 ### 下一批分组
 
-1. 日期/编译与一般工具：`@internationalized/date`、`magic-string`、`@types/semver`、Changesets等按实际消费点分别验收；AWS SDK client/presigner一起升级。
+P06先行的日期/编译器补丁组已安装：`@internationalized/date`3.12.4、`magic-string`1.2.3，catalog最低支持patch和lock同步更新。官方[MagicString变更记录](https://github.com/Rich-Harris/magic-string/blob/master/CHANGELOG.md)列出了1.2.3的替换/索引等修复；日期包以[官方发布包元数据](https://registry.npmjs.org/@internationalized%2fdate/3.12.4)核对依赖/入口。现有六文件50项编译器与日期unit通过，ZUI/Docs类型通过；不以semver兼容代替完整CI。第三方仍锁定的MagicString 1.2.2 transitive副本未用全局override强改。
+
+1. 日期/编译补丁组已先行，余下`@types/semver`、Changesets等按实际消费点分别验收；AWS SDK client/presigner一起升级。
 2. Svelte运行时与测试渲染器：先检查Miniapp精确peer及特殊compiler来源，保留平台边界，不只改普通catalog。
 3. Vitest 5与Playwright：按[官方迁移说明](https://vitest.dev/guide/migration/)核实配置API、sequential、测试产物路径及自定义reporter/command；按实际import owner处理async render，不机械修改所有同名函数。不得把升级当作已证明的浏览器断连修复。
 4. pnpm 12独立迁移；TypeScript 7等待Kit、svelte-check和typescript-eslint等真实支持。`@types/node`先对齐承诺的运行时能力与CI基线，不能仅因registry latest属于26就无条件使用Node 26 API。

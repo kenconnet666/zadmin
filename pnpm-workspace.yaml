@@ -15,7 +15,7 @@ catalog:
   '@eslint/js': ^10.0.1
   '@floating-ui/dom': ^1.8.0
   '@fontsource/fira-mono': ^5.2.7
-  '@internationalized/date': ^3.12.3
+  '@internationalized/date': ^3.12.4
   # 1.42.0 publishes unresolved @lucide/shared/types references; see .docs/zui/usage.md.
   '@lucide/svelte': '>=1.37.0 <1.42.0'
   '@neoconfetti/svelte': ^2.2.2
@@ -39,7 +39,7 @@ catalog:
   estree-walker: ^3.0.3
   fast-check: ^4.9.0
   globals: ^17.11.0
-  magic-string: ^1.2.2
+  magic-string: ^1.2.3
   playwright: ^1.62.1
   postgres: ^3.4.9
   prettier: ^3.9.6

@@ -134,8 +134,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P02  | 已提交，CI发现后续阻断 | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
 | P03  | 已提交，CI发现后续阻断 | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
 | P04  | 已提交，CI发现后续阻断 | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
-| P05  | 已提交，待组合SHA CI   | `1d7bf25`修复Transfer声明与同步终态、排除损坏Lucide版本，补TimeField边界及失败时coverage诊断；随后升级健康Lucide并同步依赖审计                   |
-| P06+ | 待执行                 | 较新受支持依赖按族升级；继续消除coverage预算缺口与浏览器中断，再推进G2–G4与D；E19B跨栏拖放等接受能力不删减                                       |
+| P05  | 已提交，CI发现后续阻断 | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
+| P06  | 本地收口，待新SHA CI   | TimeField输入/焦点、NavigationMenu取消、异步render测试所有权、日期/编译器补丁依赖与TimeField Docs同步                                            |
+| P07+ | 待执行                 | 按精确CI继续处理阻断，再推进其余依赖组、一致性、G2–G4与D；E19B等接受能力不删减                                                                   |
 
 ### P01 集成记录
 
@@ -225,5 +226,20 @@ Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和�
 - 本地收口：ZUI/Docs类型均0 errors/0 warnings，Docs unit六文件35项、Transfer SSR五项、TimeField最终两项Chromium通过；artifacts/token、修改文件格式与ESLint、完整audit:system通过。TimeField reset等待真实变化的分钟值恢复，避免只检查未变化的小时。日志见`.codex/production-p05-validation.json`及各项log；最后CI自测接线另通过cleanup self-test、release:coherence和格式检查。
 - 依赖先行批已把workspace Lucide锁定版本从1.37.0提升到已验证的1.41.0，仅该包lock变化并移除旧发布等待例外。在线frozen install通过供应链策略，升级后ZUI与Docs类型0 errors/0 warnings、Transfer八项Chromium通过，日志见`.codex/production-p05-lucide.json`。未把首次缺少本机元数据的offline失败当作通过。
 - 依赖审计覆盖53项普通catalog、2项named catalog、19条独立外部声明/peer，以及Windows两个NuGet引用；详细版本、来源、限制及下一组动作见[清单](./dependency-upgrade-audit-2026-09-08.md)。TypeScript 7当前不满足Kit和typescript-eslint peer；Vitest 5与pnpm 12作为独立迁移，不与本批行为修复混同验收。Vitest迁移先核实browser API配置、artifacts路径、sequential接口和实际render调用所有权；静态命中未await的数量不是已验证缺陷数量，也不能把升级推定成断连修复。
+
+### P06 组件边界与测试基础设施
+
+**上一批精确CI。** [34217518592](https://github.com/kenconnet666/zadmin/actions/runs/34217518592)对应`b1631543ebf7fe78614c27d1124f18d3ce50b095`，最终failure。Static、workspace构建、外部包、Windows C# WebView2、Drizzle、Docs Chromium/Firefox通过。Coverage 317文件/2072项全部通过，但未覆盖lines1589/functions455/statements2947/branches3779仍超过既有预算；full JSON已取得，不能算Coverage通过。Workspace在462/647文件、3210项通过/2跳过后因`choice-virtualization.browser.spec.ts`的tester连接关闭中止，不能把剩余文件算通过。Docs WebKit为221通过/1失败，DateRangePicker首击后仍是旧完整range，没有证据证明是重复日期或动画遮挡。
+
+- TimeField真实修复：IME期间不提前提交/清空canonical，不接管方向键；compositionend后只在仍拥有焦点时前进，并复用ShadowRoot/realm-aware的`getActiveElement`。空composition、尾随input不重复通知、blur到外部后不抢焦点、ShadowRoot内正常前进都有回归。受约束的非法两位草稿不移焦，Escape恢复真实input文本与canonical/FormData。修前已复现提前清空和残留非法46；最终组件测试6项通过。
+- NavigationMenu真实修复：快速single-sibling替代或全局disable发生在panel挂载前时，旧keyboard edge不得遗留。清理逻辑复用`isOpen`，同时考虑实际tree、expanded、ancestor、disabled和hidden，而非只看数组包含key。两种路径都先证明修前错误聚焦末项，再验证修后默认首项；专用13项Chromium通过。没有扩展非合同submenu delay或增加第二套焦点owner。
+- 测试基础设施：当前已安装的`vitest-browser-svelte@3.0.0`的render已是async，并非等待Vitest 5才需修复。按真实import symbol识别474处standalone Promise，108文件补await、90个it/test/it.each callback补async，保留两个已有Promise chain owner的返回。主代理相对b163独立校验107个纯时序文件的AST去除async/await后完全相同；NavigationMenu与TimeField的新增行为断言单独审阅。未降低断言或容错时间。
+- 持续门禁：browser lifecycle审计用TypeScript checker区分named alias、namespace及字面量成员、`/pure`、shadow和业务/SSR同名函数；识别括号await/return，拒绝standalone/void等不符合调用点所有权约定的写法。return/then仅证明直接owner转交，不声称完整数据流分析；变量转交当前要求改写为直接await/return。guard自测与当前全测试源码审计通过，定向Chromium3项/Firefox6项通过。此项尚不能证明此前CI断连根因已解决。
+- Docs保持现有两个demo ID：模式演示从静态四控件改成单一可操作实例；实际小时、AM/PM、秒段、15分钟/10秒步进与readonly/disabled可观察，正文仅保留canonical值。表单展示enabled/readonly提交与disabled排除，先修改值再reset。最终专用Chromium E2E通过，使用已有5174 dev服务、无webServer配置；生产build/三浏览器仍交新SHA CI。
+- 依赖补丁组：catalog和lock升级`@internationalized/date`3.12.3→3.12.4、`magic-string`1.2.2→1.2.3；未改变Svelte/Vitest/Playwright工具链，未强行重写第三方锁定的transitive依赖。现有编译器、日期/范围、Form值比较六文件50项unit通过；详细实施见[依赖审计](./dependency-upgrade-audit-2026-09-08.md)。
+- 集成中发现Svelte原生oninput推断为Event而非InputEvent，已恢复真实事件签名并以属性存在性判断isComposing，没有cast绕过。最终ZUI、Docs类型均0 errors/0 warnings；artifacts/token、browser lifecycle门禁、Docs unit六文件35项、两组件Chromium19项、全部修改文件Prettier/ESLint及完整audit:system均通过。统一收口记录见`.codex/production-p06-final.json`，先前失败留在`.codex/production-p06-validation.json`，不混为通过。
+- DateRangePicker的CI WebKit首击问题，在当前5174 dev服务使用原测试定向一次通过；本机已是date3.12.4且不是b163生产构建，不能据此认定旧失败flaky或已解决。没有扩大timeout、force click或改断言，保留待新SHA CI验证。
+
+阶段提交：`1cb7356`包含组件行为、专用回归与Docs；`1b3f6fd`包含其余107个纯时序测试文件与持续门禁。后续依赖/记录提交组成完整候选，CI只认最终组合SHA；没有执行npm发布、tag或生产部署。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
