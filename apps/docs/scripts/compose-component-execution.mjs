@@ -140,6 +140,7 @@ function validateVitestReport(report, identity) {
 	validateErrorList(report.unhandledErrors, 'Vitest unhandledErrors');
 
 	const specificationKeys = new Set();
+	const browserSpecificationFiles = new Set();
 	const specifications = array(report.specifications, 'Vitest specifications').map(
 		(specification, index) => {
 			object(specification, `Vitest specifications[${index}]`);
@@ -155,6 +156,11 @@ function validateVitestReport(report, identity) {
 			const key = JSON.stringify(normalized);
 			if (specificationKeys.has(key)) fail(`duplicate Vitest specification ${key}.`);
 			specificationKeys.add(key);
+			if (normalized.pool === 'browser') {
+				if (browserSpecificationFiles.has(normalized.file))
+					fail(`duplicate Vitest browser specification file ${normalized.file}.`);
+				browserSpecificationFiles.add(normalized.file);
+			}
 			return normalized;
 		}
 	);
@@ -172,6 +178,7 @@ function validateVitestReport(report, identity) {
 
 	const summary = Object.fromEntries(statuses.map((status) => [status, 0]));
 	const moduleKeys = new Set();
+	const browserModuleFiles = new Set();
 	const observedSpecificationKeys = new Set();
 	const testKeys = new Set();
 	const modules = array(report.modules, 'Vitest modules').map((module, moduleIndex) => {
@@ -197,7 +204,14 @@ function validateVitestReport(report, identity) {
 				name: string(browser.name, `Vitest browser module ${file} name`),
 				provider: string(browser.provider, `Vitest browser module ${file} provider`)
 			};
-		} else if (module.browser !== null) fail(`Vitest unit module ${file} declares a browser.`);
+			const browserFileKey = JSON.stringify([browser.name, file]);
+			if (browserModuleFiles.has(browserFileKey))
+				fail(`duplicate Vitest browser module file ${file} for ${browser.name}.`);
+			browserModuleFiles.add(browserFileKey);
+		} else {
+			if (pool === 'browser') fail(`Vitest unit module ${file} cannot use the browser pool.`);
+			if (module.browser !== null) fail(`Vitest unit module ${file} declares a browser.`);
+		}
 		const specificationKey = JSON.stringify({ project, pool, file });
 		if (!specificationKeys.has(specificationKey))
 			fail(`Vitest module has no input specification: ${file}.`);
@@ -261,6 +275,10 @@ function validateVitestReport(report, identity) {
 		run.endReason !== 'timeout';
 	return {
 		runner: { name: runner.name, version: runner.version },
+		browserSpecificationFiles: sortedSpecifications
+			.filter(({ pool }) => pool === 'browser')
+			.map(({ file }) => file),
+		unitSpecificationCount: sortedSpecifications.filter(({ pool }) => pool !== 'browser').length,
 		complete,
 		clean:
 			complete &&
@@ -273,6 +291,65 @@ function validateVitestReport(report, identity) {
 			),
 		modules,
 		missingSpecificationCount: specificationKeys.size - observedSpecificationKeys.size
+	};
+}
+
+function mapVitestReportEntries(entries) {
+	const reports = new Map();
+	for (const entry of entries) {
+		if (reports.has(entry.browser))
+			fail(`multiple Vitest ${entry.browser} execution reports were supplied.`);
+		reports.set(entry.browser, entry);
+	}
+	return reports;
+}
+
+function validateVitestReports(reports, identity) {
+	if (!(reports instanceof Map)) fail('Vitest execution reports must be a browser-keyed Map.');
+	const entries = [];
+	for (const browser of requiredBrowsers) {
+		const entry = reports.get(browser);
+		if (!entry) continue;
+		const normalized = validateVitestReport(entry.report, identity);
+		for (const module of normalized.modules)
+			if (module.kind === 'browser' && module.browser?.name !== browser)
+				fail(`Vitest ${browser} report contains a ${module.browser?.name ?? 'unknown'} module.`);
+		if (browser === 'chromium') {
+			if (normalized.unitSpecificationCount === 0)
+				fail('Vitest Chromium report must be the single workspace unit producer.');
+		} else if (normalized.unitSpecificationCount !== 0) {
+			fail(`Vitest ${browser} report must not repeat workspace unit specifications.`);
+		}
+		entries.push({
+			browser,
+			normalized: {
+				...normalized,
+				modules: normalized.modules.map((module) => ({ ...module, report: entry.path }))
+			}
+		});
+	}
+	if (entries.length === 0) return null;
+	const expectedBrowserFiles = JSON.stringify(entries[0].normalized.browserSpecificationFiles);
+	for (const { browser, normalized } of entries.slice(1))
+		if (JSON.stringify(normalized.browserSpecificationFiles) !== expectedBrowserFiles)
+			fail(`Vitest ${browser} browser specification set differs from the other environments.`);
+	const runner = entries[0].normalized.runner;
+	for (const { browser, normalized } of entries.slice(1))
+		if (normalized.runner.name !== runner.name || normalized.runner.version !== runner.version)
+			fail(`Vitest ${browser} runner identity differs from the other environments.`);
+	return {
+		runner,
+		complete:
+			entries.length === requiredBrowsers.length &&
+			entries.every(({ normalized }) => normalized.complete),
+		clean:
+			entries.length === requiredBrowsers.length &&
+			entries.every(({ normalized }) => normalized.clean),
+		modules: entries.flatMap(({ normalized }) => normalized.modules),
+		missingSpecificationCount: entries.reduce(
+			(sum, { normalized }) => sum + normalized.missingSpecificationCount,
+			0
+		)
 	};
 }
 
@@ -407,7 +484,7 @@ function environmentModules(contract, vitest) {
 	};
 }
 
-function evaluateContract(contract, vitest, reportPath) {
+function evaluateContract(contract, vitest) {
 	const { browserContract, expected, modules } = environmentModules(contract, vitest);
 	const observations = [];
 	for (const environment of expected) {
@@ -432,7 +509,7 @@ function evaluateContract(contract, vitest, reportPath) {
 							browser: module.browser,
 							file: module.file,
 							project: module.project,
-							report: reportPath
+							report: module.report
 						}
 					: null
 			});
@@ -459,7 +536,7 @@ function evaluateContract(contract, vitest, reportPath) {
 							fullName: test.fullName,
 							location: test.location,
 							project: module.project,
-							report: reportPath
+							report: module.report
 						}))
 		});
 	}
@@ -529,8 +606,7 @@ export function composeComponentExecution({
 	baseMaturity,
 	inventory,
 	identity,
-	vitestReport,
-	vitestPath,
+	vitestReports,
 	docsReports,
 	reportInputs,
 	gates,
@@ -550,7 +626,7 @@ export function composeComponentExecution({
 		fail('component test inventory does not cover the full base maturity matrix.');
 	const validGates = validateGates(gates);
 	const descriptors = validateInputDescriptors(reportInputs, gatesInput);
-	const normalizedVitest = vitestReport ? validateVitestReport(vitestReport, identity) : null;
+	const normalizedVitest = validateVitestReports(vitestReports, identity);
 	const normalizedDocs = new Map();
 	for (const browser of requiredBrowsers) {
 		const entry = docsReports.get(browser);
@@ -561,6 +637,13 @@ export function composeComponentExecution({
 	const docsGatePassed = validGates['docs-e2e']?.result === 'success';
 	if (workspaceGatePassed && normalizedVitest === null)
 		fail('workspace-tests succeeded but its Vitest execution report is missing.');
+	if (workspaceGatePassed) {
+		const missingVitestBrowsers = requiredBrowsers.filter((browser) => !vitestReports.has(browser));
+		if (missingVitestBrowsers.length > 0)
+			fail(
+				`workspace-tests succeeded but Vitest execution reports are missing for ${missingVitestBrowsers.join(', ')}.`
+			);
+	}
 	if (docsGatePassed) {
 		const missingDocs = requiredBrowsers.filter((browser) => !normalizedDocs.has(browser));
 		if (missingDocs.length > 0)
@@ -574,7 +657,7 @@ export function composeComponentExecution({
 		if (item.id !== base?.id || item.name !== base?.name)
 			fail(`inventory/base component identity differs at index ${index}.`);
 		const contracts = array(item.contracts, `inventory ${item.id} contracts`).map((contract) =>
-			evaluateContract(validateInventoryContract(contract, item.id), normalizedVitest, vitestPath)
+			evaluateContract(validateInventoryContract(contract, item.id), normalizedVitest)
 		);
 		const browserContracts = contracts.filter((contract) => contract.kind === 'browser');
 		const visualContracts = contracts.filter((contract) => contract.kind === 'visual');
@@ -780,18 +863,6 @@ export function createComponentExecutionSelfTestFixture() {
 	const identity = { revision: 'a'.repeat(40), runAttempt: 2, runId: '17' };
 	const browserFile = 'tests/self-test.browser.spec.ts';
 	const ssrFile = 'tests/self-test.spec.ts';
-	const specifications = [
-		...requiredBrowsers.map((browser) => ({
-			project: `browser (${browser})`,
-			pool: 'browser',
-			file: browserFile
-		})),
-		{ project: 'unit', pool: 'forks', file: ssrFile }
-	].sort((left, right) => {
-		const leftKey = `${left.project}\0${left.pool}\0${left.file}`;
-		const rightKey = `${right.project}\0${right.pool}\0${right.file}`;
-		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
-	});
 	const test = (id, fullName, line) => ({
 		attempt: 1,
 		durationMs: 1,
@@ -805,47 +876,73 @@ export function createComponentExecutionSelfTestFixture() {
 		retryCount: 0,
 		status: 'passed'
 	});
-	const modules = requiredBrowsers.map((browser) => ({
-		browser: { name: browser, provider: 'playwright' },
-		durationMs: 1,
-		errors: [],
-		file: browserFile,
-		kind: 'browser',
-		pool: 'browser',
-		project: `browser (${browser})`,
-		status: 'passed',
-		tests: [test(`browser-${browser}`, 'self test > browser contract', 10)]
-	}));
-	modules.push({
-		browser: null,
-		durationMs: 1,
-		errors: [],
-		file: ssrFile,
-		kind: 'unit',
-		pool: 'forks',
-		project: 'unit',
-		status: 'passed',
-		tests: [test('ssr', 'self test > SSR contract', 20)]
-	});
-	const vitestReport = {
-		modules,
-		run: {
-			attempt: identity.runAttempt,
-			endedAt: '2026-09-07T00:00:01.000Z',
-			endReason: 'passed',
-			id: identity.runId,
-			inputHash: sha256(JSON.stringify(specifications)),
-			revision: identity.revision,
-			runner: { name: 'vitest', version: 'self-test' },
-			specificationCount: specifications.length,
-			startedAt: '2026-09-07T00:00:00.000Z'
-		},
-		schemaVersion: 1,
-		specifications,
-		summary: {},
-		unhandledErrors: []
+	const createVitestReport = (browser) => {
+		const specifications = [
+			{ project: `browser (${browser})`, pool: 'browser', file: browserFile },
+			...(browser === 'chromium' ? [{ project: 'unit', pool: 'forks', file: ssrFile }] : [])
+		].sort((left, right) => {
+			const leftKey = `${left.project}\0${left.pool}\0${left.file}`;
+			const rightKey = `${right.project}\0${right.pool}\0${right.file}`;
+			return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+		});
+		const modules = [
+			{
+				browser: { name: browser, provider: 'playwright' },
+				durationMs: 1,
+				errors: [],
+				file: browserFile,
+				kind: 'browser',
+				pool: 'browser',
+				project: `browser (${browser})`,
+				status: 'passed',
+				tests: [test(`browser-${browser}`, 'self test > browser contract', 10)]
+			},
+			...(browser === 'chromium'
+				? [
+						{
+							browser: null,
+							durationMs: 1,
+							errors: [],
+							file: ssrFile,
+							kind: 'unit',
+							pool: 'forks',
+							project: 'unit',
+							status: 'passed',
+							tests: [test('ssr', 'self test > SSR contract', 20)]
+						}
+					]
+				: [])
+		];
+		const report = {
+			modules,
+			run: {
+				attempt: identity.runAttempt,
+				endedAt: '2026-09-07T00:00:01.000Z',
+				endReason: 'passed',
+				id: identity.runId,
+				inputHash: sha256(JSON.stringify(specifications)),
+				revision: identity.revision,
+				runner: { name: 'vitest', version: 'self-test' },
+				specificationCount: specifications.length,
+				startedAt: '2026-09-07T00:00:00.000Z'
+			},
+			schemaVersion: 1,
+			specifications,
+			summary: {},
+			unhandledErrors: []
+		};
+		selfTestSummary(report);
+		return report;
 	};
-	selfTestSummary(vitestReport);
+	const vitestReports = new Map(
+		requiredBrowsers.map((browser) => [
+			browser,
+			{
+				path: `test-results/component-execution/inputs/component-execution-vitest-${browser}.json`,
+				report: createVitestReport(browser)
+			}
+		])
+	);
 	const contracts = [
 		{
 			file: `ui/zui/${browserFile}`,
@@ -918,10 +1015,16 @@ export function createComponentExecutionSelfTestFixture() {
 			{ outputs: {}, result: 'success' }
 		])
 	);
-	const reportInputs = ['vitest', ...requiredBrowsers].map((name) => ({
-		path: `test-results/component-execution/inputs/${name}.json`,
-		sha256: 'b'.repeat(64)
-	}));
+	const reportInputs = [
+		...requiredBrowsers.map((browser) => ({
+			path: `test-results/component-execution/inputs/component-execution-vitest-${browser}.json`,
+			sha256: 'b'.repeat(64)
+		})),
+		...requiredBrowsers.map((browser) => ({
+			path: `test-results/component-execution/inputs/component-execution-docs-${browser}.json`,
+			sha256: 'b'.repeat(64)
+		}))
+	];
 	return {
 		baseMaturity,
 		docsReports: new Map(
@@ -941,8 +1044,7 @@ export function createComponentExecutionSelfTestFixture() {
 			schemaVersion: 1
 		},
 		reportInputs,
-		vitestPath: 'test-results/component-execution/inputs/vitest.json',
-		vitestReport
+		vitestReports
 	};
 }
 
@@ -956,10 +1058,25 @@ function expectSelfTestFailure(action, pattern, label) {
 	throw new Error(`Component execution self-test accepted ${label}.`);
 }
 
+function selfTestVitestReport(fixture, browser = 'chromium') {
+	return fixture.vitestReports.get(browser).report;
+}
+
+function refreshSelfTestVitestReport(report) {
+	report.specifications.sort((left, right) => {
+		const leftKey = `${left.project}\0${left.pool}\0${left.file}`;
+		const rightKey = `${right.project}\0${right.pool}\0${right.file}`;
+		return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+	});
+	report.run.specificationCount = report.specifications.length;
+	report.run.inputHash = sha256(JSON.stringify(report.specifications));
+	selfTestSummary(report);
+}
+
 function selfTestComponentResult(mutate) {
 	const fixture = createComponentExecutionSelfTestFixture();
 	mutate(fixture);
-	selfTestSummary(fixture.vitestReport);
+	for (const { report } of fixture.vitestReports.values()) selfTestSummary(report);
 	return composeComponentExecution(fixture).components[0];
 }
 
@@ -972,6 +1089,22 @@ export function runComponentExecutionSelfTest() {
 		clean.components[0]?.executionStages.ProductionVerified !== true
 	)
 		throw new Error('Component execution clean self-test fixture did not become Verified.');
+	const browserContract = clean.components[0].executionResults.BrowserBehaviorVerified.contracts[0];
+	for (const observation of browserContract.observations) {
+		const report = observation.evidence?.[0]?.report;
+		if (!report?.endsWith(`component-execution-vitest-${observation.environment}.json`))
+			throw new Error(
+				`Component execution self-test lost the ${observation.environment} input path.`
+			);
+	}
+	const ssrContract = clean.components[0].executionResults.ProductionVerified.contracts.find(
+		(contract) => contract.kind === 'ssr'
+	);
+	if (
+		ssrContract?.observations[0]?.evidence?.[0]?.report !==
+		'test-results/component-execution/inputs/component-execution-vitest-chromium.json'
+	)
+		throw new Error('Component execution self-test did not bind unit evidence to Chromium.');
 	let negativeCases = 0;
 	const reject = (mutate, pattern, label) => {
 		const fixture = createComponentExecutionSelfTestFixture();
@@ -986,38 +1119,41 @@ export function runComponentExecutionSelfTest() {
 		negativeCases += 1;
 	};
 	reject(
-		(fixture) => (fixture.vitestReport.run.revision = 'd'.repeat(40)),
+		(fixture) => (selfTestVitestReport(fixture).run.revision = 'd'.repeat(40)),
 		/revision/u,
 		'bad revision'
 	);
 	reject(
-		(fixture) => (fixture.vitestReport.run.inputHash = '0'.repeat(64)),
+		(fixture) => (selfTestVitestReport(fixture).run.inputHash = '0'.repeat(64)),
 		/input hash/u,
 		'bad input hash'
 	);
 	reject(
 		(fixture) =>
-			fixture.vitestReport.modules[0].tests.push(fixture.vitestReport.modules[0].tests[0]),
+			selfTestVitestReport(fixture).modules[0].tests.push(
+				selfTestVitestReport(fixture).modules[0].tests[0]
+			),
 		/duplicate Vitest test/u,
 		'duplicate test'
 	);
 	block(
-		(fixture) => (fixture.vitestReport.modules[0].tests[0].status = 'skipped'),
+		(fixture) => (selfTestVitestReport(fixture).modules[0].tests[0].status = 'skipped'),
 		'BrowserBehaviorVerified',
 		'skipped'
 	);
 	block(
 		(fixture) => {
-			fixture.vitestReport.modules[0].tests[0].status = 'failed';
-			fixture.vitestReport.modules[0].status = 'failed';
-			fixture.vitestReport.run.endReason = 'failed';
+			const report = selfTestVitestReport(fixture);
+			report.modules[0].tests[0].status = 'failed';
+			report.modules[0].status = 'failed';
+			report.run.endReason = 'failed';
 		},
 		'BrowserBehaviorVerified',
 		'failed'
 	);
 	block(
 		(fixture) => {
-			const test = fixture.vitestReport.modules[0].tests[0];
+			const test = selfTestVitestReport(fixture).modules[0].tests[0];
 			test.attempt = 2;
 			test.flaky = true;
 			test.retryCount = 1;
@@ -1026,12 +1162,12 @@ export function runComponentExecutionSelfTest() {
 		'flaky'
 	);
 	block(
-		(fixture) => fixture.vitestReport.modules.splice(2, 1),
+		(fixture) => selfTestVitestReport(fixture, 'webkit').modules.splice(0, 1),
 		'BrowserBehaviorVerified',
 		'blocked'
 	);
 	block(
-		(fixture) => (fixture.vitestReport.modules[0].tests[0].expectedFailure = true),
+		(fixture) => (selfTestVitestReport(fixture).modules[0].tests[0].expectedFailure = true),
 		'BrowserBehaviorVerified',
 		'blocked'
 	);
@@ -1042,10 +1178,116 @@ export function runComponentExecutionSelfTest() {
 	);
 	block((fixture) => (fixture.gates.packages.result = 'failure'), 'ProductionVerified', 'blocked');
 	reject(
-		(fixture) => (fixture.vitestReport = null),
-		/Vitest execution report is missing/u,
-		'successful workspace producer without report'
+		(fixture) => fixture.vitestReports.delete('webkit'),
+		/reports are missing for webkit/u,
+		'successful workspace producer without every browser report'
 	);
+	reject(
+		(fixture) => (selfTestVitestReport(fixture, 'firefox').modules[0].browser.name = 'chromium'),
+		/firefox report contains a chromium module/u,
+		'browser report with a different environment'
+	);
+	reject(
+		(fixture) => {
+			const firefox = selfTestVitestReport(fixture, 'firefox');
+			const unit = structuredClone(
+				selfTestVitestReport(fixture).modules.find((module) => module.kind === 'unit')
+			);
+			firefox.modules.push(unit);
+			firefox.specifications.push({ project: 'unit', pool: 'forks', file: unit.file });
+			refreshSelfTestVitestReport(firefox);
+		},
+		/must not repeat workspace unit specifications/u,
+		'non-Chromium report repeating units'
+	);
+	reject(
+		(fixture) => {
+			const firefox = selfTestVitestReport(fixture, 'firefox');
+			firefox.specifications.push({
+				project: 'browser (firefox)',
+				pool: 'browser',
+				file: 'tests/extra.browser.spec.ts'
+			});
+			refreshSelfTestVitestReport(firefox);
+		},
+		/browser specification set differs/u,
+		'browser report with a reduced or expanded specification set'
+	);
+	reject(
+		(fixture) => (selfTestVitestReport(fixture, 'webkit').run.runner.version = 'other-version'),
+		/runner identity differs/u,
+		'mixed Vitest runner versions'
+	);
+	block(
+		(fixture) => (selfTestVitestReport(fixture, 'firefox').run.endReason = 'interrupted'),
+		'BrowserBehaviorVerified',
+		'blocked'
+	);
+	block(
+		(fixture) => {
+			fixture.gates['workspace-tests'].result = 'failure';
+			fixture.vitestReports.delete('webkit');
+		},
+		'BrowserBehaviorVerified',
+		'blocked'
+	);
+	expectSelfTestFailure(
+		() =>
+			mapVitestReportEntries([
+				{ browser: 'chromium', path: 'first.json', report: {} },
+				{ browser: 'chromium', path: 'second.json', report: {} }
+			]),
+		/multiple Vitest chromium/u,
+		'duplicate Chromium report'
+	);
+	negativeCases += 1;
+	const partialFixture = createComponentExecutionSelfTestFixture();
+	partialFixture.gates['workspace-tests'].result = 'failure';
+	partialFixture.vitestReports.delete('webkit');
+	const partial = composeComponentExecution(partialFixture);
+	const partialObservations =
+		partial.components[0].executionResults.BrowserBehaviorVerified.contracts[0].observations;
+	if (
+		partial.globalGates.workspaceTests.result !== 'failure' ||
+		partial.globalGates.workspaceTests.vitestComplete !== false ||
+		partialObservations.find(({ environment }) => environment === 'chromium')?.status !==
+			'verified' ||
+		partialObservations.find(({ environment }) => environment === 'firefox')?.status !==
+			'verified' ||
+		partialObservations.find(({ environment }) => environment === 'webkit')?.status !== 'missing'
+	)
+		throw new Error('Component execution self-test discarded readable partial matrix diagnostics.');
+	reject(
+		(fixture) => {
+			const module = selfTestVitestReport(fixture, 'firefox').modules[0];
+			module.kind = 'unit';
+			module.browser = null;
+		},
+		/unit module .* cannot use the browser pool/u,
+		'unit module disguised as a browser specification'
+	);
+	reject(
+		(fixture) => {
+			const report = selfTestVitestReport(fixture);
+			const specification = structuredClone(
+				report.specifications.find(({ pool }) => pool === 'browser')
+			);
+			specification.project = 'different browser project';
+			report.specifications.push(specification);
+			const module = structuredClone(report.modules.find(({ kind }) => kind === 'browser'));
+			module.project = specification.project;
+			report.modules.push(module);
+			refreshSelfTestVitestReport(report);
+		},
+		/duplicate Vitest browser specification file/u,
+		'same browser file repeated under a different project'
+	);
+	expectSelfTestFailure(
+		() => recognizedExecutionReportName('component-execution-vitest.json'),
+		/unrecognized Vitest execution report filename/u,
+		'legacy single Vitest report filename'
+	);
+	negativeCases += 1;
 	reject(
 		(fixture) => fixture.docsReports.delete('webkit'),
 		/reports are missing for webkit/u,
@@ -1058,6 +1300,13 @@ export function runComponentExecutionSelfTest() {
 	};
 }
 
+function recognizedExecutionReportName(name) {
+	if (/^component-execution-vitest-(?:chromium|firefox|webkit)\.json$/u.test(name)) return true;
+	if (name.startsWith('component-execution-vitest'))
+		fail(`unrecognized Vitest execution report filename ${name}.`);
+	return /^component-execution-docs-(?:chromium|firefox|webkit)\.json$/u.test(name);
+}
+
 async function recognizedReports(paths) {
 	const files = [];
 	async function visit(path) {
@@ -1068,11 +1317,7 @@ async function recognizedReports(paths) {
 				await visit(resolve(path, entry.name));
 		} else if (information.isFile()) {
 			const name = path.split(/[\\/]/u).at(-1);
-			if (
-				name === 'component-execution-vitest.json' ||
-				/^component-execution-docs-(?:chromium|firefox|webkit)\.json$/u.test(name)
-			)
-				files.push(path);
+			if (recognizedExecutionReportName(name)) files.push(path);
 		}
 	}
 	for (const value of paths) await visit(artifactPath(value, '--reports'));
@@ -1094,10 +1339,21 @@ async function loadInputs(options) {
 			};
 		})
 	);
-	const vitestEntries = parsed.filter(({ path }) =>
-		path.endsWith('component-execution-vitest.json')
+	const vitestReports = mapVitestReportEntries(
+		parsed
+			.filter(({ path }) => path.includes('component-execution-vitest-'))
+			.map((entry) => {
+				const browser = /component-execution-vitest-(chromium|firefox|webkit)\.json$/u.exec(
+					entry.path
+				)?.[1];
+				if (!browser) fail(`unrecognized Vitest execution report ${entry.path}.`);
+				return {
+					browser,
+					path: entry.relativePath,
+					report: entry.report
+				};
+			})
 	);
-	if (vitestEntries.length > 1) fail('multiple Vitest execution reports were supplied.');
 	const docsReports = new Map();
 	for (const entry of parsed.filter(({ path }) => path.includes('component-execution-docs-'))) {
 		const browser = /component-execution-docs-(chromium|firefox|webkit)\.json$/u.exec(
@@ -1111,7 +1367,7 @@ async function loadInputs(options) {
 	if ((await lstat(gatesPath)).isSymbolicLink()) fail('--gates cannot be a symbolic link.');
 	const gatesSource = await readFile(gatesPath, 'utf8');
 	return {
-		vitestEntry: vitestEntries[0],
+		vitestReports,
 		docsReports,
 		reportInputs: parsed.map(({ relativePath: path, sha256: hash }) => ({ path, sha256: hash })),
 		gates: JSON.parse(gatesSource),
@@ -1134,8 +1390,7 @@ export async function composeFromPaths(options) {
 		baseMaturity,
 		inventory,
 		identity,
-		vitestReport: inputs.vitestEntry?.report,
-		vitestPath: inputs.vitestEntry?.relativePath ?? null,
+		vitestReports: inputs.vitestReports,
 		docsReports: new Map(
 			[...inputs.docsReports].map(([browser, entry]) => [browser, { report: entry.report }])
 		),

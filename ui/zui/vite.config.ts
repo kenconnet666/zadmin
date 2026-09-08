@@ -36,8 +36,11 @@ const browserInstances: { browser: 'chromium' | 'firefox' | 'webkit' }[] = colle
 // multiple browser files concurrently. On Windows it can fail inside
 // browserContext.newPage; under the Linux multi-browser gate it can starve
 // iframe focus/Portal work until the assertion timeout. Keep focused Chromium
-// and WebKit runs parallel, but serialize every run that includes Firefox.
-const requiresSerialBrowserFiles = browserInstances.some(({ browser }) => browser === 'firefox');
+// and WebKit local runs parallel. Keep the non-coverage CI file concurrency unchanged
+// when each browser moves to its own job; isolation must not also raise per-job load.
+const requiresSerialBrowserFiles =
+	browserInstances.some(({ browser }) => browser === 'firefox') ||
+	(process.env.CI === 'true' && !collectingCoverage);
 
 export default defineConfig({
 	optimizeDeps: {

@@ -121,10 +121,14 @@ jobs:
         run: git diff --exit-code
 
   workspace-tests:
-    name: Workspace component tests
+    name: Workspace component tests (${{ matrix.browser }})
     needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -139,29 +143,35 @@ jobs:
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Install Playwright browsers
-        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
+        run: pnpm --filter @zadmin/docs exec playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Run full workspace tests
+      - name: Run workspace units and isolated browser tests
         env:
           # Preserve browser process exits/stderr when a Vitest connection closes unexpectedly.
           DEBUG: pw:browser
-          ZUI_EXECUTION_REPORT: test-results/component-execution-vitest.json
-        run: pnpm test
+          ZUI_BROWSER: ${{ matrix.browser }}
+          ZUI_EXECUTION_REPORT: test-results/component-execution-vitest-${{ matrix.browser }}.json
+        run: |
+          if [ "$ZUI_BROWSER" = chromium ]; then
+            pnpm test
+          else
+            pnpm --filter @zadmin/zui exec vitest --run --project=browser
+          fi
 
       - name: Upload structured component execution input
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: component-execution-input-vitest-${{ github.sha }}
+          name: component-execution-input-vitest-${{ matrix.browser }}-${{ github.sha }}
           retention-days: 14
           if-no-files-found: error
-          path: ui/zui/test-results/component-execution-vitest.json
+          path: ui/zui/test-results/component-execution-vitest-${{ matrix.browser }}.json
 
       - name: Upload browser test diagnostics
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: workspace-test-diagnostics-${{ github.sha }}
+          name: workspace-test-diagnostics-${{ matrix.browser }}-${{ github.sha }}
           retention-days: 7
           if-no-files-found: ignore
           path: |

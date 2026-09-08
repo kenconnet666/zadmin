@@ -11,19 +11,29 @@ function configuredBrowserProjects(source) {
 }
 
 function installedPlaywrightBrowsers(source) {
+	const matrixBrowsers = browserMatrix(source);
 	return source
 		.split(/\r?\n/u)
 		.filter((line) => /\bplaywright\s+install\b/u.test(line))
 		.flatMap((line) =>
-			supportedBrowserNames.filter((name) => new RegExp(`\\b${name}\\b`, 'u').test(line))
+			/\$\{\{\s*matrix\.browser\s*\}\}/u.test(line)
+				? matrixBrowsers
+				: supportedBrowserNames.filter((name) => new RegExp(`\\b${name}\\b`, 'u').test(line))
 		);
 }
 
-function docsE2eBrowserMatrix(source) {
-	const job = /\n {2}docs-e2e:\n(?<body>[\s\S]*?)(?=\n {2}[a-z][a-z0-9-]*:\n)/u.exec(source)?.groups
-		?.body;
-	const values = job?.match(/\n\s+browser:\s*\[([^\]]+)\]/u)?.[1];
-	return values?.split(',').map((value) => value.trim()) ?? [];
+function workflowJob(source, name) {
+	const normalized = source.replaceAll('\r\n', '\n');
+	return (
+		new RegExp(`\\n {2}${name}:\\n(?<body>[\\s\\S]*?)(?=\\n {2}[a-z][a-z0-9-]*:\\n|$)`, 'u').exec(
+			normalized
+		)?.groups?.body ?? ''
+	);
+}
+
+function browserMatrix(source) {
+	const values = source.match(/\n\s+browser:\s*\[([^\]]+)\]/u)?.[1];
+	return values?.split(',').map((value) => value.trim().replace(/^['"]|['"]$/gu, '')) ?? [];
 }
 
 function sameValues(left, right) {
@@ -34,9 +44,13 @@ const pkg = JSON.parse(await read('ui/zui/package.json'));
 const ci = await read('.github/workflows/ci.yml');
 const pw = await read('apps/docs/playwright.config.ts');
 const browsers = configuredBrowserProjects(pw);
-const installedBrowsers = installedPlaywrightBrowsers(ci);
-const docsE2eBrowsers = docsE2eBrowserMatrix(ci);
-const docsE2eStep = ci.includes(
+const workspaceJob = workflowJob(ci, 'workspace-tests');
+const docsJob = workflowJob(ci, 'docs-e2e');
+const installedBrowsers = installedPlaywrightBrowsers(workspaceJob);
+const workspaceBrowsers = browserMatrix(workspaceJob);
+const docsE2eBrowsers = browserMatrix(docsJob);
+const docsInstalledBrowsers = installedPlaywrightBrowsers(docsJob);
+const docsE2eStep = docsJob.includes(
 	'pnpm --filter @zadmin/docs test:e2e --project=${{ matrix.browser }}'
 );
 const exists = async (p) => Boolean(await read(p).catch(() => null));
@@ -47,13 +61,28 @@ if (process.argv.includes('--self-test')) {
 	const fixtureInstall = installedPlaywrightBrowsers(
 		'run: pnpm exec playwright install --with-deps chromium firefox webkit'
 	);
-	const fixtureMatrix = docsE2eBrowserMatrix(
-		'\n  docs-e2e:\n    strategy:\n      matrix:\n        browser: [chromium, firefox, webkit]\n  build:\n'
-	);
+	const fixtureCi =
+		'\n  workspace-tests:\n    strategy:\n      matrix:\n        browser: [chromium, firefox, webkit]\n    steps:\n      - run: playwright install --with-deps ${{ matrix.browser }}\n  docs-e2e:\n    strategy:\n      matrix:\n        browser: [chromium]\n    steps:\n      - run: playwright install --with-deps ${{ matrix.browser }}\n';
+	const fixtureMatrix = browserMatrix(workflowJob(fixtureCi, 'workspace-tests'));
+	const matrixInstall = installedPlaywrightBrowsers(workflowJob(fixtureCi, 'workspace-tests'));
+	const partialDocsInstall = installedPlaywrightBrowsers(workflowJob(fixtureCi, 'docs-e2e'));
 	if (
 		!sameValues(fixtureProjects, supportedBrowserNames) ||
 		!sameValues(fixtureInstall, supportedBrowserNames) ||
 		!sameValues(fixtureMatrix, supportedBrowserNames) ||
+		!sameValues(matrixInstall, supportedBrowserNames) ||
+		!sameValues(
+			installedPlaywrightBrowsers(
+				workflowJob(fixtureCi.replaceAll('\n', '\r\n'), 'workspace-tests')
+			),
+			supportedBrowserNames
+		) ||
+		!sameValues(partialDocsInstall, ['chromium']) ||
+		sameValues(partialDocsInstall, supportedBrowserNames) ||
+		installedPlaywrightBrowsers('run: playwright install --with-deps ${{ matrix.browser }}')
+			.length !== 0 ||
+		!sameValues(workspaceBrowsers, browsers) ||
+		!sameValues(docsInstalledBrowsers, browsers) ||
 		!sameValues(browsers, installedBrowsers) ||
 		!sameValues(browsers, docsE2eBrowsers) ||
 		!docsE2eStep ||
@@ -65,11 +94,13 @@ if (process.argv.includes('--self-test')) {
 }
 if (
 	!sameValues(installedBrowsers, browsers) ||
+	!sameValues(workspaceBrowsers, browsers) ||
 	!sameValues(docsE2eBrowsers, browsers) ||
+	!sameValues(docsInstalledBrowsers, browsers) ||
 	!docsE2eStep
 )
 	throw new Error(
-		'CI Playwright install projects and docs E2E step do not match configured projects.'
+		'CI workspace/Docs browser matrices and their own Playwright installs must match configured projects.'
 	);
 if (pkg.peerDependenciesMeta?.shiki?.optional !== true)
 	throw new Error('The Shiki peer dependency must remain explicitly optional.');
