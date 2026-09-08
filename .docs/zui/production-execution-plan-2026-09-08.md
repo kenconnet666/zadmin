@@ -114,6 +114,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 ## 8. 模型、并行、验证与提交
 
+- 依赖优先较新、支持完整的稳定版本：定期核对全部catalog、非catalog直接依赖、peer范围、Node/pnpm与CI工具链；升级按耦合族分批，不用裸`latest`代替可复现lockfile。当前清单见[依赖升级审计](./dependency-upgrade-audit-2026-09-08.md)。
+- 升级先检查官方registry实际制品、engines/peer、类型入口、SSR/CSP与现有API兼容性，再做定向类型/消费端验证和精确SHA CI。major升级需同步代码和文档；已有预发布依赖按真实能力与迁移成本判断，不能机械改回数字更小的稳定分支。
+- 最新版有可复现缺陷时选最新可验收版本，记录原因、证据、受影响范围及解除限制条件，不长期停留旧版本，也不以stub、skipLibCheck或放宽门禁掩盖上游缺陷。安全发布等待策略不全局关闭。
 - GPT-5.3-Codex-Spark：搜索定位、明确小修、test shim与短反馈；不独立裁定公共状态或复杂泛型。
 - GPT-5.6 Luna：批量清单、Docs归类、机械迁移和明确边界测试。
 - GPT-5.6 Terra：常规组件、范围清楚的多文件类型/实现与定向测试。
@@ -130,8 +133,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断 |
 | P02  | 已提交，CI发现后续阻断 | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
 | P03  | 已提交，CI发现后续阻断 | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
-| P04  | 本地收口，待新SHA CI   | Transfer E19A真实组件与Docs接入、状态比较器、callable文档生成和API行唯一性；核心修复`6576d4d`、CI修复`2d72d1e`，完整候选另行绑定                 |
-| P05+ | 待执行                 | 优先消除真实coverage预算缺口和浏览器中断，再按G2–G4与D继续；E19B跨栏拖放等接受能力不删减                                                         |
+| P04  | 已提交，CI发现后续阻断 | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
+| P05  | 已提交，待组合SHA CI   | `1d7bf25`修复Transfer声明与同步终态、排除损坏Lucide版本，补TimeField边界及失败时coverage诊断；随后升级健康Lucide并同步依赖审计                   |
+| P06+ | 待执行                 | 较新受支持依赖按族升级；继续消除coverage预算缺口与浏览器中断，再推进G2–G4与D；E19B跨栏拖放等接受能力不删减                                       |
 
 ### P01 集成记录
 
@@ -206,5 +210,20 @@ Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和�
 - 生成器已支持同模块Shared、alias、union/intersection及可明确解析的Omit/Pick组成，request和terminal文档展示真实参数结构；继续拒绝外部原生handler、无关local、never-only、不明确filter和未支持的本地泛型实例化，不删除来源门禁。自测及真实API生成通过，187组件/2677 Props、0 metadata gaps/0 true fallbacks只是当前事实，不是成熟度。
 - 最终验证：ZUI与Docs类型均0 errors/0 warnings；Docs unit 6文件35项通过；最后的artifacts/token刷新、全部修改文件Prettier/ESLint、完整audit:system、SSR5项及计数修复后的ZUI类型检查全部通过。日志见`.codex/production-p04-validation.json`和`.codex/production-p04-finish.json`及对应log；早期失败记录只用于诊断，不能混作通过。
 - 未执行本地整库Coverage或重复三浏览器完整矩阵；新SHA CI必须继续验证coverage、浏览器中断与Firefox Cascader未复现路径。未发布npm、tag或生产站点，M0–M3未宣布完成。
+
+### P05 当前修复与依赖审计
+
+**精确CI取证。** [34212149364](https://github.com/kenconnet666/zadmin/actions/runs/34212149364)对应`6fda5ab1dd908aadbe8c99f183585a2dea410d83`，最终failure。Static、Docs三浏览器、workspace构建、Windows C# WebView2及Drizzle均通过；外部包检查因ZTransfer发布声明TS2590失败，workspace三浏览器和Coverage均复现immediate紧接反向移动失效。Coverage为2069通过/1失败，不能记为预算通过；workspace另有browser connection closed，需独立定位，不能因单用例修复便宣称断连闭合。
+
+- Transfer源级类型：DOM props与语义判别分支分离，组件泛型约束真实moveMode；增加直接`ComponentProps<typeof ZTransfer>`正负测试和独立打包消费测试。P04仅缩窄SSR调用的泛型不足以修复发布声明，此批以实际`.d.ts`消费作为证据。
+- Transfer同步行为：immediate在用户value写入同栈结算，不跨tick保留pending禁用选择；异步request仍保留pending、快照、回声及取消合同。测试检查紧接反向操作时目标已选、按钮可用、原始value清空且通知恰好三次；修前失败、修后定向Chromium通过，request八项通过。
+- TimeField：补真实FormModel拒绝写入次数与接受通知区分、canonical/FormData回滚、enabled/readonly/disabled/formParticipation=none，以及原生reset。两项Chromium通过；未把未测的locale/hourCycle/RTL/IME算作完成。
+- 依赖完整性：实测Lucide 1.42.0声明导入未发布的`@lucide/shared/types`，官方registry返回404；1.41.0声明自包含。暂以peer上界`<1.42.0`保护外部消费，同步安装文档，后续通过健康较新版本的完整验收再更新workspace锁定版本。上游修复后重新检验并解除限制，不加stub或skipLibCheck。
+- Coverage诊断：Vitest默认在测试失败时不输出coverage，此轮产物确实缺少ZUI完整JSON；新增`reportOnFailure: true`保留诊断，不降低阈值，也不将失败或局部报告当作全量基线。
+- 独立消费端新建项目自动选中Lucide 1.41.0，严格类型、构建、SSR及ZCode探测通过；Windows收尾发现preview进程未退出就删目录导致EBUSY。现已等待自有child退出并有限重试目录清理，进程未停或验证失败时保留现场；第二次全新gate最终exit 0。最终失败分支又收窄为stop失败不删目录，并以无child/已退出/正常退出/退出超时保留目录的self-test验证；CI同一验收步骤先执行该自测。原始功能错误不被cleanup错误覆盖。
+- 浏览器断连仍未闭合：DEBUG日志中三个引擎均正常退出，无OOM/非零进程退出证据。Firefox的Input API专项四项通过且未启用Textarea autosize，未复现响应式/尺寸读写循环；此局部通过不能替代全部workspace剩余文件验收。下一SHA CI继续保留进程诊断。
+- 本地收口：ZUI/Docs类型均0 errors/0 warnings，Docs unit六文件35项、Transfer SSR五项、TimeField最终两项Chromium通过；artifacts/token、修改文件格式与ESLint、完整audit:system通过。TimeField reset等待真实变化的分钟值恢复，避免只检查未变化的小时。日志见`.codex/production-p05-validation.json`及各项log；最后CI自测接线另通过cleanup self-test、release:coherence和格式检查。
+- 依赖先行批已把workspace Lucide锁定版本从1.37.0提升到已验证的1.41.0，仅该包lock变化并移除旧发布等待例外。在线frozen install通过供应链策略，升级后ZUI与Docs类型0 errors/0 warnings、Transfer八项Chromium通过，日志见`.codex/production-p05-lucide.json`。未把首次缺少本机元数据的offline失败当作通过。
+- 依赖审计覆盖53项普通catalog、2项named catalog、19条独立外部声明/peer，以及Windows两个NuGet引用；详细版本、来源、限制及下一组动作见[清单](./dependency-upgrade-audit-2026-09-08.md)。TypeScript 7当前不满足Kit和typescript-eslint peer；Vitest 5与pnpm 12作为独立迁移，不与本批行为修复混同验收。Vitest迁移先核实browser API配置、artifacts路径、sequential接口和实际render调用所有权；静态命中未await的数量不是已验证缺陷数量，也不能把升级推定成断连修复。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

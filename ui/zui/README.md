@@ -12,7 +12,7 @@ pnpm add @zadmin/zui '@lucide/svelte@>=1.37.0 <1.42.0' svelte
 
 `@lucide/svelte` and Svelte 5 are required peers. Install `shiki` only when using the optional `@zadmin/zui/code` syntax-highlighting entrypoint.
 
-The Lucide peer range currently stops before 1.42.0: that published version imports `@lucide/shared/types` without a published dependency, breaking strict consumer type checks. The workspace remains on 1.37.0; 1.41.0 retains self-contained declarations. Review this boundary when upstream repairs the published declaration dependency. See the [1.42.0 type source](https://github.com/lucide-icons/lucide/blob/1.42.0/packages/svelte/src/types.ts).
+The Lucide peer range currently stops before 1.42.0: that published version imports `@lucide/shared/types` without a published dependency, breaking strict consumer type checks. The workspace uses 1.41.0, whose declarations are self-contained and pass the external consumer gate. Review this boundary when upstream repairs the published declaration dependency. See the [1.42.0 type source](https://github.com/lucide-icons/lucide/blob/1.42.0/packages/svelte/src/types.ts).
 
 ## Start with a provider
 
