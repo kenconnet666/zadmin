@@ -215,7 +215,22 @@ This document is an audit snapshot and upgrade planning input; it does not mean 
 
 P06先行的日期/编译器补丁组已安装：`@internationalized/date`3.12.4、`magic-string`1.2.3，catalog最低支持patch和lock同步更新。官方[MagicString变更记录](https://github.com/Rich-Harris/magic-string/blob/master/CHANGELOG.md)列出了1.2.3的替换/索引等修复；日期包以[官方发布包元数据](https://registry.npmjs.org/@internationalized%2fdate/3.12.4)核对依赖/入口。现有六文件50项编译器与日期unit通过，ZUI/Docs类型通过；不以semver兼容代替完整CI。第三方仍锁定的MagicString 1.2.2 transitive副本未用全局override强改。
 
-1. 日期/编译补丁组已先行，余下`@types/semver`、Changesets等按实际消费点分别验收；AWS SDK client/presigner一起升级。
+P07工具组实施：
+
+| 依赖              | 原版本                  | 当前版本               |
+| ----------------- | ----------------------- | ---------------------- |
+| @changesets/cli   | 3.0.1                   | 3.0.2                  |
+| eslint            | 10.9.0                  | 10.10.0                |
+| globals           | 17.11.0                 | 17.12.0                |
+| typescript-eslint | 8.67.0                  | 8.70.0                 |
+| tsx               | 4.23.12                 | 4.23.13                |
+| @types/semver     | 已锁7.8.0（声明^7.7.1） | 7.8.0，声明收归catalog |
+
+上述版本的官方registry engine/peer已核对，Node 24与TypeScript6仍在支持范围；参见[typescript-eslint兼容范围](https://typescript-eslint.io/users/dependency-versions/)、[ESLint10.10发布说明](https://github.com/eslint/eslint/releases/tag/v10.10.0)。TS7仍不在支持链内，未盲升。Core semver类型依赖原本已锁7.8.0，本次仅收归catalog并明确最低版本，不计为新的版本升级；移除没有生产/脚本安装消费者的runed与@neoconfetti/svelte声明（bundle禁入列表中的runed仅是约束，不是消费者），移除旧ESLint发布等待例外。普通catalog由初始53项变为52项（新增一项、移除两项）；上方初始审计快照不改写。
+
+Core类型、35项unit与release version self-test通过；该self-test没有执行版本提升或发布。lock变化包括ESLint缓存依赖、TypeScript-eslint配套包和新peer解析，不是只替换顶层版本文本；最终workspace与CI验证仍绑定本批新SHA。
+
+1. 日期/编译及工具补丁组已先行；下一组AWS SDK client/presigner一起升级，Windows WebView2单独验证。
 2. Svelte运行时与测试渲染器：先检查Miniapp精确peer及特殊compiler来源，保留平台边界，不只改普通catalog。
 3. Vitest 5与Playwright：按[官方迁移说明](https://vitest.dev/guide/migration/)核实配置API、sequential、测试产物路径及自定义reporter/command；按实际import owner处理async render，不机械修改所有同名函数。不得把升级当作已证明的浏览器断连修复。
 4. pnpm 12独立迁移；TypeScript 7等待Kit、svelte-check和typescript-eslint等真实支持。`@types/node`先对齐承诺的运行时能力与CI基线，不能仅因registry latest属于26就无条件使用Node 26 API。

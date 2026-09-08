@@ -11,14 +11,13 @@ catalog:
   '@aws-sdk/client-s3': ^3.1115.0
   '@aws-sdk/s3-request-presigner': ^3.1115.0
   '@axe-core/playwright': ^4.13.0
-  '@changesets/cli': ^3.0.1
+  '@changesets/cli': ^3.0.2
   '@eslint/js': ^10.0.1
   '@floating-ui/dom': ^1.8.0
   '@fontsource/fira-mono': ^5.2.7
   '@internationalized/date': ^3.12.4
   # 1.42.0 publishes unresolved @lucide/shared/types references; see .docs/zui/usage.md.
   '@lucide/svelte': '>=1.37.0 <1.42.0'
-  '@neoconfetti/svelte': ^2.2.2
   '@playwright/test': ^1.62.1
   '@standard-schema/spec': ^1.1.0
   '@sveltejs/adapter-node': ^5.5.7
@@ -27,25 +26,25 @@ catalog:
   '@sveltejs/vite-plugin-svelte': ^7.3.0
   '@types/node': ^26.2.0
   '@types/estree': ^1.0.9
+  '@types/semver': ^7.8.0
   '@types/stylis': ^4.2.7
   '@vitest/browser-playwright': ^4.1.11
   '@vitest/coverage-v8': ^4.1.11
   csstype: ^3.2.3
   drizzle-kit: 1.0.0-rc.4
   drizzle-orm: 1.0.0-rc.4
-  eslint: ^10.9.0
+  eslint: ^10.10.0
   eslint-config-prettier: ^10.1.8
   eslint-plugin-svelte: ^3.23.0
   estree-walker: ^3.0.3
   fast-check: ^4.9.0
-  globals: ^17.11.0
+  globals: ^17.12.0
   magic-string: ^1.2.3
   playwright: ^1.62.1
   postgres: ^3.4.9
   prettier: ^3.9.6
   prettier-plugin-svelte: ^4.1.1
   redis: ^6.2.1
-  runed: ^0.37.1
   semver: ^7.8.5
   shiki: ^4.4.3
   stylis: ^4.4.0
@@ -54,8 +53,8 @@ catalog:
   tabbable: ^6.5.0
   tar: ^7.5.22
   typescript: ^6.0.3
-  typescript-eslint: ^8.67.0
-  tsx: ^4.23.12
+  typescript-eslint: ^8.70.0
+  tsx: ^4.23.13
   vite: ^8.2.2
   vitest: ^4.1.11
   vitest-browser-svelte: ^3.0.0
@@ -80,5 +79,4 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@aws-sdk/client-s3@3.1115.0'
   - '@aws-sdk/s3-request-presigner@3.1115.0'
-  - eslint@10.9.0
   - svelte@5.56.10

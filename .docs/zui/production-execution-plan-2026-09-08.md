@@ -145,8 +145,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P03  | 已提交，CI发现后续阻断 | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
 | P04  | 已提交，CI发现后续阻断 | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
 | P05  | 已提交，CI发现后续阻断 | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
-| P06  | 本地收口，待新SHA CI   | TimeField输入/焦点、NavigationMenu取消、异步render测试所有权、日期/编译器补丁依赖与TimeField Docs同步                                            |
-| P07+ | 待执行                 | 按精确CI继续处理阻断，再推进其余依赖组、一致性、G2–G4与D；E19B等接受能力不删减                                                                   |
+| P06  | 已提交，CI发现后续阻断 | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
+| P07  | 本地通过，待新SHA CI   | `7969859`组件修复与Docs，`c21f3cb`浏览器隔离与证据链；工具依赖/记录提交组成最终候选                                                              |
+| P08+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
 
 ### P01 集成记录
 
@@ -251,5 +252,22 @@ Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和�
 - DateRangePicker的CI WebKit首击问题，在当前5174 dev服务使用原测试定向一次通过；本机已是date3.12.4且不是b163生产构建，不能据此认定旧失败flaky或已解决。没有扩大timeout、force click或改断言，保留待新SHA CI验证。
 
 阶段提交：`1cb7356`包含组件行为、专用回归与Docs；`1b3f6fd`包含其余107个纯时序测试文件与持续门禁。后续依赖/记录提交组成完整候选，CI只认最终组合SHA；没有执行npm发布、tag或生产部署。
+
+### P07 请求身份、跨浏览器交互与CI隔离
+
+**上一批精确CI。** [34220762091](https://github.com/kenconnet666/zadmin/actions/runs/34220762091)对应`1eb62776e02a35dd11da50890136575121b3d1b9`，最终failure。Static、构建、外部包、Windows C# WebView2与Drizzle通过。Docs三浏览器各222通过/1失败：同一演示新增readonly/disabled实例后，旧分钟locator匹配到三个输入。Workspace为3350通过/4失败/2跳过，512文件通过、3失败且其余未完成；Select在Chromium/WebKit不能从已打开的trigger返回listbox，TimeField WebKit两项键入失败，另有`icss-token-integration` tester断连。Coverage 2077通过/1失败（同Select焦点），未覆盖lines1569/functions456/statements2926/branches3739仍超既有预算；失败时的coverage仅作诊断，不是通过基线。
+
+- Tree以typed key为身份。否决按node引用重建请求：LogicalTree每次规范化会克隆node，不能因此让label-only或不可变数组更新重载。请求缓存owner只追踪loader、parentKey与hasChildren；普通label/textValue/selectionDisabled更新保持pending/error/loaded，禁用只终止活动请求，不清已完成empty/error缓存。
+- Tree先释放旧generation登记再abort，允许同步abort listener启动的新generation不被旧finally删除。卸载先失效并清登记，再abort快照；持有旧controller也不能重新加载。预加载节点删除后同key空lazy重建的旧loaded缓存已有失败→通过回归；使用既有`tree.nodes` Map查询清理，避免对大树反复数组扫描。Tree专用11项Chromium通过，未修改LogicalTree的不可变约定。
+- Select真实缺陷：等待初始open focus完成后，trigger方向键仅重复写true，不触发再次聚焦。新增私有content reader，区分普通listbox与virtual inner listbox，同步处理first/last重入，不改选中值；键盘veto与composition保留。普通/virtual合计六项Chromium、六项WebKit通过，keyboard metadata同步。不是删掉焦点断言或退回未await render。
+- TimeField WebKit真实A/B：原focus.select被初次pointer默认caret覆盖，导致maxlength=2下键入12/46没有替换原值。仅在未聚焦segment首次左键时接管focus，使用realm-aware活动元素判断，已聚焦再次点击保持原生行为。修前WebKit2/6失败，修后WebKit与Chromium各6/6通过。
+- TimeRangePicker只增加真实边界回归：有序范围的跨午夜草稿不半写双FormData、Escape恢复、open panel draft在reset时不提交、受控拒绝confirm后clear仍拒绝。等待Presence实际退出，不要求关闭动作同步移除DOM；没有改范围运行时。六项Chromium通过，关键业务字段用getAll检查单一提交owner。
+- Docs旧TimeField locator限定到实际enabled实例，保留全部值与reset断言，Chromium/Firefox两项通过。Tree保留既有demo ID，使用公开controller与稳定key+signal，await后校验取消与节点存在再发布children；外部pending移除、取消计数、错误重试和selectionDisabled已有Chromium E2E。时钟最终使用pauseAt/runFor；早期只install仍走真实时间的失败不得当作runtime取消缺陷。
+- CI隔离：workspace-tests保持同job id，三引擎独立matrix、fail-fast=false；Chromium跑完整workspace，另外两leg跑全部ZUI browser，不重复unit。维持非coverage CI原有串行file并发，避免隔离同时提高单job负载；coverage与Docs原矩阵不缩减。依据[Vitest v4官方实例说明](https://v4.vitest.dev/config/browser/instances)，原instances共享Vite server；这只是隔离/诊断措施，新CI前不能称断连已修复。
+- 证据合并：三份原始Vitest报告文件名、artifact名唯一，各自hash与revision/run绑定。成功workspace必须齐三环境，unit只允许Chromium；环境/runner不一致、spec集合不同、同环境跨project重复、unit伪装browser pool均拒绝；旧单报告名明确拒绝。每条evidence指向真实所属输入，不生成伪合并producer文件；失败缺leg保留partial诊断且阶段blocked。reporter/composer/verifier自测通过，composer含22个负例。
+- 集成发现support parser仅统计安装命令中的字面量浏览器，未识别matrix；已改为分别解析workspace/Docs各自job的matrix与install，防止借别的job凑齐浏览器。自测涵盖动态安装、缺matrix、仅部分Docs环境、CRLF；没有跳过支持矩阵校验。
+- 工具依赖组已安装：ESLint10.10、typescript-eslint8.70、globals17.12、Changesets3.0.2、tsx4.23.13；@types/semver原已锁7.8，本次收归catalog，不冒充版本升级。Core类型与35项unit、release version self-test通过。未改变Svelte/TypeScript/Vitest/Playwright版本或发布包。最终ZUI/Docs类型0 errors/0 warnings，29项组件Chromium、Docs unit35项、reporter/composer/verifier、release coherence、全部修改格式/lint及audit:system均通过，日志见`.codex/production-p07-v2-final.json`。首次support parser失败保留在`.codex/production-p07-final.json`，不算已通过。
+
+P07阶段提交为`7969859`（组件/Docs）与`c21f3cb`（CI/证据链），再与工具依赖/记录形成组合候选。当前主周额度仍高于30%停止线；预算约定保存在本计划第8节，不改变完整目标。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
