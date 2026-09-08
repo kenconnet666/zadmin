@@ -9,7 +9,7 @@ import TooltipPopconfirmProductionFixture from './TooltipPopconfirmProductionFix
 const wait = (duration: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, duration));
 
-describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
+describe('ZPopconfirm and ZTooltip production contracts', { concurrent: false }, () => {
 	it('ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration', async () => {
 		// @zui-visual ZPopconfirm
 		// @zui-visual ZPopconfirmTrigger

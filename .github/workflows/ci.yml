@@ -186,9 +186,16 @@ jobs:
           name: workspace-test-diagnostics-${{ matrix.browser }}-${{ github.sha }}
           retention-days: 7
           if-no-files-found: ignore
+          include-hidden-files: true
           path: |
-            **/test-results/**
-            **/.vitest-reports/**
+            apps/*/test-results/**
+            packages/*/test-results/**
+            plugins/*/test-results/**
+            ui/*/test-results/**
+            apps/*/.vitest/**
+            packages/*/.vitest/**
+            plugins/*/.vitest/**
+            ui/*/.vitest/**
             ui/zui/tests/__screenshots__/**
 
   drizzle-postgres:
@@ -393,9 +400,12 @@ jobs:
           name: coverage-${{ github.sha }}
           retention-days: 7
           if-no-files-found: ignore
+          include-hidden-files: true
           path: |
             packages/*/coverage/**
             ui/*/coverage/**
+            packages/*/.vitest/**
+            ui/*/.vitest/**
             ui/zui/tests/__screenshots__/**
 
   packages:

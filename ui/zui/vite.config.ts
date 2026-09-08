@@ -114,13 +114,14 @@ export default defineConfig({
 			{
 				extends: true,
 				test: {
+					// API belongs to this browser project, not the root/unit server.
+					api: {
+						host: '127.0.0.1',
+						port: configuredBrowserPort,
+						strictPort: true
+					},
 					browser: {
 						commands: { dragElements, dragSliderTrack },
-						api: {
-							host: '127.0.0.1',
-							port: configuredBrowserPort,
-							strictPort: true
-						},
 						enabled: true,
 						headless: true,
 						// Use the full Chromium binary's modern headless mode, matching the

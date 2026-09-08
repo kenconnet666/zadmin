@@ -183,6 +183,8 @@ pnpm --filter @zadmin/zui metadata:since:materialize -- 0.2.0
 
 The package is pre-1.0. Consult each component's exported metadata for its current `stable` or `experimental` status before standardizing an application-wide API.
 
+Repository development and CI use Node.js 24. The Vitest 5 toolchain requires a supported newer Node release (including Node 22.12+ or Node 24); that development requirement is separate from the published component package's runtime floor.
+
 ## Source and license
 
 - Source: <https://github.com/kenconnet666/zadmin/tree/master/ui/zui>

@@ -32,6 +32,8 @@ Svelte >= 5.56 < 6
 现代Chromium、Firefox和WebKit
 ```
 
+以上是组件包的消费端范围。仓库开发与CI使用Node 24；Vitest 5测试工具要求较新的Node分支（包括22.12+和24），不要用早期Node 22版本运行本仓库测试。测试工具升级不等于组件包的运行时最低版本自动提升。
+
 ## SvelteKit编译优化
 
 使用独立`svelte.config.js`：

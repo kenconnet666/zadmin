@@ -17,7 +17,10 @@ node_modules
 **/coverage/
 **/target/
 **/gen/schemas/
+# Vitest 5 diagnostics; CI uploads selected package-local evidence explicitly.
+**/.vitest/
 **/.vitest-attachments/
+# Retain old local failure screenshots; reference-baseline policy is separate work.
 **/tests/__screenshots__/
 
 # OS

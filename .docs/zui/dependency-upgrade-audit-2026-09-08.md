@@ -240,7 +240,16 @@ Core类型、35项unit与release version self-test通过；该self-test没有执
 - 本次修复用P06已验证锁作临时解析种子，再按当前catalog正常解析；最终diff经机械比对，仅8.70→8.69整组及对应integrity变化，没有退回其他P07工具版本。旧锁不合规时不循环执行同一失败更新，也不清除用户代码或node_modules。
 - 已验证：19个workspace正常更新安装成功；将manifest与锁复制到独立目录，以空cache/store运行`pnpm install --frozen-lockfile --lockfile-only --ignore-scripts`，527条供应链记录全部通过（75.2秒），锁SHA256保持不变。此检查不下载/运行所有包或生命周期脚本，完整干净安装与构建仍交新SHA CI。定向ESLint及文档/YAML格式检查通过。
 
-1. 日期/编译及工具补丁组已先行；下一组AWS SDK client/presigner一起升级，Windows WebView2单独验证。
+### P11 Vitest 5 迁移
+
+- 明确升级并实际安装`vitest`、`@vitest/browser-playwright`、`@vitest/coverage-v8`至5.0.0，以及`vitest-browser-svelte`至3.1.0。2026-09-08核对registry latest、engines、peer与发布时间：前三项已发布约131小时，renderer约111小时，均超过1440分钟安全窗口；没有增加例外。Node24、Vite8.2.2、Svelte5.56满足相关支持范围。
+- 保留Playwright1.62.1与当前浏览器revision，使本批主要比较测试框架变化；Playwright1.63的成对升级仍在后续分组，不永久锁旧版本。
+- 按[Vitest 5官方迁移说明](https://vitest.dev/guide/migration/)移除browser.api，把api放到browser项目自身的test层。初次放在根test.api会让根/unit服务与独立browser cluster争用固定端口；启动前后无外部监听者且spec未执行，已修正作用域，不随机换端口或关闭strictPort。修正后同一进程unit/SSR/browser18项通过。
+- 唯一describe.sequential使用点改成concurrent:false；原9项Tooltip/Popconfirm场景、时限和等待逻辑不变，Vitest5 Chromium9项通过。已有await render与原生CSS selector browser command无须重复机械迁移。
+- CI新增精确workspace包目录下的.vitest诊断上传并启用include-hidden-files；未把根.env或整个工作区加入制品。现有显式component-execution输出路径和报告schema保持不变，reporter/composer/verifier短自测通过（composer22负例、verifier3篡改负例）。
+- 独立目录、空cache/store的frozen lockfile-only供应链校验524条通过；仍需最终项目类型/多项目定向验证与组合SHA远端CI，不能声称本次已解决整库断连。
+
+1. 日期/编译、工具补丁与Vitest5组已先行；下一组AWS SDK client/presigner一起升级，Windows WebView2单独验证。
 2. Svelte运行时与测试渲染器：先检查Miniapp精确peer及特殊compiler来源，保留平台边界，不只改普通catalog。
 3. Vitest 5与Playwright：按[官方迁移说明](https://vitest.dev/guide/migration/)核实配置API、sequential、测试产物路径及自定义reporter/command；按实际import owner处理async render，不机械修改所有同名函数。不得把升级当作已证明的浏览器断连修复。
 4. pnpm 12独立迁移；TypeScript 7等待Kit、svelte-check和typescript-eslint等真实支持。`@types/node`先对齐承诺的运行时能力与CI基线，不能仅因registry latest属于26就无条件使用Node 26 API。

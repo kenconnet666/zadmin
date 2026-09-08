@@ -150,7 +150,8 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P08  | 已提交，CI发现阻断       | `9b9756a`三浏览器Docs与其余组件/构建门禁通过，仍有Chromium整库连接中断和coverage预算缺口                                                         |
 | P09  | 已提交，CI继续定位       | `8a914f1`只读范围/周期规则验收及API/pool/GC诊断已推送，整库断连仍复现；不算已修复                                                                |
 | P10  | 基础本地通过，E19B实现中 | Chromium新headless、周期范围/焦点合同先独立提交；Transfer跨栏adapter、request-owner演示和回归独立收口                                            |
-| P11+ | 待执行                   | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
+| P11  | 本地通过，待组合SHA CI   | Vitest/browser/coverage5.0与renderer3.1迁移，API监听归属、sequential及隐藏工件路径已同步，完整远端执行待验证                                     |
+| P12+ | 待执行                   | 继续CI与覆盖缺口、Transfer触屏/动画、其余依赖组、一致性及G2–G4；不缩减接受能力                                                                   |
 
 ### P01 集成记录
 
@@ -313,5 +314,15 @@ P10后续收口：
 - 最终集成中资源审计先拒绝新monitor disposer数组写法；改成与geometry一致的具名typed连接函数，一处订阅、一处返回清理，未放宽规则。新增方向分支也改用共享navigationIntent，消除重复RTL箭头映射。首次审计失败保留在`.codex/production-p10-transfer-final.json`，中间失败见`p10-transfer-lifecycle-audit.log`，不覆盖为绿灯。
 - 当前证据：ZUI/Docs类型0 errors/0 warnings，unit/SSR/plugin14项、Transfer/Sortable Chromium28项、Docs2项通过；最后连接函数/共享intent审阅后又复核ZUI类型、Transfer14项及完整audit:system，全部通过，见`.codex/production-p10-transfer-reviewed.json`。API/Token/Docs生成已同步，待组合SHA远端验收，不把局部结果扩张为全库通过。
 - 下一步仍保留E19B真实touch/pen与滚动竞争、跨栏动画/reduced-motion、五尺寸/六主题和跨realm nonce交互验收。同时按Terra只读清单准备Vitest5+browser/coverage5+renderer3.1迁移：browser.api归并、sequential替换、.vitest工件路径及reporter/transform验证；不要把升级当作未经验证的断连根因结论。没有发布、tag或生产部署。
+
+### P11 Vitest 5 工具链迁移
+
+- Transfer首批已提交推送`9b1f93cc02749f28de1a7d14bf3564f0fb8fad23`，[CI 34243292365](https://github.com/kenconnet666/zadmin/actions/runs/34243292365)三浏览器Docs、Firefox/WebKit组件、Static、build、外部包、Windows、Drizzle均通过。Chromium非coverage仍在下一文件创建tester时断连（本轮selection-collection，268/318文件1993项通过）；Coverage318文件2101项全通过但global1551/432/2897/3722、components1312/378/2459/3103仍超预算。E19B第一批不是未经运行的占位实现，但全库验收仍未闭合。
+- 按[依赖审计](./dependency-upgrade-audit-2026-09-08.md)升级Vitest/browser/coverage至5.0.0，renderer至3.1.0；保留Node24、TypeScript6.0.3、Vite8.2.2、Playwright1.62.1和1440分钟严格等待策略。正常安装与隔离空cache/store的524条frozen锁供应链校验通过，锁SHA256未改变；未新增安全例外。
+- browser.api迁移到browser项目自身的test.api。第一次放到全局root test.api导致根服务与独立browser cluster争用端口，启动前/后端口均空且spec未执行；修正作用域后固定端口与strictPort保持，混合unit/SSR/browser正常通过。未通过随机端口、关闭严格模式或结束他人进程掩盖问题。
+- Terra只迁移唯一describe.sequential为concurrent:false，原有9项Popover/Tooltip计时器与取消用例在Vitest5下通过，无skip/超时放宽。Luna补.vitest忽略及隐藏诊断上传；根审阅保留apps/packages/plugins/ui全部workspace的精确产物目录，不把整个工作区或.env加入上传。
+- Reporter实际Vitest5 API仍兼容，无需改自有schema；reporter/composer/verifier自测通过，composer22负例与verifier3篡改负例保留。独立真实CI输入仍待新SHA采集，不伪造GITHUB_RUN_ID制造本地产物。
+- 本地最终验证见`.codex/production-p11-final.json`：ZUI/Docs/WebView/Miniapp类型均通过；Core35、WebView24、Miniapp41、SvelteKit19、Docs35共154项消费者unit通过；ZUI混合23项与独立Tooltip9项通过。静态生成、lifecycle guard、改动格式/lint和audit:system通过。没有本地重复全库coverage或三浏览器大矩阵。
+- 下一轮先核对新SHA的整库连接与coverage，不把局部成功当成Vitest5已修复断连。随后继续Playwright成对升级、E19B真实触屏/滚动/动画与剩余能力矩阵；任何新增失败按实际合同处理，不降门槛，不回退到已知不受支持的API。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
