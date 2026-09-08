@@ -155,7 +155,7 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
 | P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
 | P15  | 已提交，CI仍有阻断       | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
-| P16  | 功能CI通过，覆盖未达     | DataTable pointer归属与实例dir向ZTable传递已复现修复，14项Chromium通过；33%阶段只做必要收尾                                                      |
+| P16  | 局部验收，CI仍有阻断     | 最新4eabd3f列状态自身键修复与20项定向验收通过；Docs三浏览器通过，Chromium连接与Coverage仍阻断                                                    |
 | P17+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
 
 ### P01 集成记录
@@ -401,3 +401,4 @@ P10后续收口：
 - 继续当前家族可见性controller收尾时，SSR复现合法constructor列误读原型属性为宽度并抛错。局部columnStateValue统一四个读取点，只使用record自身键，保留合法ID，不修改全局sameStateValue或引入新API。继承值不参与可见性/宽度，显式自身键照常生效；controller未知/无变化/隐藏最后一列不通知，同步连续调用也保护至少一列。
 - 新SSR与浏览器回归加既有DataTable17项合计20项通过；ZUI/Docs类型0 errors/0 warnings、生成/token同步、lifecycle、lint/format和audit:system通过。红证据与最终结果见`.codex/p16-column-state-before.log`、`p16-column-state-after.log`、`p16-column-state-final.json`；当前主周额度剩31%，只提交和交接，不再扩展检查项。
 - 前置257f3f6的[CI 34278196491](https://github.com/kenconnet666/zadmin/actions/runs/34278196491)再次出现Chromium断连：113个browser文件完成后，下一choice-virtualization tester期间Vite/control WS错误，Playwright和CDP文本均为空；266/323文件2010项通过仅是局部结果，DataTable17项与独立触屏17项通过。Coverage323文件2136项全过但global1558/454/2920/3734、components1288/372/2431/3094超预算。历史连续通过不能替代根因证明；不调整并发/超时/GC或下调门槛。
+- 自身键修复已推送4eabd3fa7bbfce0f8e65cee649c5308b24379b22，[CI 34281572183](https://github.com/kenconnet666/zadmin/actions/runs/34281572183)已全部结束：三浏览器Docs各227项、Firefox/WebKit组件、Static、build、外部包、Windows和Drizzle通过。DataTable定向20项在CI通过，Chromium主套件却在121个browser文件完成、下一selection-collection tester时中断，仅275/325文件2031项通过；独立触屏17项通过。Coverage325文件2139项全过但global1557/454/2916/3727、components1287/372/2427/3087未覆盖量仍超原门槛。最终仍因Chromium和Coverage两个独立阻断失败；此处只结束当前修复批次，不缩减G0–G4，也不声称生产验收完成。
