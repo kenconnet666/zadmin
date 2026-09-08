@@ -18,6 +18,7 @@
 	export type DateTimePickerCommitMode = 'confirm' | 'immediate';
 	type DateTimePickerMode = 'local' | 'zoned';
 	export type DateTimePickerSize = ZControlSize;
+	// eslint-disable-next-line no-import-assign -- Type-only re-export, not a runtime assignment to the import.
 	export type { DateTimePickerDirection } from '../../runtime/date-time-picker.js';
 
 	export interface DateTimePickerPreset<TValue extends CalendarDateTime | ZonedDateTime> {
@@ -25,10 +26,9 @@
 		readonly value: TValue | (() => TValue);
 	}
 
-	interface ZDateTimePickerSharedProps extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'children' | 'onchange'
-	> {
+	type ZDateTimePickerDomProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'>;
+
+	interface ZDateTimePickerSharedProps {
 		readonly calendarLabel?: string;
 		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
 		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
@@ -114,18 +114,29 @@
 			ZDateTimePickerSharedProps,
 			ZDateTimePickerZonedValueProps,
 			InlinePickerPresentationProps {}
-	export type ZDateTimePickerLocalProps = LocalPopoverProps | LocalInlineProps;
-	export type ZDateTimePickerZonedProps = ZonedPopoverProps | ZonedInlineProps;
+	type ZDateTimePickerLocalSemanticProps = LocalPopoverProps | LocalInlineProps;
+	type ZDateTimePickerZonedSemanticProps = ZonedPopoverProps | ZonedInlineProps;
+	export type ZDateTimePickerLocalProps = ZDateTimePickerDomProps &
+		ZDateTimePickerLocalSemanticProps;
+	export type ZDateTimePickerZonedProps = ZDateTimePickerDomProps &
+		ZDateTimePickerZonedSemanticProps;
+	type ZDateTimePickerSemanticProps<
+		TMode extends DateTimePickerMode = DateTimePickerMode,
+		TPresentation extends PickerPresentation = PickerPresentation
+	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (
+		| ('local' extends TMode
+				? | ('inline' extends TPresentation ? LocalInlineProps : never)
+					| ('popover' extends TPresentation ? LocalPopoverProps : never)
+				: never)
+		| ('zoned' extends TMode
+				? | ('inline' extends TPresentation ? ZonedInlineProps : never)
+					| ('popover' extends TPresentation ? ZonedPopoverProps : never)
+				: never)
+	);
 	export type ZDateTimePickerProps<
 		TMode extends DateTimePickerMode = DateTimePickerMode,
 		TPresentation extends PickerPresentation = PickerPresentation
-	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (TMode extends 'zoned'
-		? TPresentation extends 'inline'
-			? ZonedInlineProps
-			: ZonedPopoverProps
-		: TPresentation extends 'inline'
-			? LocalInlineProps
-			: LocalPopoverProps);
+	> = ZDateTimePickerDomProps & ZDateTimePickerSemanticProps<TMode, TPresentation>;
 
 	export const zuiMetadata = {
 		bindings: [
@@ -615,7 +626,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimePickerProps<TMode, TPresentation> = $props();
-	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest);
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();

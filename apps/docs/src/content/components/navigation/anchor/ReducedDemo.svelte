@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZAnchor, ZButton, ZProvider, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
+	import { ZAnchor, ZButton, ZHeading, ZProvider, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
 
 	const items = [
 		{
@@ -52,19 +52,21 @@
 						id="anchor-container-one"
 						style="scroll-margin-block-start: 3rem; min-height: 12rem;"
 					>
-						<ZText as="h3">容器第一段</ZText><ZText>Anchor可以绑定具名HTMLElement滚动容器。</ZText>
+						<ZHeading level={3} size="medium">容器第一段</ZHeading>
+						<ZText>Anchor可以绑定具名HTMLElement滚动容器。</ZText>
 					</section>
 					<section
 						id="anchor-container-two"
 						style="scroll-margin-block-start: 3rem; min-height: 12rem;"
 					>
-						<ZText as="h3">容器第二段</ZText><ZText>reduced motion下滚动立即完成。</ZText>
+						<ZHeading level={3} size="medium">容器第二段</ZHeading>
+						<ZText>reduced motion下滚动立即完成。</ZText>
 					</section>
 					<section
 						id="anchor-container-three"
 						style="scroll-margin-block-start: 3rem; min-height: 12rem;"
 					>
-						<ZText as="h3">容器第三段</ZText>
+						<ZHeading level={3} size="medium">容器第三段</ZHeading>
 					</section>
 				</ZStack>
 			</ZScrollArea>

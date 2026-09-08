@@ -302,6 +302,14 @@ async function scanWorkspacePropertyPaths(graph, modulePath, rootName, collectAl
 		}
 		if (ts.isArrayTypeNode(node))
 			return visitType(node.elementType, context, path, include, exclude);
+		if (ts.isConditionalTypeNode(node)) {
+			// This scanner records the public-path superset used by metadata and deprecation checks.
+			// Property facts below resolve finite branches; keeping both paths here avoids dropping a
+			// valid branch when the scanner cannot prove a generic conditional's instantiation.
+			await visitType(node.trueType, context, path, include, exclude);
+			await visitType(node.falseType, context, path, include, exclude);
+			return;
+		}
 		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
 			for (const type of node.types) await visitType(type, context, path, include, exclude);
 			return;
@@ -2144,6 +2152,27 @@ if (process.argv.includes('--self-test')) {
 			!value.type.includes("PeriodSelectionValue<'week', 'range'>")
 		)
 			throw new Error(`Distributed conditional API self-test missed ${id} discriminants.`);
+	}
+	const expectedReverseConditionalProps = new Map([
+		[
+			'calendar',
+			['value', 'defaultValue', 'onValueChange', 'size', 'disabled', 'visibleMonths', 'visibleDays']
+		],
+		['date-time-field', ['value', 'defaultValue', 'onValueChange', 'size', 'disabled', 'timeZone']],
+		[
+			'date-time-picker',
+			['value', 'defaultValue', 'onValueChange', 'size', 'disabled', 'timeZone']
+		],
+		[
+			'date-time-range-picker',
+			['value', 'defaultValue', 'onValueChange', 'size', 'disabled', 'timeZone']
+		]
+	]);
+	for (const [id, expected] of expectedReverseConditionalProps) {
+		const actual = new Set(facts[id]?.props.map(({ name }) => name) ?? []);
+		const missing = expected.filter((name) => !actual.has(name));
+		if (missing.length > 0)
+			throw new Error(`Reverse conditional API self-test missed ${id}: ${missing.join(', ')}.`);
 	}
 	const nested = parseDocTeaching(
 		`defineComponentDoc(meta, { demos: [{ teaching: { props: { fake: {} } } }] })`,

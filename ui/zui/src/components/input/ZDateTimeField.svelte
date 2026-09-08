@@ -11,10 +11,9 @@
 	export type DateTimeFieldFormParticipation = 'auto' | 'none';
 	type DateTimeFieldMode = 'local' | 'zoned';
 
-	interface ZDateTimeFieldSharedProps extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'children' | 'onchange'
-	> {
+	type ZDateTimeFieldDomProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'>;
+
+	interface ZDateTimeFieldSharedProps {
 		readonly controlId?: string;
 		readonly disabled?: boolean;
 		readonly disambiguation?: DateTimeDisambiguation;
@@ -60,13 +59,20 @@
 		value?: ZonedDateTime | null;
 	}
 
-	export interface ZDateTimeFieldLocalProps
+	interface ZDateTimeFieldLocalSemanticProps
 		extends ZDateTimeFieldSharedProps, ZDateTimeFieldLocalValueProps {}
-	export interface ZDateTimeFieldZonedProps
+	interface ZDateTimeFieldZonedSemanticProps
 		extends ZDateTimeFieldSharedProps, ZDateTimeFieldZonedValueProps {}
-	export type ZDateTimeFieldProps<TMode extends DateTimeFieldMode = DateTimeFieldMode> = {
+	export type ZDateTimeFieldLocalProps = ZDateTimeFieldDomProps & ZDateTimeFieldLocalSemanticProps;
+	export type ZDateTimeFieldZonedProps = ZDateTimeFieldDomProps & ZDateTimeFieldZonedSemanticProps;
+	type ZDateTimeFieldSemanticProps<TMode extends DateTimeFieldMode = DateTimeFieldMode> = {
 		readonly mode?: TMode;
-	} & (TMode extends 'zoned' ? ZDateTimeFieldZonedProps : ZDateTimeFieldLocalProps);
+	} & (
+		| ('local' extends TMode ? ZDateTimeFieldLocalSemanticProps : never)
+		| ('zoned' extends TMode ? ZDateTimeFieldZonedSemanticProps : never)
+	);
+	export type ZDateTimeFieldProps<TMode extends DateTimeFieldMode = DateTimeFieldMode> =
+		ZDateTimeFieldDomProps & ZDateTimeFieldSemanticProps<TMode>;
 
 	export const zuiMetadata = {
 		category: 'input',
@@ -366,7 +372,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimeFieldProps<TMode> = $props();
-	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest);
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CalendarDate } from '@internationalized/date';
+	import { untrack } from 'svelte';
 	import ZCalendar from '../src/components/input/ZCalendar.svelte';
 	import ZDateField from '../src/components/input/ZDateField.svelte';
 	import ZDatePicker from '../src/components/input/ZDatePicker.svelte';
@@ -19,12 +20,14 @@
 		| 'string'
 		| 'time-field';
 	let { kind }: { kind: Kind } = $props();
+	// This SSR-only invalid-fixture intentionally chooses its failure shape once at creation.
+	const initialKind = untrack(() => kind);
 	const invalidValue =
-		kind === 'range'
+		initialKind === 'range'
 			? { start: new Date(), end: null }
-			: kind === 'range-shape'
+			: initialKind === 'range-shape'
 				? { start: new CalendarDate(2026, 9, 7) }
-				: kind === 'string'
+				: initialKind === 'string'
 					? '2026-09-07'
 					: new Date();
 	const model = createFormModel({ defaultValues: { value: invalidValue as unknown } });

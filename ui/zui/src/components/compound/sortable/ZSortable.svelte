@@ -9,12 +9,14 @@
 		SortableMoveEnd,
 		SortableMoveRequest
 	} from '../../../runtime/drag-drop/types.js';
+	/* eslint-disable no-import-assign -- Type-only re-exports have no runtime writes; the Svelte scope analyzer marks their references as assignments. */
 	export type {
 		SortableItemContext,
 		SortableMoveEnd,
 		SortableMoveRequest,
 		SortableMoveResult
 	} from '../../../runtime/drag-drop/types.js';
+	/* eslint-enable no-import-assign */
 
 	export interface ZSortableProps<
 		T,
@@ -220,6 +222,7 @@
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../../theme/units.js';
 	import {
 		getActiveElement,
 		containsComposedNode,
@@ -495,7 +498,7 @@
 			if (!live || entry.completed || controller.signal.aborted) return false;
 			if (accepted && sameKeys(keys, expected)) {
 				animationCleanup = animateReorderLayout(before, {
-					duration: zui.theme.duration.normal,
+					duration: durationMilliseconds(zui.theme.duration.normal),
 					easing: zui.theme.easing.standard,
 					reduced: motion.current
 				});

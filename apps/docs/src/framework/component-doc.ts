@@ -249,6 +249,8 @@ export function defineComponentDoc(
 			throw new TypeError(`${metadata.name} has duplicate demo id "${demo.id}".`);
 		if (!demo.source.trim())
 			throw new TypeError(`${metadata.name} demo "${demo.id}" has no source.`);
+		if (typeof demo.component !== 'function')
+			throw new TypeError(`${metadata.name} demo "${demo.id}" has no runnable component.`);
 		if (doc.sourceApi && (demo.covers?.length ?? 0) === 0) {
 			throw new TypeError(`${metadata.name} demo "${demo.id}" has no capability evidence.`);
 		}

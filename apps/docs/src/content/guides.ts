@@ -497,10 +497,11 @@ pnpm --filter @zadmin/docs stability:check`,
 				id: 'entrypoints',
 				title: '入口边界',
 				paragraphs: [
-					'根入口提供组件与公共运行时；按职责使用themes、code、runtime、compiler、metadata和testing子入口。'
+					'根入口提供组件与公共运行时；按职责使用themes、theme、layer、code、runtime、compiler、metadata和testing子入口。theme入口导出主题定义/扩展、语义色调、调色板辅助函数及其类型；layer入口导出自定义浮层所需的DismissableLayer、FloatingPositioner、FocusScope、portal、inert、scroll-lock和layer-stack原语。'
 				],
 				bullets: [
 					'应用生产代码不得导入testing或internal。',
+					'theme与layer是公开入口，但只对各自entrypoint文件当前导出的符号负责；未导出的runtime模块和internal不是稳定兼容边界。',
 					'ZCode从code入口加载，Shiki保持可选peer。',
 					'Lucide使用单图标静态子路径，避免全量运行时索引。'
 				]

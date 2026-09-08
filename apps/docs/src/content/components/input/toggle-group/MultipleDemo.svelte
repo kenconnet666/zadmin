@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { ZButton, ZStack, ZText, ZToggleGroup } from '@zadmin/zui';
+	import { ZButton, ZStack, ZText, ZToggleGroup, type ZToggleGroupItem } from '@zadmin/zui';
 
-	const items = [
+	type FilterKey = 1 | '1' | 2;
+	const items: readonly ZToggleGroupItem<FilterKey>[] = [
 		{ value: 1, label: '数字 1' },
 		{ value: '1', label: '字符串 1' },
 		{ value: 2, label: '数字 2' }
-	] as const;
-	let value = $state<readonly (typeof items)[number]['value'][]>([1]);
+	];
+	const defaultValue: readonly FilterKey[] = [1];
+	let value = $state<readonly FilterKey[]>(defaultValue);
 	let submitted = $state('尚未提交');
 
 	function submit(event: SubmitEvent): void {
@@ -20,7 +22,7 @@
 	<ZStack gap="small">
 		<ZToggleGroup
 			bind:value
-			defaultValue={[1]}
+			{defaultValue}
 			{items}
 			name="filter"
 			selectionMode="multiple"

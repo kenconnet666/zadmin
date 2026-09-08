@@ -49,18 +49,21 @@ it('defers and coalesces element resize positioning outside ResizeObserver deliv
 		constructor(callback: ResizeObserverCallback) {
 			callbacks.push(callback);
 		}
-		disconnect = vi.fn();
-		observe = vi.fn();
-		unobserve = vi.fn();
+		disconnect(): void {}
+		observe(): void {}
+		unobserve(): void {}
 	}
 	class InertIntersectionObserver implements IntersectionObserver {
-		readonly root = null;
+		readonly root: Element | Document | null = null;
 		readonly rootMargin = '0px';
-		readonly thresholds = [];
-		disconnect = vi.fn();
-		observe = vi.fn();
-		takeRecords = vi.fn(() => []);
-		unobserve = vi.fn();
+		readonly scrollMargin = '0px';
+		readonly thresholds: readonly number[] = [];
+		disconnect(): void {}
+		observe(): void {}
+		unobserve(): void {}
+		takeRecords(): IntersectionObserverEntry[] {
+			return [];
+		}
 	}
 	vi.stubGlobal('ResizeObserver', ControlledResizeObserver);
 	vi.stubGlobal('IntersectionObserver', InertIntersectionObserver);

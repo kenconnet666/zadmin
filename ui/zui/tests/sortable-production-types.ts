@@ -54,25 +54,25 @@ function consumeEnd(detail: SortableMoveEnd<Item, Key>): string {
 const invalidKey = {
 	items,
 	// @ts-expect-error Sortable identity is a string or finite number, never a symbol.
-	itemKey: (_entry: Item) => Symbol('invalid'),
+	itemKey: () => Symbol('invalid'),
 	itemLabel: (entry: Item) => entry.label,
 	onMoveRequest
-} satisfies ZSortableProps<Item>;
+} satisfies ZSortableProps<Item, Key>;
 
 const invalidRequestResult = {
 	items,
 	itemKey: (entry: Item) => entry.key,
 	itemLabel: (entry: Item) => entry.label,
 	// @ts-expect-error Move ownership must explicitly accept or reject with boolean.
-	onMoveRequest: (_request: SortableMoveRequest<Item, Key>) => 'accepted'
+	onMoveRequest: () => 'accepted'
 } satisfies ZSortableProps<Item, Key>;
 
 // @ts-expect-error onMoveRequest is required because ZSortable never mutates owner items itself.
-const missingOwner = {
+const missingOwner: ZSortableProps<Item, Key> = {
 	items,
 	itemKey: (entry: Item) => entry.key,
 	itemLabel: (entry: Item) => entry.label
-} satisfies ZSortableProps<Item, Key>;
+};
 
 void props;
 void everyResult;

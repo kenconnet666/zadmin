@@ -262,6 +262,11 @@ describe('date family Form model adapters', () => {
 			expect(rejectedTime.value).toBe('09');
 
 			const rejectedPicker = target.querySelector<HTMLElement>('[data-testid="rejected-picker"]')!;
+			const rejectedPickerInputs = rejectedPicker.querySelectorAll<HTMLInputElement>(
+				'[data-slot="field"] input'
+			);
+			await inputSegment(rejectedPickerInputs[1]!, '20');
+			expect(rejectedPickerInputs[1]!.value).toBe('13');
 			const rejectedPickerDialog = await openDialog(rejectedPicker);
 			await userEvent.click(dayButton(rejectedPickerDialog, '20'));
 			expect(new FormData(rejectedForm).get('picker')).toBe('2026-09-13');
@@ -278,6 +283,11 @@ describe('date family Form model adapters', () => {
 			);
 			await inputSegment(rejectedRangeStart[1]!, '20');
 			expect(rejectedRangeStart[1]!.value).toBe('14');
+			const rejectedRangeEnd = rejectedRange.querySelectorAll<HTMLInputElement>(
+				'[data-slot="end-field"] input'
+			);
+			await inputSegment(rejectedRangeEnd[1]!, '22');
+			expect(rejectedRangeEnd[1]!.value).toBe('16');
 			const rejectedRangeDialog = await openDialog(rejectedRange);
 			await userEvent.click(dayButton(rejectedRangeDialog, '18'));
 			expect(new FormData(rejectedForm).get('range.start')).toBe('2026-09-14');

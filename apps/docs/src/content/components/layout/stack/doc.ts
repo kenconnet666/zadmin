@@ -67,6 +67,7 @@ export const stackDoc = defineComponentDoc(stackMetadata, {
 		},
 		{
 			covers: ['composition', 'native-props', 'ssr'],
+			component: ResponsiveDemo,
 			description: '方向、间距和换行在base/small/medium/large断点下生成稳定CSS，不依赖客户端测量。',
 			id: 'stack-responsive',
 			source: responsiveSource,

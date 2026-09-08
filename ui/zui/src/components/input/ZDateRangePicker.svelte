@@ -337,7 +337,6 @@
 		normalizeCalendarRangeModelValue,
 		preserveCalendarOwner,
 		resolveOwnerCalendar,
-		type CalendarRange,
 		type CalendarRangeValue
 	} from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
@@ -544,6 +543,10 @@
 	}
 
 	function syncOwnedValue(): void {
+		// Restore the bound canonical values before asking the child controllers
+		// to synchronize their DOM; a rejected edit must not become the rollback source.
+		endValue = normalizedValue?.end ?? null;
+		startValue = normalizedValue?.start ?? null;
 		startController?.rollbackDraft();
 		endController?.rollbackDraft();
 		calendarValue = null;
@@ -553,8 +556,6 @@
 			normalizedDefaultValue?.start ??
 			normalizedDefaultValue?.end ??
 			undefined;
-		endValue = normalizedValue?.end ?? null;
-		startValue = normalizedValue?.start ?? null;
 	}
 
 	function preserveRangeOwner(next: CalendarRangeValue | null): CalendarRangeValue | null {

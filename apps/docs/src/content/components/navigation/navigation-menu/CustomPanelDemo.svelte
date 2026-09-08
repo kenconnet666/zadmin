@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { ZButton, ZCard, ZLink, ZNavigationMenu, ZStack, ZText } from '@zadmin/zui';
+	import {
+		ZButton,
+		ZCard,
+		ZLink,
+		ZNavigationMenu,
+		ZStack,
+		ZText,
+		type NavigationMenuPanelContext
+	} from '@zadmin/zui';
 </script>
 
-{#snippet panel(context)}
+{#snippet panel(context: NavigationMenuPanelContext)}
 	<ZStack direction="row" gap="small" wrap style="padding: 0.75rem; max-width: 100%;">
 		<ZCard>
 			<ZText weight="semibold">后台工作台</ZText>

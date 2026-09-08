@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
+	import { untrack } from 'svelte';
 	import ZForm, { type ZFormController } from '../src/components/input/ZForm.svelte';
 	import ZFormField from '../src/components/input/ZFormField.svelte';
 	import ZFormList from '../src/components/input/ZFormList.svelte';
@@ -14,8 +15,10 @@
 	}
 	let { native = false }: { native?: boolean } = $props();
 	let owner = $state<Values>({ preserved: 'keep', users: [{ name: 'same' }, { name: 'same' }] });
+	// The controlled owner changes, but this model baseline intentionally belongs to fixture creation.
+	const initialValues = untrack(() => owner);
 	const model = createFormModel({
-		defaultValues: owner,
+		defaultValues: initialValues,
 		read: () => owner,
 		write: (next) => (owner = next)
 	});
@@ -31,7 +34,7 @@
 		'~standard': {
 			version: 1,
 			vendor: 'form-list-test',
-			validate: async (_value) => {
+			validate: async () => {
 				signalValidationStarted?.();
 				await new Promise<void>((resolve) => (resolveValidation = resolve));
 				return { issues: [{ message: 'Late row error', path: ['users', 0, 'name'] }] };

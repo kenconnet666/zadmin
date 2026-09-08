@@ -40,7 +40,10 @@ describe('ZFormList production contract', () => {
 				[...target.querySelectorAll<HTMLElement>('[data-row-id]')].map((row) => row.dataset.rowId)
 			).toEqual(baselineIds);
 			const moveButton = target.querySelector<HTMLButtonElement>('[data-testid="move-rows"]')!;
-			await userEvent.click(moveButton);
+			moveButton.focus();
+			expect(document.activeElement).toBe(moveButton);
+			moveButton.click();
+			await tick();
 			expect(document.activeElement).toBe(moveButton);
 			await userEvent.click(target.querySelector<HTMLButtonElement>('button[type="reset"]')!);
 			await expect
@@ -72,6 +75,32 @@ describe('ZFormList production contract', () => {
 			expect(component.fieldState(0)?.errors).not.toContain('Late row error');
 		} finally {
 			await unmount(component);
+			target.remove();
+		}
+	});
+	it('does not redirect external or vacant document focus when removal is invoked programmatically', async () => {
+		const target = document.createElement('div');
+		const external = document.createElement('button');
+		document.body.append(external, target);
+		const component = mount(FormListFixture, { target });
+		try {
+			await tick();
+			const removeFirst = target.querySelector<HTMLButtonElement>('[data-remove]')!;
+			external.focus();
+			removeFirst.click();
+			await tick();
+			expect(document.activeElement).toBe(external);
+
+			external.blur();
+			expect(document.activeElement).toBe(document.body);
+			target.querySelector<HTMLButtonElement>('[data-testid="append-row"]')!.click();
+			await tick();
+			target.querySelector<HTMLButtonElement>('[data-remove]')!.click();
+			await tick();
+			expect(document.activeElement).toBe(document.body);
+		} finally {
+			await unmount(component);
+			external.remove();
 			target.remove();
 		}
 	});

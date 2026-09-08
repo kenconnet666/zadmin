@@ -83,6 +83,28 @@ const rangeInSingleCandidate = {
 } as const;
 // @ts-expect-error Single mode cannot receive a range value.
 const rangeInSingle: ZCalendarProps = rangeInSingleCandidate;
+type StripSingleOrMultipleCalendar = ZCalendarProps<'single' | 'multiple', 'strip'>;
+const stripSingleOrMultiple = {
+	selectionMode: 'multiple',
+	value: [new CalendarDate(2026, 9, 7)],
+	view: 'strip',
+	visibleDays: 7
+} satisfies StripSingleOrMultipleCalendar;
+const stripRangeCandidate = {
+	selectionMode: 'range',
+	value: { start: new CalendarDate(2026, 9, 7), end: null },
+	view: 'strip'
+} as const;
+// @ts-expect-error single|multiple strip excludes range values.
+const rangeInStripSingleOrMultiple: StripSingleOrMultipleCalendar = stripRangeCandidate;
+const stripMonthGridCandidate = {
+	selectionMode: 'single',
+	value: new CalendarDate(2026, 9, 7),
+	view: 'strip',
+	visibleMonths: 2
+} as const;
+// @ts-expect-error Strip view accepts visibleDays, not month-grid visibleMonths.
+const monthGridInStripSingleOrMultiple: StripSingleOrMultipleCalendar = stripMonthGridCandidate;
 
 void [
 	single,
@@ -96,5 +118,8 @@ void [
 	headerContext,
 	missingMultipleMode,
 	missingRangeEnd,
-	rangeInSingle
+	rangeInSingle,
+	stripSingleOrMultiple,
+	rangeInStripSingleOrMultiple,
+	monthGridInStripSingleOrMultiple
 ];

@@ -116,6 +116,20 @@ describe('ZToolbar and ZToggleGroup composition contract', () => {
 		expect(root.querySelectorAll('[tabindex="0"]')).toHaveLength(1);
 	});
 
+	it('retains a focused item when layout invalidates without changing its Toolbar owner', async () => {
+		await render(ToolbarToggleGroupFixture);
+		const item = buttons(group('toolbar-toggle-editable'))[0]!;
+		await userEvent.click(item);
+		const value = output('toolbar-toggle-editable-output');
+		toolbar().style.paddingInlineStart = '3px';
+		window.dispatchEvent(new Event('resize'));
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		expect(document.activeElement).toBe(item);
+		expect(output('toolbar-toggle-editable-output')).toBe(value);
+		expect(toolbar().querySelectorAll('[tabindex="0"]')).toHaveLength(1);
+	});
+
 	it('keeps a portalled ToggleGroup on independent roving focus and restores the Toolbar trigger', async () => {
 		await render(ToolbarToggleGroupFixture);
 		await tick();

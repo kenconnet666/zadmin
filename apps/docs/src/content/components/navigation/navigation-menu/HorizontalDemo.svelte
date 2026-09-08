@@ -1,10 +1,16 @@
 <script lang="ts">
-	import { ZButton, ZNavigationMenu, ZStack, ZText } from '@zadmin/zui';
+	import {
+		ZButton,
+		ZNavigationMenu,
+		ZStack,
+		ZText,
+		type NavigationMenuPanelContext
+	} from '@zadmin/zui';
 
 	let width = $state(240);
 </script>
 
-{#snippet panel(context)}
+{#snippet panel(context: NavigationMenuPanelContext)}
 	<ZStack gap="small" style="padding: 0.75rem; min-width: 14rem;">
 		<ZText weight="semibold">面板 {context.key}</ZText>
 		<ZButton variant="ghost" onclick={context.close}>关闭面板</ZButton>

@@ -3,7 +3,7 @@ import { playwright } from '@vitest/browser-playwright';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 import { createComponentExecutionReporter } from './scripts/component-execution-reporter.js';
-import { dragSliderTrack } from './tests/browser-commands.js';
+import { dragElements, dragSliderTrack } from './tests/browser-commands.js';
 
 const collectingCoverage = process.argv.includes('--coverage');
 const packageRoot = fileURLToPath(new URL('.', import.meta.url));
@@ -109,7 +109,7 @@ export default defineConfig({
 				extends: true,
 				test: {
 					browser: {
-						commands: { dragSliderTrack },
+						commands: { dragElements, dragSliderTrack },
 						api: {
 							host: '127.0.0.1',
 							port: configuredBrowserPort,

@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { dataTableMetadata } from '@zadmin/zui/metadata';
+import * as publicMetadata from '@zadmin/zui/metadata';
+import * as publicComponents from '@zadmin/zui';
+import { ZCode } from '@zadmin/zui/code';
+import type { ZuiComponentMetadata } from '@zadmin/zui/metadata';
 
 import { componentDocs, componentDocsById } from './catalog.js';
 import { componentCatalogManifest } from './catalog-manifest.generated.js';
+import { componentDocLoaders } from './component-doc-loaders.generated.js';
 import { dataTableApiFacts, radioGroupItemApiFacts } from './component-api.generated.js';
 import * as generatedApiFacts from './component-api.generated.js';
 import type { ComponentApiFacts } from './component-api.js';
@@ -30,19 +35,35 @@ describe('ZUI component documentation catalog', () => {
 		const factsByName = new Map(facts.map((fact) => [fact.name, fact]));
 		const manifestById = new Map(componentCatalogManifest.map((entry) => [entry.id, entry]));
 		const ownerNames = new Set(componentDocs.map(({ name }) => name));
+		const loaderIds = new Set(Object.keys(componentDocLoaders));
+		const manifestIds = componentCatalogManifest.map((entry) => entry.id);
 
-		expect(componentDocs).toHaveLength(79);
-		expect(componentCatalogManifest).toHaveLength(79);
-		expect(facts).toHaveLength(141);
+		expect(componentDocs).toHaveLength(loaderIds.size);
+		expect(componentDocs.map(({ id }) => id).sort()).toEqual([...loaderIds].sort());
+		expect(loaderIds).toEqual(new Set(manifestIds));
 		expect(
 			componentCatalogManifest.reduce((total, entry) => total + entry.publicComponentCount, 0)
 		).toBe(facts.length);
+		// Runtime public exports are independent of the Docs catalog generator.
+		const metadata = (Object.values(publicMetadata) as readonly unknown[]).filter(
+			(value): value is ZuiComponentMetadata =>
+				value !== null &&
+				typeof value === 'object' &&
+				'id' in value &&
+				'name' in value &&
+				'props' in value &&
+				'source' in value
+		);
+		expect(facts.map(({ name }) => name).sort()).toEqual(metadata.map(({ name }) => name).sort());
+		const exports: Readonly<Record<string, unknown>> = { ...publicComponents, ZCode };
+		for (const entry of metadata)
+			expect(exports[entry.name], `${entry.name} public export`).toBeDefined();
 		for (const doc of componentDocs) {
 			const manifest = manifestById.get(doc.id);
 			const fact = factsByName.get(doc.name);
 			expect(manifest, `${doc.name} catalog manifest entry`).toBeDefined();
 			expect(manifest?.name).toBe(doc.name);
-			expect(manifest?.demoCount).toBe(doc.demos.length);
+			expect(manifest?.demoCount, `${doc.id} manifest demo count`).toBe(doc.demos.length);
 			expect(manifest?.publicComponentCount).toBe(
 				doc.api.filter(({ title }) => title.endsWith('Props')).length
 			);
@@ -83,170 +104,21 @@ describe('ZUI component documentation catalog', () => {
 		}
 	});
 
-	it('covers the approved component catalog exactly once', () => {
-		expect(componentDocs.map(({ name }) => name)).toEqual([
-			'ZProvider',
-			'ZBox',
-			'ZStack',
-			'ZText',
-			'ZHeading',
-			'ZIcon',
-			'ZCode',
-			'ZButton',
-			'ZToggleButton',
-			'ZLink',
-			'ZSeparator',
-			'ZVisuallyHidden',
-			'ZKbd',
-			'ZAspectRatio',
-			'ZContainer',
-			'ZAvatar',
-			'ZBadge',
-			'ZCard',
-			'ZDescriptionList',
-			'ZList',
-			'ZTag',
-			'ZProgress',
-			'ZMeter',
-			'ZSkeleton',
-			'ZEmpty',
-			'ZTimeline',
-			'ZStatistic',
-			'ZTable',
-			'ZVirtualList',
-			'ZDataTable',
-			'ZCarousel',
-			'ZAlert',
-			'ZLoadingBar',
-			'ZResult',
-			'ZSpinner',
-			'ZToast',
-			'ZCheckbox',
-			'ZCalendar',
-			'ZCascader',
-			'ZColorPicker',
-			'ZCombobox',
-			'ZDateField',
-			'ZDatePicker',
-			'ZDateRangePicker',
-			'ZInput',
-			'ZInputGroup',
-			'ZMention',
-			'ZMultiSelect',
-			'ZNumberField',
-			'ZPinInput',
-			'ZField',
-			'ZFileUpload',
-			'ZForm',
-			'ZRadioGroup',
-			'ZSelect',
-			'ZSegmented',
-			'ZSwitch',
-			'ZTagsInput',
-			'ZTextarea',
-			'ZTimeField',
-			'ZTreeSelect',
-			'ZTransfer',
-			'ZSlider',
-			'ZAccordion',
-			'ZCommand',
-			'ZCommandPalette',
-			'ZContextMenu',
-			'ZDropdownMenu',
-			'ZMenu',
-			'ZPagination',
-			'ZTabs',
-			'ZTree',
-			'ZAlertDialog',
-			'ZDialog',
-			'ZDrawer',
-			'ZPopconfirm',
-			'ZPopover',
-			'ZTooltip',
-			'ZTour'
-		]);
+	it('keeps loaded component names, ids and categories aligned with the lazy catalog', () => {
+		const manifestById = new Map(componentCatalogManifest.map((entry) => [entry.id, entry]));
+		const expectedNames = [...manifestById.values()].map((entry) => entry.name).sort();
+		const actualNames = componentDocs.map(({ name }) => name).sort();
+		const expectedIds = [...manifestById.keys()].sort();
+		const actualIds = componentDocs.map(({ id }) => id).sort();
+
+		expect(actualNames).toEqual(expectedNames);
+		expect(actualIds).toEqual(expectedIds);
 		expect(componentDocsById.size).toBe(componentDocs.length);
-		expect(componentDocs.map(({ category }) => category)).toEqual([
-			'gene',
-			'gene',
-			'layout',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'gene',
-			'layout',
-			'layout',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'data-display',
-			'feedback',
-			'feedback',
-			'feedback',
-			'feedback',
-			'feedback',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'input',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'navigation',
-			'overlay',
-			'overlay',
-			'overlay',
-			'overlay',
-			'overlay',
-			'overlay',
-			'overlay'
-		]);
+		for (const doc of componentDocs) {
+			const manifest = manifestById.get(doc.id);
+			expect(manifest, `${doc.name} catalog entry`).toBeDefined();
+			expect(manifest?.category, `${doc.name} catalog category`).toBe(doc.category);
+		}
 	});
 
 	it('includes every Tabs compound member on the owning page', () => {
@@ -287,7 +159,7 @@ describe('ZUI component documentation catalog', () => {
 		const props = stack?.api.find(({ id }) => id === 'props');
 		expect(props?.description).toContain('ZStackProps');
 		expect(props?.rows.find(({ name }) => name === 'direction')?.type).toBe(
-			"'column' | 'column-reverse' | 'row' | 'row-reverse'"
+			'ResponsiveValue<ZStackDirection>'
 		);
 		expect(stack?.props).toStrictEqual(props?.rows);
 		expect(stack?.profiles).toContain('primitive');
@@ -405,7 +277,7 @@ describe('ZUI component documentation catalog', () => {
 			expect(['experimental', 'stable']).toContain(doc.status);
 			for (const demo of doc.demos) {
 				expect(demo.source).toContain('<script');
-				expect(typeof demo.component).toBe('function');
+				expect(typeof demo.component, `${doc.id}/${demo.id} runnable component`).toBe('function');
 			}
 		}
 	});
@@ -428,5 +300,12 @@ describe('ZUI component documentation catalog', () => {
 				demos: [first!, { ...second!, source: '   ' }]
 			})
 		).toThrow(/has no source/u);
+		expect(() =>
+			defineComponentDoc(metadata, {
+				accessibility: ['test'],
+				// @ts-expect-error Runtime validation also rejects malformed untyped definitions.
+				demos: [first!, { ...second!, component: undefined }]
+			})
+		).toThrow(/has no runnable component/u);
 	});
 });

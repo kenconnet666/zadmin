@@ -22,6 +22,7 @@
 	} from '../../runtime/picker-presentation.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
+	/* eslint-disable no-import-assign -- Type-only re-exports have no runtime writes; the Svelte scope analyzer marks their references as assignments. */
 	export type {
 		DateTimeRangeOrder,
 		DateTimeRangePart,
@@ -29,14 +30,14 @@
 		LocalDateTimeRangeValue,
 		ZonedDateTimeRangeValue
 	} from '../../runtime/date-time-range.js';
+	/* eslint-enable no-import-assign */
 	export type DateTimeRangeCommitMode = 'confirm' | 'immediate';
 	type DateTimeRangePickerMode = 'local' | 'zoned';
 	export type DateTimeRangePickerSize = ZControlSize;
 
-	interface ZDateTimeRangePickerSharedProps extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'children' | 'onchange'
-	> {
+	type ZDateTimeRangePickerDomProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'>;
+
+	interface ZDateTimeRangePickerSharedProps {
 		readonly allowEmpty?: boolean;
 		readonly calendarLabel?: string;
 		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
@@ -136,18 +137,29 @@
 			ZDateTimeRangePickerSharedProps,
 			ZDateTimeRangePickerZonedBranch,
 			InlinePickerPresentationProps {}
-	export type ZDateTimeRangePickerLocalProps = LocalPopoverProps | LocalInlineProps;
-	export type ZDateTimeRangePickerZonedProps = ZonedPopoverProps | ZonedInlineProps;
+	type ZDateTimeRangePickerLocalSemanticProps = LocalPopoverProps | LocalInlineProps;
+	type ZDateTimeRangePickerZonedSemanticProps = ZonedPopoverProps | ZonedInlineProps;
+	export type ZDateTimeRangePickerLocalProps = ZDateTimeRangePickerDomProps &
+		ZDateTimeRangePickerLocalSemanticProps;
+	export type ZDateTimeRangePickerZonedProps = ZDateTimeRangePickerDomProps &
+		ZDateTimeRangePickerZonedSemanticProps;
+	type ZDateTimeRangePickerSemanticProps<
+		TMode extends DateTimeRangePickerMode = DateTimeRangePickerMode,
+		TPresentation extends PickerPresentation = PickerPresentation
+	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (
+		| ('local' extends TMode
+				? | ('inline' extends TPresentation ? LocalInlineProps : never)
+					| ('popover' extends TPresentation ? LocalPopoverProps : never)
+				: never)
+		| ('zoned' extends TMode
+				? | ('inline' extends TPresentation ? ZonedInlineProps : never)
+					| ('popover' extends TPresentation ? ZonedPopoverProps : never)
+				: never)
+	);
 	export type ZDateTimeRangePickerProps<
 		TMode extends DateTimeRangePickerMode = DateTimeRangePickerMode,
 		TPresentation extends PickerPresentation = PickerPresentation
-	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (TMode extends 'zoned'
-		? TPresentation extends 'inline'
-			? ZonedInlineProps
-			: ZonedPopoverProps
-		: TPresentation extends 'inline'
-			? LocalInlineProps
-			: LocalPopoverProps);
+	> = ZDateTimeRangePickerDomProps & ZDateTimeRangePickerSemanticProps<TMode, TPresentation>;
 
 	export const zuiMetadata = {
 		bindings: [
@@ -661,7 +673,6 @@
 	} from '../../runtime/date-time.js';
 	import {
 		normalizeDateTimeRangeModelValue,
-		replaceDateTimeRangePart,
 		resolveDateTimeRangeCandidate,
 		resolveDateTimeRangePreset,
 		sameDateTimeRangeValue,
@@ -765,7 +776,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimeRangePickerProps<TMode, TPresentation> = $props();
-	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest);
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();

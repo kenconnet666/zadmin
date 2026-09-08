@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
+	import { untrack } from 'svelte';
 	import ZForm, { type ZFormController } from '../src/components/input/ZForm.svelte';
 	import ZFormField from '../src/components/input/ZFormField.svelte';
 	import ZFormList, { type FormListOperations } from '../src/components/input/ZFormList.svelte';
@@ -28,8 +29,10 @@
 	}
 
 	let owner = $state<Values>(baselineValues());
+	// The controlled owner changes, but reset must retain this fixture's original nested baseline.
+	const initialValues = untrack(() => owner);
 	const model = createFormModel<Values>({
-		defaultValues: owner,
+		defaultValues: initialValues,
 		read: () => owner,
 		write: (next) => (owner = next)
 	});
@@ -44,7 +47,7 @@
 		'~standard': {
 			version: 1,
 			vendor: 'nested-form-list-test',
-			validate: async (_value) => {
+			validate: async () => {
 				signalValidationStarted?.();
 				await new Promise<void>((resolve) => (resolveValidation = resolve));
 				return {
@@ -201,7 +204,7 @@
 			{#each groups as group (group.id)}
 				<section data-rejected-group-id={group.id} data-rejected-group-key={group.value.key}>
 					<ZFormList name={[...group.path, 'members']}>
-						{#snippet children(members, _memberOperations)}
+						{#snippet children(members)}
 							{#each members as member (member.id)}
 								<div data-rejected-member-id={member.id}>
 									<ZFormField

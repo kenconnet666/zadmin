@@ -79,7 +79,7 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'ssr'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{

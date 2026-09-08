@@ -405,9 +405,11 @@
 		if (containedFocus) restoreFocus();
 		else
 			void tick().then(() => {
+				if (!live || !ref?.isConnected || array !== current) return;
 				// Includes a row's remove button, which need not be inside a registered FormField.
-				if (focusWasInside && active && !active.isConnected && ref && focusIsVacant(ref))
-					restoreFocus();
+				// WebKit can focus the tabindex=-1 list root after row removal. Treat that, like an
+				// empty document focus, as a browser fallback rather than a surviving user target.
+				if (focusWasInside && (focusIsVacant(ref) || getActiveElement(ref) === ref)) restoreFocus();
 			});
 		return true;
 	}

@@ -18,9 +18,10 @@ function frozenUniqueKeys<TKey extends SelectionKey>(
 	const seen = new Set<SelectionKey>();
 	const copy: TKey[] = [];
 	for (const key of keys) {
-		assertSelectionKey(key, owner);
-		if (seen.has(key)) throw new TypeError(`${owner} keys must be unique.`);
-		seen.add(key);
+		const candidate: unknown = key;
+		assertSelectionKey(candidate, owner);
+		if (seen.has(candidate)) throw new TypeError(`${owner} keys must be unique.`);
+		seen.add(candidate);
 		copy.push(key);
 	}
 	return Object.freeze(copy);

@@ -6410,7 +6410,7 @@ export const descriptionListApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet',
-			inheritedFrom: 'ZDescriptionListDataProps'
+			inheritedFrom: 'ZDescriptionListManualProps'
 		},
 		{
 			name: 'description',
@@ -6552,7 +6552,7 @@ export const listApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet',
-			inheritedFrom: 'ZListDataProps'
+			inheritedFrom: 'ZListManualProps'
 		},
 		{
 			name: 'item',
@@ -8362,7 +8362,8 @@ export const calendarApiFacts = {
 	declaration: 'ZCalendarProps',
 	id: 'calendar',
 	inheritedFrom: [
-		"TView extends 'strip' ? TSelectionMode extends 'multiple' ? StripMultipleProps : TSelectionMode extends 'range' ? StripRangeProps : StripSingleProps : TSelectionMode extends 'multiple' ? MonthMultipleProps : TSelectionMode extends 'range' ? MonthRangeProps : MonthSingleProps"
+		'HTMLAttributes<HTMLDivElement>',
+		"| ('month' extends TView ? | ('single' extends TSelectionMode ? MonthSingleProps : never) | ('multiple' extends TSelectionMode ? MonthMultipleProps : never) | ('range' extends TSelectionMode ? MonthRangeProps : never) : never) | ('strip' extends TView ? | ('single' extends TSelectionMode ? StripSingleProps : never) | ('multiple' extends TSelectionMode ? StripMultipleProps : never) | ('range' extends TSelectionMode ? StripRangeProps : never) : never)"
 	],
 	name: 'ZCalendar',
 	props: [
@@ -8596,7 +8597,7 @@ export const calendarApiFacts = {
 			name: 'visibleDays',
 			required: false,
 			type: 'number',
-			inheritedFrom: 'CalendarMonthViewOptions'
+			inheritedFrom: 'CalendarStripViewOptions'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
@@ -9482,7 +9483,10 @@ export const dateRangePickerApiFacts = {
 export const dateTimeFieldApiFacts = {
 	declaration: 'ZDateTimeFieldProps',
 	id: 'date-time-field',
-	inheritedFrom: ["TMode extends 'zoned' ? ZDateTimeFieldZonedProps : ZDateTimeFieldLocalProps"],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		"| ('local' extends TMode ? ZDateTimeFieldLocalSemanticProps : never) | ('zoned' extends TMode ? ZDateTimeFieldZonedSemanticProps : never)"
+	],
 	name: 'ZDateTimeField',
 	props: [
 		{
@@ -9667,7 +9671,8 @@ export const dateTimePickerApiFacts = {
 	declaration: 'ZDateTimePickerProps',
 	id: 'date-time-picker',
 	inheritedFrom: [
-		"TMode extends 'zoned' ? TPresentation extends 'inline' ? ZonedInlineProps : ZonedPopoverProps : TPresentation extends 'inline' ? LocalInlineProps : LocalPopoverProps"
+		'HTMLAttributes<HTMLDivElement>',
+		"| ('local' extends TMode ? | ('inline' extends TPresentation ? LocalInlineProps : never) | ('popover' extends TPresentation ? LocalPopoverProps : never) : never) | ('zoned' extends TMode ? | ('inline' extends TPresentation ? ZonedInlineProps : never) | ('popover' extends TPresentation ? ZonedPopoverProps : never) : never)"
 	],
 	name: 'ZDateTimePicker',
 	props: [
@@ -9990,7 +9995,8 @@ export const dateTimeRangePickerApiFacts = {
 	declaration: 'ZDateTimeRangePickerProps',
 	id: 'date-time-range-picker',
 	inheritedFrom: [
-		"TMode extends 'zoned' ? TPresentation extends 'inline' ? ZonedInlineProps : ZonedPopoverProps : TPresentation extends 'inline' ? LocalInlineProps : LocalPopoverProps"
+		'HTMLAttributes<HTMLDivElement>',
+		"| ('local' extends TMode ? | ('inline' extends TPresentation ? LocalInlineProps : never) | ('popover' extends TPresentation ? LocalPopoverProps : never) : never) | ('zoned' extends TMode ? | ('inline' extends TPresentation ? ZonedInlineProps : never) | ('popover' extends TPresentation ? ZonedPopoverProps : never) : never)"
 	],
 	name: 'ZDateTimeRangePicker',
 	props: [

@@ -18,7 +18,8 @@
 		hourCycle={24}
 		minValue={new CalendarDateTime(2026, 9, 7, 10, 30)}
 		maxValue={new CalendarDateTime(2026, 9, 10, 16)}
-		isDateTimeUnavailable={(candidate) => candidate.hour < 9 || candidate.hour >= 18}
+		isDateTimeUnavailable={(candidate: CalendarDateTime) =>
+			candidate.hour < 9 || candidate.hour >= 18}
 	/>
 	<ZText tone="muted"
 		>预约：{appointment?.toString() ?? '空'}。9 月 7 日最早 10:30，9 月 10 日最晚

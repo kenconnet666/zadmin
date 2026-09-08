@@ -480,10 +480,10 @@
 	}
 
 	function syncOwnedValue(next = valueState.current): void {
+		fieldValue = next;
 		fieldController?.rollbackDraft();
 		calendarValue = next;
 		calendarFocusedValue = next ?? normalizedDefaultValue ?? undefined;
-		fieldValue = next;
 	}
 
 	function updateValue(next: CalendarDate | null): boolean {

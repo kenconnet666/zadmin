@@ -192,11 +192,12 @@ function mergeFacts(facts, kind) {
 		(grouped.get(item.path) ?? grouped.set(item.path, []).get(item.path)).push(item);
 	return new Map(
 		[...grouped].map(([path, items]) => {
-			const first = items[0];
 			const typedItems =
 				kind === 'union' && items.some((item) => item.requiredness !== REQUIREDNESS.forbidden)
 					? items.filter((item) => item.requiredness !== REQUIREDNESS.forbidden)
 					: items;
+			// Provenance must follow an inhabitable declaration, not an earlier `prop?: never`.
+			const first = typedItems[0];
 			const types = [...new Set(typedItems.map((item) => item.declaredType))];
 			const typeCandidates = [
 				...new Set(typedItems.flatMap((item) => item.typeCandidates ?? [item.declaredType]))
@@ -235,11 +236,24 @@ function hasForbiddenAncestor(items, path) {
 /** Collects public property facts without a TypeScript checker or external package resolution. */
 export async function collectWorkspacePropertyFacts(graph, modulePath, rootName, options = {}) {
 	const active = new Set();
+	const unreachableFacts = Symbol('unreachable-property-facts');
+
+	function unreachableBranch() {
+		const facts = [];
+		Object.defineProperty(facts, unreachableFacts, { value: true });
+		return facts;
+	}
+
+	function isUnreachableBranch(facts) {
+		return facts[unreachableFacts] === true;
+	}
 
 	function mergeUnionBranches(branchFacts, context) {
-		const allPaths = new Set(branchFacts.flatMap((items) => items.map((item) => item.path)));
+		const reachableBranches = branchFacts.filter((items) => !isUnreachableBranch(items));
+		if (reachableBranches.length === 0) return unreachableBranch();
+		const allPaths = new Set(reachableBranches.flatMap((items) => items.map((item) => item.path)));
 		const branches = [...allPaths].flatMap((factPath) =>
-			branchFacts
+			reachableBranches
 				.filter((items) => !hasForbiddenAncestor(items, factPath))
 				.map(
 					(items) =>
@@ -258,6 +272,8 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 	async function finiteLiteralCandidates(node, context, seen = new Set()) {
 		if (!node) return undefined;
 		if (ts.isParenthesizedTypeNode(node)) return finiteLiteralCandidates(node.type, context, seen);
+		// `never` distributes to no branches; it must not be treated as a false branch.
+		if (node.kind === ts.SyntaxKind.NeverKeyword) return [];
 		if (ts.isUnionTypeNode(node)) {
 			const candidates = [];
 			for (const branch of node.types) {
@@ -315,18 +331,34 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 		return candidates;
 	}
 
+	function isNakedGenericParameter(node, context) {
+		return (
+			ts.isTypeReferenceNode(node) &&
+			ts.isIdentifier(node.typeName) &&
+			(context.bindings.has(node.typeName.text) || context.constraints?.has(node.typeName.text))
+		);
+	}
+
 	async function visitType(node, context, path = '', modifiers = {}) {
 		if (!node) return [];
 		if (ts.isParenthesizedTypeNode(node)) return visitType(node.type, context, path, modifiers);
+		// Alias/binding traversal below preserves this marker without a second type resolver.
+		if (node.kind === ts.SyntaxKind.NeverKeyword) return unreachableBranch();
 		if (ts.isArrayTypeNode(node)) return visitType(node.elementType, context, path, modifiers);
 		if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.ReadonlyKeyword)
 			return visitType(node.type, context, path, modifiers);
 		if (ts.isConditionalTypeNode(node)) {
-			if (!ts.isTypeReferenceNode(node.checkType) || !ts.isIdentifier(node.checkType.typeName))
-				return [];
 			const candidates = await finiteLiteralCandidates(node.checkType, context);
 			const accepted = await finiteLiteralCandidates(node.extendsType, context);
-			if (!candidates || candidates.length === 0 || !accepted || accepted.length === 0) return [];
+			if (!candidates || !accepted) return [];
+			const nakedGeneric = isNakedGenericParameter(node.checkType, context);
+			if (!nakedGeneric) {
+				// The empty finite set is never: it is a subset of every type, including never.
+				const acceptedKeys = new Set(accepted.map((candidate) => candidate.key));
+				const selected = candidates.every((candidate) => acceptedKeys.has(candidate.key));
+				return visitType(selected ? node.trueType : node.falseType, context, path, modifiers);
+			}
+			if (candidates.length === 0) return unreachableBranch();
 			const acceptedKeys = new Set(accepted.map((candidate) => candidate.key));
 			const branchFacts = [];
 			for (const candidate of candidates) {
@@ -352,7 +384,9 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 				branchFacts.push(await visitType(branch, context, path, modifiers));
 			return ts.isUnionTypeNode(node)
 				? mergeUnionBranches(branchFacts, context)
-				: [...mergeFacts(branchFacts.flat(), 'intersection').values()];
+				: branchFacts.some(isUnreachableBranch)
+					? unreachableBranch()
+					: [...mergeFacts(branchFacts.flat(), 'intersection').values()];
 		}
 		if (ts.isTypeLiteralNode(node)) {
 			const facts = [];
@@ -605,7 +639,39 @@ interface DistributedShared<K extends Kind, M extends Mode> {
 type ModeProp<M extends Mode> = { selectionMode?: M } &
 	(M extends 'single' ? unknown : { selectionMode: M });
 export type Distributed<K extends Kind = Kind, M extends Mode = Mode> =
-	K extends Kind ? (M extends Mode ? DistributedShared<K, M> & ModeProp<M> : never) : never;`,
+	K extends Kind ? (M extends Mode ? DistributedShared<K, M> & ModeProp<M> : never) : never;
+type DateTimeMode = 'local' | 'zoned';
+type Presentation = 'inline' | 'popover';
+export type ReverseNested<M extends DateTimeMode = DateTimeMode, P extends Presentation = Presentation> =
+	| ('local' extends M
+		? ('inline' extends P ? { localInline: string } : never) |
+			('popover' extends P ? { localPopover: string } : never)
+		: never)
+	| ('zoned' extends M
+		? ('inline' extends P ? { zonedInline: string } : never) |
+			('popover' extends P ? { zonedPopover: string } : never)
+		: never);
+export type ReverseNestedPartial = ReverseNested<'local' | 'zoned', 'inline'>;
+export type ReverseNestedExact = ReverseNested<'local', 'inline'>;
+export type NeverDistributed<T extends DateTimeMode = never> =
+	T extends 'local' ? { localOnly: string } : { falseBranch: string };
+export type NeverExtendsLiteral = never extends 'local'
+	? { directTrue: string }
+	: { directFalse: string };
+export type LiteralExtendsNever = 'local' extends never
+	? { impossibleTrue: string }
+	: { directFalse: string };
+export type NonDistributed = ('local' | 'zoned') extends 'local'
+	? { wrongBranch: string }
+	: { falseBranch: string };
+export type AliasedDistributed = NeverDistributed<'local' | 'zoned'>;
+type Impossible = never;
+export type UnionWithNever = { retained: string } | Impossible;
+export type UnionWithEmpty = { retained: string } | {};
+export type IntersectionWithNever = { discarded: string } & Impossible;
+interface InlineBranch { open?: never }
+interface PopoverBranch { open?: boolean }
+export type ForbiddenFirst = InlineBranch | PopoverBranch;`,
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
@@ -681,6 +747,100 @@ export type Distributed<K extends Kind = Kind, M extends Mode = Mode> =
 			distributedFacts.get('value.kind')?.requiredness !== REQUIREDNESS.required
 		)
 			throw new Error('finite distributed conditional facts were not preserved');
+		const reverseNestedFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'ReverseNested'
+		);
+		for (const path of ['localInline', 'localPopover', 'zonedInline', 'zonedPopover'])
+			if (
+				reverseNestedFacts.get(path)?.requiredness !== REQUIREDNESS.conditional ||
+				reverseNestedFacts.get(path)?.requiredInSomeBranch !== true
+			)
+				throw new Error(`reverse nested conditional facts missed ${path}`);
+		const partialReverseFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'ReverseNestedPartial'
+		);
+		if (
+			partialReverseFacts.get('localInline')?.requiredness !== REQUIREDNESS.conditional ||
+			partialReverseFacts.get('zonedInline')?.requiredness !== REQUIREDNESS.conditional ||
+			partialReverseFacts.has('localPopover') ||
+			partialReverseFacts.has('zonedPopover')
+		)
+			throw new Error('partial reverse conditional facts did not exclude popover branches');
+		const exactReverseFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'ReverseNestedExact'
+		);
+		if (
+			exactReverseFacts.get('localInline')?.requiredness !== REQUIREDNESS.required ||
+			exactReverseFacts.size !== 1
+		)
+			throw new Error('exact reverse conditional facts did not retain only local inline props');
+		const neverFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'NeverDistributed'
+		);
+		if (neverFacts.size !== 0)
+			throw new Error('never conditional facts produced a false or optional branch');
+		const neverExtendsFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'NeverExtendsLiteral'
+		);
+		if (
+			neverExtendsFacts.get('directTrue')?.requiredness !== REQUIREDNESS.required ||
+			neverExtendsFacts.has('directFalse')
+		)
+			throw new Error('non-distributed never did not select its true branch');
+		const literalExtendsNeverFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'LiteralExtendsNever'
+		);
+		if (
+			literalExtendsNeverFacts.get('directFalse')?.requiredness !== REQUIREDNESS.required ||
+			literalExtendsNeverFacts.has('impossibleTrue')
+		)
+			throw new Error('literal extends never did not select its false branch');
+		const nonDistributedFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'NonDistributed'
+		);
+		if (
+			nonDistributedFacts.get('falseBranch')?.requiredness !== REQUIREDNESS.required ||
+			nonDistributedFacts.has('wrongBranch')
+		)
+			throw new Error('non-distributed literal-union conditional selected both branches');
+		for (const [name, expectedPaths, requiredness] of [
+			['AliasedDistributed', ['localOnly', 'falseBranch'], REQUIREDNESS.conditional],
+			['UnionWithNever', ['retained'], REQUIREDNESS.required],
+			['UnionWithEmpty', ['retained'], REQUIREDNESS.conditional],
+			['IntersectionWithNever', [], REQUIREDNESS.required]
+		]) {
+			const actual = await collectWorkspacePropertyFacts(
+				graph,
+				resolve(root, 'src/props.ts'),
+				name
+			);
+			if (
+				actual.size !== expectedPaths.length ||
+				expectedPaths.some((path) => actual.get(path)?.requiredness !== requiredness)
+			)
+				throw new Error(`conditional alias/reachability regression: ${name}`);
+		}
+		const forbiddenFirst = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'ForbiddenFirst'
+		);
+		if (forbiddenFirst.get('open')?.source.declaration !== 'PopoverBranch')
+			throw new Error('Union property provenance points at its forbidden branch.');
 		console.log(JSON.stringify({ status: 'passed', facts: facts.size }));
 	} finally {
 		await rm(root, { recursive: true, force: true });

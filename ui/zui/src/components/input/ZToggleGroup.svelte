@@ -324,6 +324,7 @@
 	const resolvedShape = $derived(shape ?? defaults?.shape ?? buttonDefaults?.shape ?? 'default');
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const sourceItems = $derived.by(() => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Temporary validation membership, not retained reactive state.
 		const keys = new Set<TKey>();
 		if (!Array.isArray(items)) throw new TypeError('ZToggleGroup requires an items array.');
 		for (const entry of items) {
@@ -362,6 +363,7 @@
 	});
 	function validateValue(values: readonly TKey[]): readonly TKey[] {
 		if (!Array.isArray(values)) throw new TypeError('ZToggleGroup value must be an array.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Rebuilt per validation call; nothing observes this Set.
 		const seen = new Set<TKey>();
 		for (const valueKey of values) {
 			assertSelectionKey(valueKey, 'ZToggleGroup value');
@@ -466,8 +468,11 @@
 				[attachmentKey]: (node) => {
 					const button = node as HTMLButtonElement;
 					const dispose = untrack(() => mounted.mount(key, button, toolbarKey(key)));
+					// Layout observations should only change the lease when physical
+					// ownership changes, not unregister focused items on every resize.
+					const ownedByToolbar = $derived(toolbar?.owns(button) ?? false);
 					$effect(() => {
-						if (!delegated || !toolbar || !toolbar.owns(button)) return;
+						if (!delegated || !toolbar || !ownedByToolbar) return;
 						const registration = {
 							key: toolbarKey(key),
 							element: button,

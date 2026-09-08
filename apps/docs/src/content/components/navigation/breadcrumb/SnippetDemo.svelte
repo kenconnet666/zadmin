@@ -16,7 +16,7 @@
 <script lang="ts">
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import Folder from '@lucide/svelte/icons/folder';
-	import { ZBreadcrumb, useZui } from '@zadmin/zui';
+	import { ZBreadcrumb, useZui, type BreadcrumbItem } from '@zadmin/zui';
 	const zui = useZui();
 	const iconClass = $derived(zui.recipe(iconRecipe));
 
@@ -27,7 +27,7 @@
 	] as const;
 </script>
 
-{#snippet item(entry)}
+{#snippet item(entry: BreadcrumbItem)}
 	<Folder aria-hidden="true" class={iconClass} /> {entry.label}
 {/snippet}
 

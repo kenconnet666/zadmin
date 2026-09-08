@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZAnchor, ZProvider, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
+	import { ZAnchor, ZHeading, ZProvider, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
 
 	const items = [
 		{
@@ -42,13 +42,13 @@
 		>
 			<div style="padding: 0.75rem;">
 				<section id="anchor-horizontal-one" style="min-height: 7rem;">
-					<ZText as="h3">华东区域合作伙伴结算与对账中心</ZText>
+					<ZHeading level={3} size="medium">华东区域合作伙伴结算与对账中心</ZHeading>
 				</section>
 				<section id="anchor-horizontal-two" style="min-height: 7rem;">
-					<ZText as="h3">第二个包含较长中文说明的章节</ZText>
+					<ZHeading level={3} size="medium">第二个包含较长中文说明的章节</ZHeading>
 				</section>
 				<section id="anchor-horizontal-three" style="min-height: 7rem;">
-					<ZText as="h3">第三个章节</ZText>
+					<ZHeading level={3} size="medium">第三个章节</ZHeading>
 				</section>
 			</div>
 		</ZScrollArea>

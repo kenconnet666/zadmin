@@ -31,6 +31,16 @@ const mismatchedCallback = {
 	onValueChange: (value: ReturnType<typeof parseZonedDateTime> | null) => value?.timeZone
 	// @ts-expect-error Local callbacks cannot receive ZonedDateTime.
 } satisfies ZDateTimeFieldProps;
+const localWithZonedValue = {
+	mode: 'local',
+	value: parseZonedDateTime('2026-09-07T09:30-07:00[America/Los_Angeles]')
+} as const;
+// @ts-expect-error The concrete local generic branch cannot accept a ZonedDateTime value.
+const exactLocalWithZonedValue: ZDateTimeFieldProps<'local'> = localWithZonedValue;
+const exactZoned = {
+	mode: 'zoned',
+	value: parseZonedDateTime('2026-09-07T09:30-07:00[America/Los_Angeles]')
+} satisfies ZDateTimeFieldProps<'zoned'>;
 
 void [
 	local,
@@ -41,5 +51,7 @@ void [
 	zoned,
 	dateOnly,
 	zonedWithLocal,
-	mismatchedCallback
+	mismatchedCallback,
+	exactLocalWithZonedValue,
+	exactZoned
 ];

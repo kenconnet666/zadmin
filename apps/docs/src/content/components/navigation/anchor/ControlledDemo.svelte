@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZAnchor, ZButton, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
+	import { ZAnchor, ZButton, ZHeading, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
 	type SectionKey = 'first' | 'second' | 'third';
 
 	const items = [
@@ -63,13 +63,16 @@
 	>
 		<div style="display: grid; gap: 0.75rem; padding: 0.75rem; max-width: 100%;">
 			<section id="anchor-controlled-first" style="min-height: 7rem;">
-				<ZText as="h3">第一段</ZText><ZText>owner持有activeKey。</ZText>
+				<ZHeading level={3} size="medium">第一段</ZHeading>
+				<ZText>owner持有activeKey。</ZText>
 			</section>
 			<section id="anchor-controlled-second" style="min-height: 7rem;">
-				<ZText as="h3">第二段</ZText><ZText>focus和active观察不会隐式变更路由。</ZText>
+				<ZHeading level={3} size="medium">第二段</ZHeading>
+				<ZText>focus和active观察不会隐式变更路由。</ZText>
 			</section>
 			<section id="anchor-controlled-third" style="min-height: 7rem;">
-				<ZText as="h3">第三段</ZText><ZText>scrollTo只请求目标定位。</ZText>
+				<ZHeading level={3} size="medium">第三段</ZHeading>
+				<ZText>scrollTo只请求目标定位。</ZText>
 			</section>
 		</div>
 	</ZScrollArea>

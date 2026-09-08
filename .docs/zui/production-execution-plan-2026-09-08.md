@@ -124,11 +124,23 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 ## 9. 执行记录
 
-| 批次 | 状态       | 内容/证据                                                       |
-| ---- | ---------- | --------------------------------------------------------------- |
-| P00  | 规划已落盘 | 基线复核，建立本文入口，尚未修改生产代码                        |
-| P01  | 待执行     | G0类型/shim/catalog合同；Sortable、日期adapter与Toolbar行为修复 |
-| P02  | 待执行     | 当前SHA执行验收；一致性重构与Docs试点                           |
-| P03+ | 待执行     | 依赖闭合后按G2–G4与D主线继续，不重复历史数量                    |
+| 批次 | 状态               | 内容/证据                                                                                                                         |
+| ---- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| P00  | 已提交             | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                           |
+| P01  | 本地通过，CI待验收 | G0类型/shim/catalog；Sortable共享几何、日期adapter拒绝回滚、Toolbar焦点与FormList WebKit恢复；以本节对应修复提交的精确SHA进入CI   |
+| P02  | 试点清单已建立     | 当前SHA执行验收待CI；[7族41项演示静态清单](./docs-demo-pilot-inventory-2026-09-08.md)已区分保留/重写/补证据，尚未把建议当作已实现 |
+| P03+ | 待执行             | 依赖闭合后按G2–G4与D主线继续，不重复历史数量                                                                                      |
+
+### P01 集成记录
+
+- Calendar与DateTime的DOM Props和语义判别分支分离；补充部分联合泛型、原生事件/ARIA、local/zoned与inline互斥负例。四组件原TS2590已消除，fixture有意初值捕获显式标注。
+- 日期Picker先恢复受控canonical值，再rollback子字段草稿，避免模型拒绝后DOM仍显示候选值。Toolbar布局变化只有改变物理owner时才重建ToggleGroup注册。
+- Sortable使用现有主题duration单位转换；键盘target回到源行定位为dragmove与position微任务之间的几何发布时序，并发现上一轮WAAPI取消后的初始rect过期。共享adapter只同步投影无nativeEvent的相对move，使用generation/source/initial token撤销未接受投影，并在dragstart后重新捕获已稳定且未移动的源rect。取消、replacement、disconnect、真实KeyboardEvent、scroll/ref边界已回归；未复制第二套键盘引擎，未保留临时Scroller接管或调试代码。
+- FormList WebKit删除后的list root焦点视为浏览器fallback，但仅在删除前焦点属于本list时恢复邻项，外部程序化删除不抢焦点。server error测试改为真实编辑后seed，再验证重排迁移；不改变编辑清server error的正式合同。
+- Docs检查发现并修正19处消费端类型错误：标题使用ZHeading、独立snippet明确参数类型、混合typed key明确领域、删除NativeSelect重复绑定回调。Stack响应式演示补回漏掉的component；catalog改AST计数并拒绝缺字段，运行时也拒绝不可运行demo。
+- 重新生成时发现API提取器不支持反向条件类型，曾将2674个Props少计为2503；此错误生成结果未提交。现已修复有限条件集合求值、裸参数分发、不可达never与合法空分支、别名分发，以及禁止分支不应成为可用属性来源的问题；自测包含真实日期Props集合。重新生成完整恢复2674，逐组件数量与基线一致。
+- 已执行的定向证据：日期adapter/Toolbar/floating/geometry Chromium 4文件12用例；Docs catalog 2文件17用例；Sortable三浏览器24用例；geometry/RangeSlider三浏览器18用例；reorder与Sortable SSR 7用例；FormList及nested Chromium12用例、unit8用例，WebKit12用例后补充外部焦点回归的FormList5用例。最终修改仍以收口后的检查结果为准，以上不替代精确SHA CI。
+- 最后geometry与Sortable三浏览器合计48/48通过；ZUI和Docs类型检查均为0 errors/0 warnings。最终执行`pnpm zui:artifacts:update`、`pnpm --filter @zadmin/docs tokens:update`、全部修改文件Prettier/ESLint、`api:catalog:check`与Docs catalog 17用例均通过。生成器自测通过，类型提取数量完整保留2674；Stack漏挂演示恢复后catalog实际计数为599，不是凭空新增一项教学内容。
+- 记录位置：本地可追溯日志`.codex/production-p01-final.json`及逐项log；执行计划与修复分阶段提交。M0仍等待修复提交精确SHA的完整CI，不以本地定向结果替代。没有执行发布、tag或生产部署。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

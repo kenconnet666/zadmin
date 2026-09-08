@@ -50,10 +50,9 @@
 		goToPreviousPage(): void;
 	}
 
-	interface ZCalendarSharedProps extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'children' | 'onchange'
-	> {
+	type ZCalendarDomProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'>;
+
+	interface ZCalendarSharedProps {
 		readonly allowEmpty?: boolean;
 		readonly allowNonContiguousRange?: boolean;
 		readonly appearance?: 'bare' | 'calendar';
@@ -121,23 +120,32 @@
 		extends ZCalendarSharedProps, ZCalendarRangeBranch, CalendarMonthViewOptions {}
 	interface StripRangeProps
 		extends ZCalendarSharedProps, ZCalendarRangeBranch, CalendarStripViewOptions {}
-	export type ZCalendarSingleProps = MonthSingleProps | StripSingleProps;
-	export type ZCalendarMultipleProps = MonthMultipleProps | StripMultipleProps;
-	export type ZCalendarRangeProps = MonthRangeProps | StripRangeProps;
+	type ZCalendarSingleSemanticProps = MonthSingleProps | StripSingleProps;
+	type ZCalendarMultipleSemanticProps = MonthMultipleProps | StripMultipleProps;
+	type ZCalendarRangeSemanticProps = MonthRangeProps | StripRangeProps;
+	export type ZCalendarSingleProps = ZCalendarDomProps & ZCalendarSingleSemanticProps;
+	export type ZCalendarMultipleProps = ZCalendarDomProps & ZCalendarMultipleSemanticProps;
+	export type ZCalendarRangeProps = ZCalendarDomProps & ZCalendarRangeSemanticProps;
+	type ZCalendarSemanticProps<
+		TSelectionMode extends CalendarSelectionMode = CalendarSelectionMode,
+		TView extends CalendarView = CalendarView
+	> = { readonly selectionMode?: TSelectionMode; readonly view?: TView } & (
+		| ('month' extends TView
+				? | ('single' extends TSelectionMode ? MonthSingleProps : never)
+					| ('multiple' extends TSelectionMode ? MonthMultipleProps : never)
+					| ('range' extends TSelectionMode ? MonthRangeProps : never)
+				: never)
+		| ('strip' extends TView
+				? | ('single' extends TSelectionMode ? StripSingleProps : never)
+					| ('multiple' extends TSelectionMode ? StripMultipleProps : never)
+					| ('range' extends TSelectionMode ? StripRangeProps : never)
+				: never)
+	);
 	export type ZCalendarProps<
 		TSelectionMode extends CalendarSelectionMode = CalendarSelectionMode,
 		TView extends CalendarView = CalendarView
-	> = { readonly selectionMode?: TSelectionMode; readonly view?: TView } & (TView extends 'strip'
-		? TSelectionMode extends 'multiple'
-			? StripMultipleProps
-			: TSelectionMode extends 'range'
-				? StripRangeProps
-				: StripSingleProps
-		: TSelectionMode extends 'multiple'
-			? MonthMultipleProps
-			: TSelectionMode extends 'range'
-				? MonthRangeProps
-				: MonthSingleProps);
+	> = ZCalendarDomProps & ZCalendarSemanticProps<TSelectionMode, TView>;
+	// eslint-disable-next-line no-import-assign -- Type-only re-export, not a runtime assignment to either import.
 	export type { CalendarSelectionMode, CalendarWeekNumbering } from '../../runtime/calendar.js';
 
 	export const zuiMetadata = {
@@ -837,7 +845,7 @@
 		weekNumberLabel,
 		...rest
 	}: ZCalendarProps<TSelectionMode, TView> = $props();
-	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest);
 	const zui = useZui();
 	const uid = $props.id();
 	const dayIdBase = $derived(createZuiId(zui.idPrefix, uid, 'calendar-day'));
@@ -894,7 +902,7 @@
 	const resolvedFirstDayOfWeek = $derived(firstDayOfWeek ?? resolvedWeekRules.firstDayOfWeek);
 	const resolvedWeekLabel = $derived(weekLabel ?? zui.localePack.date.week);
 	const resolvedWeekNumberLabel = $derived(
-		weekNumberLabel ?? ((week: number, _year: number) => zui.localePack.date.weekNumber(week))
+		weekNumberLabel ?? ((week: number) => zui.localePack.date.weekNumber(week))
 	);
 	const constraints = $derived.by(() => {
 		if (!['single', 'multiple', 'range'].includes(selectionMode))

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZAnchor, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
+	import { ZAnchor, ZHeading, ZScrollArea, ZStack, ZText } from '@zadmin/zui';
 
 	const items = [
 		{ key: 'overview', label: '概览', href: '#anchor-overview', targetId: 'anchor-overview' },
@@ -31,16 +31,16 @@
 	>
 		<div style="padding: 0.75rem;">
 			<section id="anchor-overview" style="scroll-margin-block-start: 3rem; min-height: 8rem;">
-				<ZText as="h3">概览</ZText><ZText>真实section目标由targetId绑定，导航仍是原生anchor。</ZText
-				>
+				<ZHeading level={3} size="medium">概览</ZHeading>
+				<ZText>真实section目标由targetId绑定，导航仍是原生anchor。</ZText>
 			</section>
 			<section id="anchor-usage" style="scroll-margin-block-start: 3rem; min-height: 8rem;">
-				<ZText as="h3">用法</ZText><ZText
-					>scroll-margin为固定标题留下目标偏移，不在组件内部写死像素。</ZText
-				>
+				<ZHeading level={3} size="medium">用法</ZHeading>
+				<ZText>scroll-margin为固定标题留下目标偏移，不在组件内部写死像素。</ZText>
 			</section>
 			<section id="anchor-accessibility" style="scroll-margin-block-start: 3rem; min-height: 8rem;">
-				<ZText as="h3">可访问性</ZText><ZText>active观察和路由current由不同owner管理。</ZText>
+				<ZHeading level={3} size="medium">可访问性</ZHeading>
+				<ZText>active观察和路由current由不同owner管理。</ZText>
 			</section>
 		</div>
 	</ZScrollArea>

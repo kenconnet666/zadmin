@@ -58,10 +58,18 @@ uses the theme color. Zeroes, percentages and runtime geometry remain explicit v
 
 ### Component defaults
 
-`componentDefaults` is intentionally a small behavior-only whitelist. In the current
-release it accepts only `button`, `input`, `tag`, `card`, `dataTable`, and `pagination`.
-The `input.size` group applies to `ZInput`, `ZInputGroup`, and `ZTextarea` so single-line,
-composed and multiline text controls share the same application default.
+`componentDefaults` is a typed whitelist of component props. Its accepted component keys and property
+rules come from the typed `COMPONENT_RULES` source in `runtime/foundation/component-defaults.ts`;
+the list is not a fixed number of groups. It currently covers button/action controls, data
+display and typography, navigation/layout, form and date controls, collection controls, and
+feedback/overlay helpers (including keys such as `button`, `copyButton`, `card`, `dataTable`,
+`input`, `pagination`, `tag`, `toolbar`, and `tooltip`). The rule source is the compatibility
+boundary: a component key or property not represented there is rejected at runtime.
+Family components may intentionally fall back to a related key: for example, `copyButton`,
+`menubar`, and `toolbar` fall back to `button` for shared size defaults, while checkbox-group
+and range-slider tone resolution can fall back to their base family. `input.size` is consumed
+by `ZInput`, `ZInputGroup`, and `ZTextarea` so single-line, composed, and multiline text
+controls share the same application default.
 Explicit component props always win; nearest Field/InputGroup context remains more local than
 a Provider default, followed by Provider density and the component's local fallback. Controlled
 values (`open`, `value`, `page`, selection/sort state), callbacks, DOM references, `class`/`style`,
@@ -116,17 +124,21 @@ connecting queue work fails fast, while late task settlements cannot revive reco
 
 ## Public entrypoints
 
-| Entrypoint             | Purpose                                                                         |
-| ---------------------- | ------------------------------------------------------------------------------- |
-| `@zadmin/zui`          | Components, public runtime helpers, recipes, theme primitives, and public types |
-| `@zadmin/zui/themes`   | Six official light, dark, and high-contrast themes                              |
-| `@zadmin/zui/code`     | Optional Shiki-backed `ZCode` component                                         |
-| `@zadmin/zui/runtime`  | Browser and SSR ICSS runtimes                                                   |
-| `@zadmin/zui/compiler` | ICSS Svelte preprocessing                                                       |
-| `@zadmin/zui/metadata` | Component identity, release, structure, and tooling metadata                    |
-| `@zadmin/zui/testing`  | Test harnesses and contract assertions; never import into production bundles    |
+| Entrypoint             | Purpose                                                                                                                                                         |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@zadmin/zui`          | Components, public runtime helpers, recipes, theme primitives, and public types                                                                                 |
+| `@zadmin/zui/themes`   | Official light, dark, and high-contrast theme presets                                                                                                           |
+| `@zadmin/zui/theme`    | Theme schema/types, `defineTheme`/`extendTheme`, semantic tones, and palette helpers; use for defining or extending themes                                      |
+| `@zadmin/zui/layer`    | Public overlay primitives (`DismissableLayer`, `FloatingPositioner`, `FocusScope`, portal, inert, scroll-lock, and layer-stack helpers) for custom integrations |
+| `@zadmin/zui/code`     | Optional Shiki-backed `ZCode` component                                                                                                                         |
+| `@zadmin/zui/runtime`  | Browser and SSR ICSS runtimes                                                                                                                                   |
+| `@zadmin/zui/compiler` | ICSS Svelte preprocessing                                                                                                                                       |
+| `@zadmin/zui/metadata` | Component identity, release, structure, and tooling metadata                                                                                                    |
+| `@zadmin/zui/testing`  | Test harnesses and contract assertions; never import into production bundles                                                                                    |
 
-`internal` is an unstable package-development boundary and is not a compatibility promise.
+`theme` and `layer` expose only the symbols listed by their current entrypoint files; they are
+public integration boundaries, but this pre-1.0 package does not promise compatibility for
+unexported runtime modules or `internal`. Component internals remain implementation details.
 
 ## Component contracts
 

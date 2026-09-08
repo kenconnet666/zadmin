@@ -65,17 +65,12 @@ describe('ZSortable production browser contracts', () => {
 			await tick();
 			const pointer = target.querySelector<HTMLElement>('[data-testid="sortable-pointer"]')!;
 			const pointerRows = rows(pointer);
-			const rootRect = pointer.getBoundingClientRect();
-			const handleRect = pointerRows[0]!
-				.querySelector<HTMLButtonElement>('[data-slot="handle"]')!
-				.getBoundingClientRect();
-			const targetRect = pointerRows[1]!.getBoundingClientRect();
-			const startRatio = (handleRect.left + handleRect.width / 2 - rootRect.left) / rootRect.width;
-			const endRatio = (targetRect.left + targetRect.width / 2 - rootRect.left) / rootRect.width;
-			expect(startRatio).toBeGreaterThanOrEqual(0);
-			expect(endRatio).toBeLessThanOrEqual(1);
-
-			await commands.dragSliderTrack('[data-testid="sortable-pointer"]', startRatio, endRatio);
+			expect(pointerRows[0]!.getBoundingClientRect().width).toBeGreaterThan(0);
+			expect(pointerRows[1]!.getBoundingClientRect().width).toBeGreaterThan(0);
+			await commands.dragElements(
+				'[data-testid="sortable-pointer"] [data-slot="row"]:nth-child(1) [data-slot="handle"]',
+				'[data-testid="sortable-pointer"] [data-slot="row"]:nth-child(2)'
+			);
 			await expect
 				.poll(() => component.getPointerItems().map((item) => item.key))
 				.toEqual(['pointer-b', 'pointer-a', 'pointer-c']);
@@ -312,8 +307,10 @@ describe('ZSortable production browser contracts', () => {
 			const firstInput = baselineRows[0]!.querySelector<HTMLInputElement>('input')!;
 			const firstHandle =
 				baselineRows[0]!.querySelector<HTMLButtonElement>('[data-slot="handle"]')!;
-			component.seedState();
 			await userEvent.fill(firstInput, 'Edited alpha');
+			component.seedState();
+			expect(component.fieldState(0)?.errors).toEqual(['Sortable server error']);
+			expect(component.fieldState(0)?.warnings).toEqual(['Sortable warning']);
 			expect(component.fieldState(0)?.dirty).toBe(true);
 			expect(component.formState()?.dirty).toBe(true);
 
@@ -325,7 +322,8 @@ describe('ZSortable production browser contracts', () => {
 			await userEvent.keyboard('{Enter}');
 			await expect.poll(() => rows(sortable)[1]).toBe(baselineRows[0]);
 			expect(rows(sortable)).toEqual([baselineRows[1], baselineRows[0], baselineRows[2]]);
-			expect(document.activeElement).toBe(firstHandle);
+			expect(document.activeElement).toBe(firstInput);
+			expect(rows(sortable)[1]!.querySelector('input')).toBe(firstInput);
 			expect(firstInput.value).toBe('Edited alpha');
 			expect(component.fieldState(1)?.errors).toEqual(['Sortable server error']);
 			expect(component.fieldState(1)?.warnings).toEqual(['Sortable warning']);

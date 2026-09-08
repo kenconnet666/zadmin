@@ -13,12 +13,5 @@
 	let value = $state('beijing');
 </script>
 
-<ZNativeSelect
-	aria-label="城市与地区"
-	{items}
-	bind:value
-	size="medium"
-	nativeSize={4}
-	onValueChange={(next) => (value = next)}
-/>
+<ZNativeSelect aria-label="城市与地区" {items} bind:value size="medium" nativeSize={4} />
 <ZText>选择值：{value}</ZText>

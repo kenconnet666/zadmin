@@ -56,7 +56,7 @@
 </script>
 
 <ZForm bind:controller {model} data-testid="sortable-form">
-	<ZFormList name="rows" getRowKey={(row) => row.id} data-testid="sortable-form-list">
+	<ZFormList name="rows" getRowKey={(row: Row) => row.id} data-testid="sortable-form-list">
 		{#snippet children(rows, operations)}
 			<ZSortable
 				readonly={reorderReadonly}
