@@ -75,3 +75,29 @@ test('Transfer request demo preserves native value ownership across manual decis
 	await expect(status).toContainText('FormData=["stable"]');
 	expect(errors).toEqual([]);
 });
+
+test('Transfer request keyboard move keeps FormData unchanged until owner acceptance', async ({
+	page
+}) => {
+	await page.goto('/#/components/transfer');
+	const demo = page.getByTestId('demo-transfer-request-owner');
+	const widget = demo.getByRole('group', { name: '需要外部确认的发布通道转移', exact: true });
+	const source = demo.getByRole('listbox', { name: '可请求移动', exact: true });
+	const status = demo.getByTestId('transfer-request-status');
+	const read = demo.getByRole('button', { name: '读取原生FormData', exact: true });
+	const accept = demo.getByRole('button', { name: '接受请求', exact: true });
+	const candidate = source.getByRole('option', { name: /候选集群/u });
+
+	await candidate.click();
+	await expect(source).toBeFocused();
+	await source.press('Alt+ArrowRight');
+	await expect(widget).toHaveAttribute('data-state', 'pending');
+	await expect(status).toContainText('等待外部确认：keyboard→target');
+	await read.click();
+	await expect(status).toContainText('FormData=["stable"]');
+
+	await accept.click();
+	await expect(status).toContainText('移动结果：accepted · source=keyboard');
+	await read.click();
+	await expect(status).toContainText('FormData=["stable","candidate"]');
+});

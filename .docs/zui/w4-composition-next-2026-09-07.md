@@ -142,3 +142,9 @@ E19B 随后只做 Transfer 的跨栏 pointer/touch/keyboard drop adapter，并�
 - 手势途中items/value改变、readonly/disabled/pending或卸载，使旧gesture失效；不能把旧手势套用到新的数据快照。未提交的取消不伪造onMoveEnd；已提交request继续使用既有AbortSignal、回声核对和终态。拖动结束不能额外触发一次option click勾选。
 - 视觉反馈消费既有Theme/ICSS tokens；六主题、五尺寸、RTL、reduced motion、nonce及虚拟pane继续分别验收。PointerEvent代码路径能接收touch/pen不等于真实设备已验证；真实touch/滚动竞争与跨栏动画仍在完整E19B目标中，未完成不得删除或标通过。
 - Docs扩充原`transfer-request-owner`，不复制第二个双栏演示。先验收pointer与keyboard来源、接受前canonical/FormData不变、接受后唯一回声，再覆盖拒绝、取消、snapshot stale、禁用项和未参与移动的checked保留。
+
+### 首批实施证据
+
+Pointer/快捷键adapter、typed key与同一移动事务已实现；普通与virtual pane都有真实pointer回归。根审阅使用共享navigationIntent统一物理箭头，保留拖起的非首项焦点锚点，monitor订阅使用同函数返回的完整disposer；状态反馈使用既有primarySubtle/primary/muted tokens。SSR启用/关闭dragDrop均不提前建立浏览器资源或AbortController，原按钮与request合同继续通过。
+
+本地unit/SSR/plugin14项、Transfer/Sortable Chromium28项及Docs2项通过；最终审阅后Transfer14项复核和静态审计通过。完整记录与组合SHA见[执行计划](./production-execution-plan-2026-09-08.md)。该结果不是全部E19B验收：真实touch/pen、滚动竞争、跨栏动画及reduced-motion、主题/尺寸/nonce跨realm矩阵仍需继续完成。

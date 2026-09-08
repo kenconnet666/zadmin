@@ -305,4 +305,13 @@ P09入口：先收集上述完整CI与coverage产物，按文件比较未覆盖�
 - 上述基础改动ZUI类型0 errors/0 warnings、9项Chromium、定向格式/lint及maturity生成通过，可独立提交；Transfer新API实现不混入这次验证声明。
 - E19B开始按[接入合同](./w4-composition-next-2026-09-07.md)实施`dragDrop`、pointer与Alt+逻辑跨栏移动。复用既有移动事务和request-owner Demo，明确gesture快照、typed key、checked清理与取消边界。当前实现/Docs尚未完成集成验证；真实touch、滚动竞争与动画仍保留为完整目标，不因本批先实现pointer/keyboard而删除。
 
+P10后续收口：
+
+- 基础提交为`30112c6aec02030a0857c5668f4623f7772ce9a8`，[CI 34237579270](https://github.com/kenconnet666/zadmin/actions/runs/34237579270)三浏览器Docs、Static、build、外部包、Windows、Drizzle、Firefox/WebKit组件全部通过。完整Chromium仍在`visual-evidence-audit`待执行期间断连，272/317文件2000项通过，不能把新headless模式宣称为既定修复。Coverage317文件2094项全过，未覆盖global1547/434/2889/3708、components1308/380/2451/3089仍超预算。
+- E19B首批已实现`dragDrop=false`默认、普通/虚拟option的pointer跨栏与listbox Alt+逻辑方向移动，同一request/immediate事务保留typed key与唯一canonical owner。拖未勾选项只移动自身且不清其他checked，拖已勾选项按组；private focusKey保留拖起锚点。语义同值clone/改label不取消，实际value或readonly变化中止旧gesture，未提交手势不伪造onMoveEnd；同owner相反pane才高亮/可接收。
+- 根审阅补齐非首项锚点、virtual真实注册/active-descendant、fixture abort/unmount结清等待、合法/非法dragDrop类型和dragDrop两种SSR idle路径；普通按钮/request回归与共享drag命令的Sortable调用仍通过。Docs只扩展已有request-owner并保留人工接受/拒绝/错误，不另造双栏示例；接受前后原生FormData与source的2项浏览器用例通过。
+- 最终集成中资源审计先拒绝新monitor disposer数组写法；改成与geometry一致的具名typed连接函数，一处订阅、一处返回清理，未放宽规则。新增方向分支也改用共享navigationIntent，消除重复RTL箭头映射。首次审计失败保留在`.codex/production-p10-transfer-final.json`，中间失败见`p10-transfer-lifecycle-audit.log`，不覆盖为绿灯。
+- 当前证据：ZUI/Docs类型0 errors/0 warnings，unit/SSR/plugin14项、Transfer/Sortable Chromium28项、Docs2项通过；最后连接函数/共享intent审阅后又复核ZUI类型、Transfer14项及完整audit:system，全部通过，见`.codex/production-p10-transfer-reviewed.json`。API/Token/Docs生成已同步，待组合SHA远端验收，不把局部结果扩张为全库通过。
+- 下一步仍保留E19B真实touch/pen与滚动竞争、跨栏动画/reduced-motion、五尺寸/六主题和跨realm nonce交互验收。同时按Terra只读清单准备Vitest5+browser/coverage5+renderer3.1迁移：browser.api归并、sequential替换、.vitest工件路径及reporter/transform验证；不要把升级当作未经验证的断连根因结论。没有发布、tag或生产部署。
+
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 187 metadata components, 117 documentation modules, 187 API contract entries, and 391 test files.
+Generated from 187 metadata components, 117 documentation modules, 187 API contract entries, and 392 test files.
 
 This is a static inventory of authored contracts and source assets. `BrowserBehaviorContractsDeclared`, `VisualContractsDeclared`, `ProductionContractsDeclared`, and `SsrContractsDeclared` only mean matching assets exist. They do not report that a test ran or passed. Per-component execution stages remain pending until a revision-bound evidence manifest is supplied; the existing WebView2 desktop composer is one such independent evidence path.
 

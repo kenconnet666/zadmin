@@ -118,10 +118,12 @@
 			aria-label="需要外部确认的发布通道转移"
 			bind:value
 			{defaultValue}
+			dragDrop
 			{items}
 			moveMode="request"
 			name="cluster"
-			onMoveEnd={(detail) => (status = `移动结果：${detail.result}`)}
+			onMoveEnd={(detail) =>
+				(status = `移动结果：${detail.result} · source=${detail.request.source}`)}
 			onMoveRequest={handleMove}
 			sourceTitle="可请求移动"
 			targetTitle="已确认移动"
@@ -144,7 +146,7 @@
 			<ZButton type="reset" variant="outline">Reset</ZButton>
 		</ZStack>
 		<ZText data-testid="transfer-request-status" tone="muted">
-			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · request mode仅支持按钮确认，不支持跨栏拖放。
+			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · 启用dragDrop后支持pointer跨栏，listbox也支持Alt+方向键快捷跨栏；接受前不预写canonical。本演示验证pointer/keyboard，真实touch与跨栏动画仍待后续验收。
 		</ZText>
 	</ZStack>
 </form>

@@ -41,6 +41,7 @@
 		readonly controlId?: string;
 		readonly defaultValue?: readonly SelectionKey[];
 		readonly disabled?: boolean;
+		readonly dragDrop?: boolean;
 		readonly emptyText?: string;
 		readonly filter?: (item: TransferItem, query: string) => boolean;
 		readonly filterable?: boolean;
@@ -52,6 +53,7 @@
 		readonly moveToSourceLabel?: string;
 		readonly moveToTargetLabel?: string;
 		readonly name?: string;
+		readonly nonce?: string;
 		readonly onMoveEnd?: (detail: TransferMoveEnd) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
@@ -106,7 +108,8 @@
 			'CollectionNavigation',
 			'ActiveDescendant',
 			'ZVirtualList',
-			'FormValueBridge'
+			'FormValueBridge',
+			'@dnd-kit/dom cross-pane adapter'
 		],
 		events: [
 			{
@@ -133,7 +136,11 @@
 			{ description: '切换当前active项目的临时勾选。', key: 'Enter / Space' },
 			{ description: '选择当前pane过滤view中的全部enabled项目。', key: 'Ctrl / Meta + A' },
 			{ description: '按Provider locale标签前缀移动active key。', key: 'Typeahead' },
-			{ description: '从筛选输入进入对应listbox。', key: 'ArrowUp / ArrowDown' }
+			{ description: '从筛选输入进入对应listbox。', key: 'ArrowUp / ArrowDown' },
+			{
+				description: 'dragDrop启用时，把active项目或其已勾选组移到相反pane；物理方向按RTL解析。',
+				key: 'Alt + ArrowLeft / ArrowRight'
+			}
 		],
 		parts: [
 			{ description: '来源或目标pane。', name: 'panel' },
@@ -193,7 +200,7 @@
 									name: 'source',
 									type: 'TransferMoveSource',
 									required: true,
-									description: '操作来源；当前中间按钮产生action，未承诺跨栏drop。'
+									description: '操作来源；中间按钮、键盘快捷移动或跨栏pointer drop。'
 								},
 								{
 									name: 'signal',
@@ -334,6 +341,19 @@
 				type: 'boolean'
 			},
 			{
+				default: 'false',
+				description:
+					'启用跨栏pointer拖放与listbox上的RTL感知Alt+水平方向键快捷移动；仍复用同一移动事务。',
+				name: 'dragDrop',
+				type: 'boolean'
+			},
+			{
+				default: 'undefined',
+				description: '启用dragDrop时传给底层StyleInjector的CSP nonce，同时保留原生nonce属性。',
+				name: 'nonce',
+				type: 'string'
+			},
+			{
 				default: 'Provider localePack.transfer.moveToSource',
 				description: '返回来源pane按钮的可访问名称。',
 				name: 'moveToSourceLabel',
@@ -424,7 +444,17 @@
 			{ description: '整个Transfer或项目禁用。', name: 'data-disabled', values: ['true'] },
 			{ description: '整个Transfer只读。', name: 'data-readonly', values: ['true'] },
 			{ description: '整个Transfer无效。', name: 'data-invalid', values: ['true'] },
-			{ description: '异步数据仍在加载。', name: 'data-loading', values: ['true'] }
+			{ description: '异步数据仍在加载。', name: 'data-loading', values: ['true'] },
+			{
+				description: '拖动中的来源item；virtual模式标记在其item-content上。',
+				name: 'data-dragging',
+				values: ['true']
+			},
+			{
+				description: '当前允许接收跨栏移动的相反panel。',
+				name: 'data-drop-target',
+				values: ['true']
+			}
 		],
 		status: 'stable',
 		summary:
@@ -444,6 +474,7 @@
 		isKeyboardComposing
 	} from '../../runtime/collection/collection-navigation.svelte.js';
 	import { LogicalCollection } from '../../runtime/collection/logical-collection.js';
+	import { navigationIntent } from '../../runtime/collection/list-navigation.js';
 	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { SelectionModel } from '../../runtime/collection/selection-model.js';
 	import type { Selection } from '../../runtime/collection/selection.js';
@@ -463,6 +494,7 @@
 	import {
 		containsComposedNode,
 		getActiveElement,
+		getElementDirection,
 		isDomHtmlElement
 	} from '../../runtime/layer/dom-realm.js';
 	import {
@@ -480,6 +512,10 @@
 	import ZButton from '../gene/ZButton.svelte';
 	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import TransferPane from './TransferPane.svelte';
+	import {
+		TransferDragDropAdapter,
+		type TransferDragDropContext
+	} from './transfer-drag-drop.svelte.js';
 
 	type Side = 'source' | 'target';
 	const rootRecipe = defineRecipe({
@@ -562,6 +598,8 @@
 		controlId: controlIdProp,
 		defaultValue = [],
 		disabled: disabledProp = false,
+		dir,
+		dragDrop = false,
 		emptyText,
 		filter,
 		filterable = true,
@@ -575,6 +613,7 @@
 		moveToTargetLabel,
 		moveMode = 'immediate' as TMode,
 		name: nameProp,
+		nonce,
 		onMoveEnd,
 		onMoveRequest,
 		onValueChange,
@@ -717,6 +756,10 @@
 	let targetActiveKey = $state<SelectionKey>();
 	let sourceListRef = $state<HTMLDivElement | null>(null);
 	let targetListRef = $state<HTMLDivElement | null>(null);
+	interface TransferDragSnapshot {
+		readonly candidate: TransferMoveCandidate;
+		readonly root: HTMLDivElement | null;
+	}
 	interface PendingTransferMove {
 		readonly candidate: TransferMoveCandidate;
 		readonly controller: AbortController;
@@ -796,10 +839,39 @@
 	const targetTypeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, size: resolvedSize }));
 	const controlsClass = $derived(zui.recipe(controlsRecipe));
-	const MoveToTargetIcon = $derived(zui.direction === 'rtl' ? ArrowLeft : ArrowRight);
-	const MoveToSourceIcon = $derived(zui.direction === 'rtl' ? ArrowRight : ArrowLeft);
+	const effectiveDirection = $derived.by(() => {
+		if (dir === 'ltr' || dir === 'rtl') return dir;
+		return getElementDirection(ref, zui.direction);
+	});
+	const MoveToTargetIcon = $derived(effectiveDirection === 'rtl' ? ArrowLeft : ArrowRight);
+	const MoveToSourceIcon = $derived(effectiveDirection === 'rtl' ? ArrowRight : ArrowLeft);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	const transferDragDrop = new TransferDragDropAdapter<TransferDragSnapshot>({
+		disabled: () => !dragDrop || !ref || disabled || readonly || pending !== null,
+		keysFor: movingKeysFor,
+		matchesSnapshot: (snapshot) =>
+			ref === snapshot.root &&
+			matchesTransferItemsSnapshot(items, snapshot.candidate) &&
+			matchesTransferValueSnapshot(resolvedValue, snapshot.candidate.value),
+		nonce: () => nonce,
+		onDrop: ({ destination, focusKey, keys, source }) => {
+			void requestTransferMove(destination, source, keys, focusKey);
+		},
+		snapshot: (side, movingKeys) =>
+			Object.freeze({
+				candidate: createTransferMoveCandidate({
+					destination: side === 'source' ? 'target' : 'source',
+					items,
+					movingKeys,
+					value: resolvedValue
+				}),
+				root: ref
+			})
+	});
+	const dragContext = $derived<TransferDragDropContext | undefined>(
+		dragDrop ? transferDragDrop.context : undefined
+	);
 
 	function paneRuntime(side: Side) {
 		return side === 'source'
@@ -817,9 +889,36 @@
 				};
 	}
 
+	function movingKeysFor(side: Side, key?: SelectionKey): readonly SelectionKey[] {
+		const checked = side === 'source' ? sourceChecked : targetChecked;
+		const requested = key !== undefined && !checked.has(key) ? new Set([key]) : checked;
+		const view = side === 'source' ? sourceFullView : targetFullView;
+		return view.items
+			.filter((item) => requested.has(item.key) && !item.disabled)
+			.map((item) => item.key);
+	}
+
 	function handleListKey(event: KeyboardEvent, side: Side): void {
-		if (isKeyboardComposing(event) || disabled) return;
+		if (event.defaultPrevented || isKeyboardComposing(event) || disabled) return;
 		const runtime = paneRuntime(side);
+		if (dragDrop && !readonly && !pending && event.altKey && !event.ctrlKey && !event.metaKey) {
+			const intent = navigationIntent(
+				event.key,
+				'horizontal',
+				getElementDirection(ref, effectiveDirection)
+			);
+			const destination =
+				intent === 'next' ? 'target' : intent === 'previous' ? 'source' : undefined;
+			if (destination !== undefined && destination !== side) {
+				const key = runtime.active.activeKey;
+				if (key === undefined) return;
+				const movingKeys = movingKeysFor(side, key);
+				if (movingKeys.length === 0) return;
+				event.preventDefault();
+				void requestTransferMove(destination, 'keyboard', movingKeys);
+				return;
+			}
+		}
 		if ((event.ctrlKey || event.metaKey) && event.key.toLocaleLowerCase() === 'a') {
 			event.preventDefault();
 			runtime.selection.selectAll();
@@ -963,12 +1062,13 @@
 		return true;
 	}
 
-	function clearAcceptedSelection(origin: Side): void {
+	function clearAcceptedSelection(origin: Side, movingKeys: readonly SelectionKey[]): void {
+		const moved = new Set<SelectionKey>(movingKeys);
 		if (origin === 'source') {
-			sourceChecked = new Set();
+			sourceChecked = new Set([...sourceChecked].filter((key) => !moved.has(key)));
 			sourceSelection.resetTransient();
 		} else {
-			targetChecked = new Set();
+			targetChecked = new Set([...targetChecked].filter((key) => !moved.has(key)));
 			targetSelection.resetTransient();
 		}
 	}
@@ -980,7 +1080,7 @@
 		restoreFocus: boolean
 	): boolean {
 		const accepted = result === 'accepted';
-		if (accepted) clearAcceptedSelection(entry.origin);
+		if (accepted) clearAcceptedSelection(entry.origin, entry.request.movingKeys);
 		if (live) {
 			announceTerminal(entry, result);
 			onMoveEnd?.(
@@ -1018,16 +1118,23 @@
 
 	async function requestTransferMove(
 		destination: Side,
-		source: TransferMoveSource
+		source: TransferMoveSource,
+		explicitKeys?: readonly SelectionKey[],
+		focusKeyOverride?: SelectionKey
 	): Promise<boolean> {
 		if (!live || !ref || disabled || readonly || pending) return false;
 		const mode = resolveMoveMode();
 		const origin: Side = destination === 'target' ? 'source' : 'target';
-		const checked = origin === 'source' ? sourceChecked : targetChecked;
-		const originView = origin === 'source' ? sourceFullView : targetFullView;
-		const movingKeys = originView.items
-			.filter((item) => checked.has(item.key) && !item.disabled)
-			.map((item) => item.key);
+		const movingKeys =
+			explicitKeys === undefined
+				? movingKeysFor(origin)
+				: (() => {
+						const requested = new Set<SelectionKey>(explicitKeys);
+						const view = origin === 'source' ? sourceFullView : targetFullView;
+						return view.items
+							.filter((item) => requested.has(item.key) && !item.disabled)
+							.map((item) => item.key);
+					})();
 		if (movingKeys.length === 0) return false;
 		const currentValue =
 			value !== undefined ? normalizeKeys(value, 'ZTransfer value') : resolvedValue;
@@ -1041,7 +1148,7 @@
 		const Controller = ref.ownerDocument.defaultView?.AbortController;
 		if (!Controller) return false;
 		const controller = new Controller();
-		const activeKey = sideActive(origin).activeKey;
+		const activeKey = focusKeyOverride ?? sideActive(origin).activeKey;
 		const moving = new Set<SelectionKey>(candidate.movingKeys);
 		const request = Object.freeze({
 			destination: candidate.destination,
@@ -1136,7 +1243,19 @@
 		moveGeneration += 1;
 		const entry = pending;
 		if (entry) reserveTerminal(entry, true);
+		transferDragDrop.destroy();
 		unregisterFocusOwner();
+	});
+	$effect(() => {
+		const currentItems = items.map((item) => ({ disabled: item.disabled, key: item.key }));
+		const currentValue = resolvedValue;
+		const currentRoot = ref;
+		const unavailable = !dragDrop || disabled || readonly || pending !== null;
+		void currentItems;
+		void currentValue;
+		void currentRoot;
+		void unavailable;
+		untrack(() => transferDragDrop.reconcile());
 	});
 	$effect(() => {
 		void sourceQuery;
@@ -1221,6 +1340,8 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	id={resolvedRootId}
+	dir={dir ?? zui.direction}
+	{nonce}
 	role="group"
 	aria-busy={loading || pending ? true : ariaBusy}
 	aria-disabled={disabled || undefined}
@@ -1243,6 +1364,7 @@
 		controlId={resolvedControlId}
 		describedBy={resolvedDescribedBy}
 		{disabled}
+		drag={dragContext}
 		emptyText={resolvedEmptyText}
 		{filterable}
 		invalid={resolvedInvalid}
@@ -1261,6 +1383,7 @@
 		{readonly}
 		required={resolvedRequired}
 		searchPlaceholder={resolvedSearchPlaceholder}
+		side="source"
 		totalCount={sourceFullView.size}
 		view={sourceView}
 		{virtual}
@@ -1300,6 +1423,7 @@
 		checkedCount={targetCheckedCount}
 		controlId={`${idBase}-target-list`}
 		{disabled}
+		drag={dragContext}
 		emptyText={resolvedEmptyText}
 		{filterable}
 		invalid={false}
@@ -1318,6 +1442,7 @@
 		{readonly}
 		required={false}
 		searchPlaceholder={resolvedSearchPlaceholder}
+		side="target"
 		totalCount={resolvedValue.length}
 		view={targetView}
 		{virtual}

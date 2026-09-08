@@ -15,13 +15,16 @@ const items = [
 ] as const satisfies readonly TransferItem[];
 
 const immediate = {
+	dragDrop: true,
 	items,
+	nonce: 'request-nonce',
 	onMoveEnd: (detail: TransferMoveEnd) => detail.result,
 	onValueChange: (value: readonly (number | string)[]) => value.length,
 	value: [0]
 } satisfies ZTransferProps;
 
 const requested = {
+	dragDrop: true,
 	items,
 	moveMode: 'request',
 	onMoveEnd: (detail: TransferMoveEnd) => detail.request.nextValue,
@@ -41,6 +44,12 @@ const request: TransferMoveRequest = {
 	value: [0]
 };
 const source: TransferMoveSource = request.source;
+
+const invalidDragDrop = {
+	items,
+	// @ts-expect-error dragDrop is a boolean opt-in, not the native draggable string attribute.
+	dragDrop: 'enabled'
+} satisfies ZTransferProps;
 const result: TransferMoveResult = 'stale';
 
 const missingRequestHandler = {
@@ -96,5 +105,6 @@ void [
 	invalidComponentMissingHandler,
 	invalidComponentRequestWithValueCallback,
 	invalidComponentImmediateWithRequestHandler,
-	invalidRequestResult
+	invalidRequestResult,
+	invalidDragDrop
 ];

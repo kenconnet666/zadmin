@@ -19,10 +19,11 @@ export const dragSliderTrack: BrowserCommand<[string, number, number]> = async (
 	}
 };
 
-export const dragElements: BrowserCommand<[string, string]> = async (
+export const dragElements: BrowserCommand<[string, string, string?]> = async (
 	context,
 	sourceSelector,
-	targetSelector
+	targetSelector,
+	duringDragSelector
 ) => {
 	if (context.provider.name !== 'playwright') throw new TypeError('Playwright provider required.');
 	const frame = await context.frame();
@@ -42,6 +43,16 @@ export const dragElements: BrowserCommand<[string, string]> = async (
 		// the first constrained move only to initialize the operation.
 		await context.page.mouse.move(start.x + (end.x - start.x) / 4, start.y + (end.y - start.y) / 4);
 		await nextFrame();
+		if (duringDragSelector !== undefined) {
+			// Simulate an external owner update while the real pointer remains pressed.
+			// This deliberately is not another mouse click, which would end the gesture.
+			await frame.locator(duringDragSelector).evaluate((element) => {
+				if (!(element instanceof HTMLElement))
+					throw new TypeError('The during-drag owner control must be an HTML element.');
+				element.click();
+			});
+			await nextFrame();
+		}
 		await context.page.mouse.move(end.x, end.y);
 		await nextFrame();
 	} finally {

@@ -8,6 +8,7 @@
 	import type { LogicalCollectionView } from '../../runtime/collection/logical-collection.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import type { ChoiceVirtualController } from '../compound/choice-virtualization.js';
+	import type { TransferDragDropContext } from './transfer-drag-drop.svelte.js';
 	import type { TransferItem } from './ZTransfer.svelte';
 
 	export interface TransferPaneProps {
@@ -17,6 +18,7 @@
 		readonly controlId: string;
 		readonly describedBy?: string;
 		readonly disabled: boolean;
+		readonly drag?: TransferDragDropContext;
 		readonly emptyText: string;
 		readonly filterable: boolean;
 		readonly invalid: boolean;
@@ -36,6 +38,7 @@
 		readonly readonly: boolean;
 		readonly required: boolean;
 		readonly searchPlaceholder: string;
+		readonly side: 'source' | 'target';
 		readonly size: ZControlSize;
 		readonly totalCount: number;
 		readonly view: LogicalCollectionView<SelectionKey, TransferItem>;
@@ -68,6 +71,13 @@
 			s.padding._medium;
 		},
 		variants: {
+			targeted: {
+				false: () => undefined,
+				true: (s) => {
+					s.borderColor._primary;
+					s.backgroundColor._primarySubtle;
+				}
+			},
 			size: {
 				xsmall: (s) => {
 					s.padding._small;
@@ -86,7 +96,7 @@
 				}
 			}
 		},
-		defaultVariants: {}
+		defaultVariants: { targeted: false }
 	});
 	const headerRecipe = defineRecipe({
 		base: (s) => {
@@ -124,6 +134,13 @@
 			s.userSelect.none;
 		},
 		variants: {
+			dragging: {
+				false: () => undefined,
+				true: (s) => {
+					s.backgroundColor._primarySubtle;
+					s.opacity._muted;
+				}
+			},
 			size: controlSizeStyles,
 			disabled: {
 				false: () => undefined,
@@ -140,7 +157,7 @@
 				}
 			}
 		},
-		defaultVariants: { disabled: false, selected: false }
+		defaultVariants: { disabled: false, dragging: false, selected: false }
 	});
 	const descriptionRecipe = defineRecipe({
 		base: (s) => {
@@ -194,6 +211,7 @@
 		controlId,
 		describedBy,
 		disabled,
+		drag,
 		emptyText,
 		filterable,
 		invalid,
@@ -213,6 +231,7 @@
 		readonly,
 		required,
 		searchPlaceholder,
+		side,
 		size,
 		totalCount,
 		view,
@@ -222,7 +241,9 @@
 		virtualOverscan
 	}: TransferPaneProps = $props();
 	const zui = useZui();
-	const panelClass = $derived(zui.recipe(panelRecipe, { size }));
+	const panelClass = $derived(
+		zui.recipe(panelRecipe, { size, targeted: drag?.targetSide === side })
+	);
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const listClass = $derived(zui.recipe(listRecipe, { virtual }));
 	const descriptionClass = $derived(zui.recipe(descriptionRecipe, { size }));
@@ -257,6 +278,11 @@
 	function attachItem(item: TransferItem, mount: boolean): Attachment<HTMLDivElement> {
 		return (node) => {
 			const stopMount = mount ? active.mount(item.key, node) : undefined;
+			const stopDrag = drag?.attachItem({
+				disabled: disabled || readonly || pending || Boolean(item.disabled),
+				key: item.key,
+				side
+			})(node);
 			const handlePointerDown = (event: PointerEvent): void => {
 				if (disabled) return;
 				event.preventDefault();
@@ -267,12 +293,14 @@
 				if (!disabled && !item.disabled) active.set(item.key, 'pointer');
 			};
 			const handleClick = (): void => {
+				if (drag?.consumeClick(item.key)) return;
 				if (!disabled && !readonly && !pending && !item.disabled) onToggle(item);
 			};
 			node.addEventListener('click', handleClick);
 			node.addEventListener('pointerdown', handlePointerDown);
 			node.addEventListener('pointermove', handlePointerMove);
 			return () => {
+				stopDrag?.();
 				stopMount?.();
 				node.removeEventListener('click', handleClick);
 				node.removeEventListener('pointerdown', handlePointerDown);
@@ -280,6 +308,9 @@
 			};
 		};
 	}
+
+	const attachPane: Attachment<HTMLDivElement> = (node) =>
+		drag?.attachPane({ disabled: disabled || readonly || pending, side })(node);
 
 	function handleListFocus(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
 		if (event.target === event.currentTarget) active.reconcile();
@@ -294,7 +325,14 @@
 	}
 </script>
 
-<div class={panelClass} data-slot="panel" role="group" aria-labelledby={labelId}>
+<div
+	{@attach attachPane}
+	class={panelClass}
+	data-drop-target={drag?.targetSide === side || undefined}
+	data-slot="panel"
+	role="group"
+	aria-labelledby={labelId}
+>
 	<header class={headerClass}>
 		<span id={labelId}>{label}</span><span>{checkedCount} / {totalCount}</span>
 	</header>
@@ -351,10 +389,12 @@
 					{@attach attachItem(logicalItem.value, false)}
 					class={zui.recipe(itemRecipe, {
 						disabled: disabled || logicalItem.disabled,
+						dragging: Object.is(drag?.draggingKey, logicalItem.key),
 						selected: checked.has(logicalItem.key),
 						size
 					})}
 					data-slot="item-content"
+					data-dragging={Object.is(drag?.draggingKey, logicalItem.key) || undefined}
 					data-state={checked.has(logicalItem.key) ? 'selected' : 'unselected'}
 					style="box-sizing: border-box; height: 100%;"
 				>
@@ -404,10 +444,12 @@
 					{@attach attachItem(logicalItem.value, true)}
 					class={zui.recipe(itemRecipe, {
 						disabled: disabled || logicalItem.disabled,
+						dragging: Object.is(drag?.draggingKey, logicalItem.key),
 						selected: checked.has(logicalItem.key),
 						size
 					})}
 					data-disabled={disabled || logicalItem.disabled || undefined}
+					data-dragging={Object.is(drag?.draggingKey, logicalItem.key) || undefined}
 					data-slot="item"
 					data-state={checked.has(logicalItem.key) ? 'selected' : 'unselected'}
 					id={active.idFor(logicalItem.key)}

@@ -1764,7 +1764,7 @@
 			"id": "transfer",
 			"name": "ZTransfer",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
-			"declaredPropCount": 30,
+			"declaredPropCount": 32,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -2036,7 +2036,7 @@
 	},
 	"totals": {
 		"components": 187,
-		"declaredProps": 2677,
+		"declaredProps": 2679,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

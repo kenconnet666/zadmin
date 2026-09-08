@@ -14096,6 +14096,12 @@ export const transferApiFacts = {
 			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
+			name: 'dragDrop',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
+		},
+		{
 			name: 'emptyText',
 			required: false,
 			type: 'string',
@@ -14157,6 +14163,12 @@ export const transferApiFacts = {
 		},
 		{
 			name: 'name',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
+		},
+		{
+			name: 'nonce',
 			required: false,
 			type: 'string',
 			inheritedFrom: 'ZTransferSharedProps'
