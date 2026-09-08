@@ -46,7 +46,8 @@ export const treeDoc = defineComponentDoc(treeMetadata, {
 			},
 			onLoadChildren: {
 				default: '—',
-				description: '展开lazy branch时调用；signal在节点删除或卸载时abort。'
+				description:
+					'展开lazy branch时调用；以本次node.key与signal绑定请求，节点删除或卸载时signal会abort。'
 			},
 			onLoadError: {
 				default: '—',
@@ -110,7 +111,7 @@ export const treeDoc = defineComponentDoc(treeMetadata, {
 			covers: ['keyboard', 'loading', 'locale', 'resource-cleanup'],
 			component: LazyDemo,
 			description:
-				'hasChildren声明未加载branch；请求去重、错误状态、指针/逻辑展开键重试、AbortSignal和调用方nodes更新形成清晰边界。',
+				'hasChildren声明未加载branch；ZTree拥有loading/error并支持键盘/指针重试，owner可移除请求节点触发AbortSignal，成功后selectionDisabled月报仍可导航但不可选择。',
 			id: 'tree-lazy-retry',
 			source: lazySource,
 			title: 'Lazy children、错误与重试'

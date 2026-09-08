@@ -41,10 +41,18 @@ describe('ZSelect production contract', () => {
 		expect(items[2]?.getAttribute('aria-disabled')).toBe('true');
 		expect(document.querySelector<HTMLLabelElement>('label[for]')?.htmlFor).toBe(trigger.id);
 
+		await expect.poll(() => document.activeElement).toBe(content);
 		trigger.focus();
 		trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		await tick();
 		expect(document.activeElement).toBe(content);
+		expect(content.getAttribute('aria-activedescendant')).toBe(items[0]?.id);
+		trigger.focus();
+		trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		await tick();
+		expect(document.activeElement).toBe(content);
+		expect(content.getAttribute('aria-activedescendant')).toBe(items[3]?.id);
+		expect(items[1]?.getAttribute('aria-selected')).toBe('true');
 		content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
 		await tick();
 		expect(content.getAttribute('aria-activedescendant')).toBe(items[3]?.id);
@@ -52,6 +60,35 @@ describe('ZSelect production contract', () => {
 		await tick();
 		expect(document.activeElement).toBe(trigger);
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
+	});
+
+	it('preserves composing and caller-vetoed trigger keys while the listbox is already open', async () => {
+		const { rerender } = await render(SelectFixture, { defaultOpen: true });
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
+		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
+		await expect.poll(() => document.activeElement).toBe(content);
+		trigger.focus();
+		const composing = new KeyboardEvent('keydown', {
+			bubbles: true,
+			cancelable: true,
+			isComposing: true,
+			key: 'ArrowDown'
+		});
+		trigger.dispatchEvent(composing);
+		expect(composing.defaultPrevented).toBe(false);
+		expect(document.activeElement).toBe(trigger);
+
+		await rerender({ preventKey: true });
+		trigger.focus();
+		const vetoed = new KeyboardEvent('keydown', {
+			bubbles: true,
+			cancelable: true,
+			key: 'ArrowUp'
+		});
+		trigger.dispatchEvent(vetoed);
+		expect(vetoed.defaultPrevented).toBe(true);
+		expect(document.activeElement).toBe(trigger);
+		expect(trigger.getAttribute('aria-expanded')).toBe('true');
 	});
 
 	it('allows intrinsic content width when matchWidth is disabled', async () => {

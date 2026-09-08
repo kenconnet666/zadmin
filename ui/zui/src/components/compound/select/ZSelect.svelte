@@ -294,6 +294,8 @@
 	const valueElements = new Map<symbol, () => HTMLButtonElement | null>();
 	let valueElementRevision = $state(0);
 	let nextValueElementRevision = 0;
+	// The content owner resolves either the ordinary listbox or its virtual inner listbox.
+	let readContentElement: (() => HTMLElement | null) | undefined;
 	function valueElement(): HTMLButtonElement | null {
 		valueElementRevision;
 		for (const read of valueElements.values()) {
@@ -401,9 +403,17 @@
 
 	function setOpen(next: boolean, strategy: SelectOpenFocusStrategy = 'selected'): void {
 		if (next && (disabled || readonly)) return;
+		const wasOpen = resolvedOpen;
 		openingStrategy = strategy;
 		openState.setFromUser(next);
 		if (!next) navigation.set(undefined, 'programmatic');
+		else if (wasOpen) {
+			const preferred = preferredActive(strategy);
+			if (preferred !== undefined) activeDescendant.set(preferred, 'keyboard');
+			const content = readContentElement?.();
+			if (content?.isConnected && !content.closest('[inert]'))
+				content.focus({ preventScroll: true });
+		}
 	}
 
 	const context: ZSelectContext = {
@@ -496,6 +506,12 @@
 			return () => {
 				stopMount();
 				stopLogical();
+			};
+		},
+		registerContentElement(element) {
+			readContentElement = element;
+			return () => {
+				if (readContentElement === element) readContentElement = undefined;
 			};
 		},
 		registerValueElement(element) {

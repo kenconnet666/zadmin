@@ -21,7 +21,14 @@
 				type: 'MouseEventHandler<HTMLButtonElement>'
 			}
 		],
-		keyboard: [{ description: '打开listbox。', key: 'Enter / Space / ArrowUp / ArrowDown' }],
+		keyboard: [
+			{ description: '通过原生button激活切换listbox。', key: 'Enter / Space' },
+			{
+				description:
+					'打开或返回已打开的listbox，ArrowDown定位首项，ArrowUp定位末项；不改变选中值。',
+				key: 'ArrowUp / ArrowDown'
+			}
+		],
 		parts: [],
 		props: [
 			{
@@ -59,6 +66,7 @@
 </script>
 
 <script lang="ts">
+	import { isKeyboardComposing } from '../../../runtime/collection/collection-navigation.svelte.js';
 	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
 	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
@@ -88,7 +96,15 @@
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
 		onkeydown?.(event);
-		if (!event.defaultPrevented && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+		if (
+			event.defaultPrevented ||
+			disabledProp ||
+			select.disabled ||
+			select.readonly ||
+			isKeyboardComposing(event)
+		)
+			return;
+		if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
 			event.preventDefault();
 			select.setOpen(true, event.key === 'ArrowUp' ? 'last' : 'first');
 		}

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 187,
-	"overallSha256": "f38509bef89fdf3400e23de44ebada0cdf31f8c87c4afc67a2730102c7843f6a",
+	"overallSha256": "8a9a448fbf44604328913528ab7655c2ec735080dbb51adcd672ff87ce0fd7db",
 	"components": [
 		{
 			"id": "accordion",
@@ -375,7 +375,7 @@
 		},
 		{
 			"id": "select-trigger",
-			"sha256": "cb6b569843b3bccdd691f4c7cf4fc327cf7f31118a13d0ad09f31b354cd11935",
+			"sha256": "965cf8de3419c19013a6df337db2322aeb3eeb80fc6c8ed2d96b98cc83a4119c",
 			"source": "src/components/compound/select/ZSelectTrigger.svelte"
 		},
 		{

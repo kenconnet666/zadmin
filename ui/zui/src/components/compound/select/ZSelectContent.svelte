@@ -161,6 +161,7 @@
 
 	untrack(assertContentContract);
 	$effect(assertContentContract);
+	$effect(() => select.registerContentElement(() => (virtual ? virtualRef : ref)));
 	$effect(() => {
 		select.setVirtualizer(virtual ? controller : null);
 		return () => select.setVirtualizer(null);

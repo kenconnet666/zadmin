@@ -10,11 +10,13 @@
 		defaultOpen = false,
 		matchWidth = true,
 		prevent = false,
+		preventKey = false,
 		longLabels = false
 	}: {
 		defaultOpen?: boolean;
 		matchWidth?: boolean;
 		prevent?: boolean;
+		preventKey?: boolean;
 		longLabels?: boolean;
 	} = $props();
 	let value = $state<string | number | undefined>('b');
@@ -43,6 +45,9 @@
 			<ZSelectTrigger
 				aria-label="Choice"
 				data-testid="select-trigger"
+				onkeydown={(event) => {
+					if (preventKey) event.preventDefault();
+				}}
 				style={longLabels ? 'inline-size: 80px' : undefined}
 			/>
 			<ZSelectContent data-testid="select-content">

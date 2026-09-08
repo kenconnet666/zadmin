@@ -18,7 +18,7 @@ describe('virtual Select and Combobox choices', () => {
 		await tick();
 		const shell = document.querySelector<HTMLElement>('[data-testid="virtual-select-shell"]');
 		const listbox = shell?.querySelector<HTMLElement>('[role="listbox"]');
-		expect(document.activeElement).toBe(listbox);
+		await expect.poll(() => document.activeElement).toBe(listbox);
 		expect(listbox?.textContent).not.toContain('Virtual option 1000');
 
 		keydown(listbox, 'End');
@@ -28,6 +28,27 @@ describe('virtual Select and Combobox choices', () => {
 		const active = activeId ? listbox?.querySelector<HTMLElement>(`#${activeId}`) : null;
 		expect(active?.textContent).toContain('Virtual option 1000');
 		expect(active?.getAttribute('aria-selected')).toBe('false');
+
+		trigger?.focus();
+		keydown(trigger, 'ArrowDown');
+		await expect.poll(() => document.activeElement).toBe(listbox);
+		await expect
+			.poll(() => {
+				const id = listbox?.getAttribute('aria-activedescendant');
+				return id ? listbox?.querySelector<HTMLElement>(`#${id}`)?.textContent?.trim() : undefined;
+			})
+			.toBe('Virtual option 1');
+		expect(document.querySelector('[data-testid="virtual-select-output"]')?.textContent).toBe('0');
+
+		trigger?.focus();
+		keydown(trigger, 'ArrowUp');
+		await expect.poll(() => document.activeElement).toBe(listbox);
+		await expect
+			.poll(() => {
+				const id = listbox?.getAttribute('aria-activedescendant');
+				return id ? listbox?.querySelector<HTMLElement>(`#${id}`)?.textContent?.trim() : undefined;
+			})
+			.toBe('Virtual option 1000');
 
 		keydown(listbox, 'Enter');
 		await tick();

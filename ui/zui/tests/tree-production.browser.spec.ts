@@ -48,6 +48,20 @@ describe('ZTree production contracts', () => {
 		host.querySelector<HTMLButtonElement>('[data-testid="tree-production-fail"]')!.click();
 		await settle();
 		expect(tree.querySelector('[data-slot="load-error"][role="status"]')).not.toBeNull();
+		component.renameWorkspace();
+		await tick();
+		expect(tree.querySelector('[data-slot="load-error"][role="status"]')).not.toBeNull();
+		expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+			/:1:[^:]+:0/u
+		);
+		component.setLazyDisabled(true);
+		await tick();
+		component.setLazyDisabled(false);
+		await tick();
+		expect(tree.querySelector('[data-slot="load-error"][role="status"]')).not.toBeNull();
+		expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+			/:1:[^:]+:0/u
+		);
 
 		tree.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
 		await tick();
@@ -87,6 +101,137 @@ describe('ZTree production contracts', () => {
 
 		await unmount(component);
 		host.remove();
+	});
+
+	it('keeps label-only updates but replaces an active lazy loader with a new generation', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(TreeProductionFixture, { target: host });
+		try {
+			await tick();
+			const tree = host.querySelector<HTMLElement>('[data-testid="tree-production-lazy"]')!;
+			const firstSignal = component.currentLoadSignal();
+			expect(firstSignal?.aborted).toBe(false);
+
+			component.renameWorkspace();
+			await tick();
+			expect(firstSignal?.aborted).toBe(false);
+			expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+				/:1:[^:]+:0/u
+			);
+
+			component.setRetryOnAbort(true);
+			component.replaceLoader();
+			await expect
+				.poll(() => host.querySelector('[data-testid="tree-production-output"]')?.textContent)
+				.toContain(':2:');
+			expect(component.lastAbortRetryResult()).toBe(true);
+			expect(firstSignal?.aborted).toBe(true);
+			expect(component.currentLoadSignal()?.aborted).toBe(false);
+			expect(tree.getAttribute('aria-busy')).toBe('true');
+
+			host.querySelector<HTMLButtonElement>('[data-testid="tree-production-resolve"]')!.click();
+			await settle();
+			expect(tree.querySelector('[role="treeitem"][data-key="api"]')).not.toBeNull();
+			expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+				/:2:[^:]+:1/u
+			);
+		} finally {
+			await unmount(component);
+			host.remove();
+		}
+	});
+
+	it('does not let an unmount abort listener restart lazy work through a retained controller', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(TreeProductionFixture, { target: host });
+		await tick();
+		const signal = component.currentLoadSignal();
+		const attempts = component.loadAttemptCount();
+		component.setRetryOnAbort(true);
+
+		await unmount(component);
+		expect(signal?.aborted).toBe(true);
+		expect(component.lastAbortRetryResult()).toBe(false);
+		expect(component.retryHeldIdle()).toBe(false);
+		expect(component.loadAttemptCount()).toBe(attempts);
+		host.remove();
+	});
+
+	it('cancels lazy work while disabled and aborts the restarted owner on unmount', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(TreeProductionFixture, { target: host });
+		await tick();
+		const tree = host.querySelector<HTMLElement>('[data-testid="tree-production-lazy"]')!;
+		const firstSignal = component.currentLoadSignal();
+		expect(firstSignal?.aborted).toBe(false);
+		component.setLazyDisabled(true);
+		await expect.poll(() => firstSignal?.aborted).toBe(true);
+		expect(tree.getAttribute('aria-busy')).toBeNull();
+
+		component.setLazyDisabled(false);
+		await expect
+			.poll(() => host.querySelector('[data-testid="tree-production-output"]')?.textContent)
+			.toContain(':2:');
+		const restartedSignal = component.currentLoadSignal();
+		expect(restartedSignal?.aborted).toBe(false);
+		await unmount(component);
+		expect(restartedSignal?.aborted).toBe(true);
+		host.remove();
+	});
+
+	it('preserves a completed empty lazy result across disabled state changes', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(TreeProductionFixture, { target: host });
+		try {
+			await tick();
+			const tree = host.querySelector<HTMLElement>('[data-testid="tree-production-lazy"]')!;
+			component.resolveEmptyLoad();
+			await settle();
+			expect(tree.getAttribute('aria-busy')).toBeNull();
+			expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+				/:1:[^:]+:0/u
+			);
+
+			component.setLazyDisabled(true);
+			await tick();
+			component.setLazyDisabled(false);
+			await tick();
+			expect(tree.getAttribute('aria-busy')).toBeNull();
+			expect(host.querySelector('[data-testid="tree-production-output"]')?.textContent).toMatch(
+				/:1:[^:]+:0/u
+			);
+		} finally {
+			await unmount(component);
+			host.remove();
+		}
+	});
+
+	it('forgets a removed preloaded key so a later same-key lazy branch loads', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(TreeProductionFixture, { target: host });
+		try {
+			await tick();
+			expect(
+				host.querySelector('[data-testid="tree-production-preloaded-output"]')?.textContent
+			).toBe('0');
+
+			component.removePreloadedBranch();
+			await tick();
+			component.restorePreloadedLazyBranch();
+			await expect
+				.poll(
+					() => host.querySelector('[data-testid="tree-production-preloaded-output"]')?.textContent
+				)
+				.toBe('1');
+		} finally {
+			await unmount(component);
+			host.remove();
+		}
 	});
 
 	it('keeps one virtual focus owner and exposes mounted hierarchy metadata', async () => {

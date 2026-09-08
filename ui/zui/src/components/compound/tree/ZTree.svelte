@@ -596,7 +596,14 @@
 		TKey,
 		{ readonly controller: AbortController; readonly generation: number }
 	>();
+	interface TreeLoadOwner {
+		readonly hasChildren: boolean;
+		readonly loader: NonNullable<ZTreeProps<TKey>['onLoadChildren']>;
+		readonly parentKey: TKey | undefined;
+	}
+	const loadOwners = new Map<TKey, TreeLoadOwner>();
 	let loadGeneration = 0;
+	let live = true;
 
 	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled }));
 	const switcherClass = $derived(zui.recipe(switcherRecipe));
@@ -637,15 +644,27 @@
 		selected;
 		disabled;
 		onLoadChildren;
+		for (const key of loadedKeys) {
+			if (!tree.nodes.has(key)) loadedKeys.delete(key);
+		}
 		activeDescendant.prune(allKeys);
-		const retained = new Set(allKeys);
-		for (const [key, request] of requests) {
-			if (!disabled && onLoadChildren && retained.has(key)) continue;
-			request.controller.abort();
-			requests.delete(key);
+		for (const [key, owner] of loadOwners) {
+			const node = tree.nodes.get(key);
+			const request = requests.get(key);
+			if (
+				onLoadChildren === owner.loader &&
+				node !== undefined &&
+				Boolean(node.hasChildren) === owner.hasChildren &&
+				Object.is(node.parentKey, owner.parentKey) &&
+				(!request || (!disabled && !node.disabled))
+			)
+				continue;
+			if (request) requests.delete(key);
 			loadingKeys.delete(key);
 			errorKeys.delete(key);
 			loadedKeys.delete(key);
+			loadOwners.delete(key);
+			request?.controller.abort();
 		}
 		for (const entry of treeView.entries) {
 			if (entry.childCount > 0) {
@@ -670,6 +689,7 @@
 		for (const entry of treeView.entries) {
 			if (
 				expanded.has(entry.key) &&
+				!entry.disabled &&
 				entry.hasChildren &&
 				entry.childCount === 0 &&
 				!loadedKeys.has(entry.key) &&
@@ -682,9 +702,14 @@
 	});
 
 	onDestroy(() => {
-		for (const request of requests.values()) request.controller.abort();
+		live = false;
+		const pendingRequests = [...requests.values()];
 		requests.clear();
+		loadingKeys.clear();
+		errorKeys.clear();
+		loadOwners.clear();
 		mountedElements.clear();
+		for (const request of pendingRequests) request.controller.abort();
 	});
 
 	function normalizeKeys(values: readonly TKey[], name: string): readonly TKey[] {
@@ -800,17 +825,32 @@
 	}
 
 	async function loadChildren(node: TreeNode<TKey>, retry = false): Promise<void> {
-		if (!onLoadChildren || disabled || requests.has(node.key)) return;
+		const loader = onLoadChildren;
+		const currentNode = tree.nodes.get(node.key);
+		if (
+			!live ||
+			!loader ||
+			disabled ||
+			!currentNode?.hasChildren ||
+			currentNode.disabled ||
+			requests.has(node.key)
+		)
+			return;
 		if (!retry && loadedKeys.has(node.key)) return;
 		const AbortControllerConstructor = ref?.ownerDocument.defaultView?.AbortController;
 		if (!AbortControllerConstructor) return;
 		const abortController = new AbortControllerConstructor();
 		const generation = (loadGeneration += 1);
 		requests.set(node.key, { controller: abortController, generation });
+		loadOwners.set(node.key, {
+			hasChildren: Boolean(currentNode.hasChildren),
+			loader,
+			parentKey: currentNode.parentKey
+		});
 		loadingKeys.add(node.key);
 		errorKeys.delete(node.key);
 		try {
-			await onLoadChildren(node, { key: node.key, signal: abortController.signal });
+			await loader(currentNode, { key: node.key, signal: abortController.signal });
 			if (requests.get(node.key)?.generation !== generation || abortController.signal.aborted)
 				return;
 			loadedKeys.add(node.key);
@@ -829,7 +869,15 @@
 
 	function retryLoad(key: TKey): boolean {
 		const node = tree.nodes.get(key);
-		if (!node?.hasChildren || requests.has(key) || !onLoadChildren) return false;
+		if (
+			!live ||
+			disabled ||
+			!node?.hasChildren ||
+			node.disabled ||
+			requests.has(key) ||
+			!onLoadChildren
+		)
+			return false;
 		loadedKeys.delete(key);
 		errorKeys.delete(key);
 		void loadChildren(node, true);

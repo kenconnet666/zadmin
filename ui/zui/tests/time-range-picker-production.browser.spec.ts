@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import TimeRangePickerProductionFixture from './TimeRangePickerProductionFixture.svelte';
@@ -108,6 +109,53 @@ describe('ZTimeRangePicker production contracts', () => {
 		);
 	});
 
+	it('rejects an ordered cross-midnight field draft atomically and restores both business entries on Escape', async () => {
+		await render(TimeRangePickerProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="time-range-form"]')!;
+		const range = root('time-range');
+		const endHour = range.querySelector<HTMLInputElement>('[data-slot="end-field"] input')!;
+
+		await userEvent.click(endHour);
+		await userEvent.keyboard('08');
+		await tick();
+		expect(range).toHaveAttribute('data-invalid', 'true');
+		expect(endHour).toHaveValue('08');
+		expect(new FormData(form).getAll('deployment.start')).toEqual(['09:30:00']);
+		expect(new FormData(form).getAll('deployment.end')).toEqual(['10:30:00']);
+
+		await userEvent.keyboard('{Escape}');
+		await expect.poll(() => endHour.value).toBe('10');
+		expect(range).not.toHaveAttribute('data-invalid');
+		expect(new FormData(form).get('deployment.start')).toBe('09:30:00');
+		expect(new FormData(form).get('deployment.end')).toBe('10:30:00');
+	});
+
+	it('discards an open panel draft during form reset without committing either endpoint', async () => {
+		await render(TimeRangePickerProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="time-range-form"]')!;
+		trigger('time-range').click();
+		await tick();
+		const popup = dialog('Choose time range');
+		const startHours = popup.querySelector<HTMLElement>('[role="listbox"][aria-label="Hour"]')!;
+		const hourEight = [...startHours.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(item) => item.textContent?.trim() === '08'
+		)!;
+		hourEight.click();
+		await tick();
+		expect(new FormData(form).get('deployment.start')).toBe('09:30:00');
+
+		await resetForm(form);
+		await expect.poll(() => trigger('time-range').getAttribute('aria-expanded')).toBe('false');
+		await expect
+			.poll(() => document.querySelector('[role="dialog"][aria-label="Choose time range"]'))
+			.toBeNull();
+		expect(new FormData(form).get('deployment.start')).toBe('09:30:00');
+		expect(new FormData(form).get('deployment.end')).toBe('10:30:00');
+		expect(document.querySelector('[data-testid="time-range-output"]')?.textContent).toContain(
+			'|0|0'
+		);
+	});
+
 	it('keeps range presets draft-only, overnight order explicit and instance direction authoritative', async () => {
 		await render(TimeRangePickerProductionFixture);
 		const overnight = root('time-range-overnight');
@@ -140,6 +188,7 @@ describe('ZTimeRangePicker production contracts', () => {
 
 	it('resynchronizes both fields and keeps the popover open when a controlled owner rejects confirm', async () => {
 		await render(TimeRangePickerProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="time-range-form"]')!;
 		trigger('time-range-rejected').click();
 		await tick();
 		const popup = dialog('Choose time range');
@@ -161,5 +210,16 @@ describe('ZTimeRangePicker production contracts', () => {
 			root('time-range-rejected').querySelector<HTMLInputElement>('[data-slot="end-field"] input')
 				?.value
 		).toBe('10');
+		expect(new FormData(form).get('rejected.start')).toBe('09:30:00');
+		expect(new FormData(form).get('rejected.end')).toBe('10:30:00');
+
+		root('time-range-rejected').querySelector<HTMLButtonElement>('[data-slot="clear"]')!.click();
+		await tick();
+		expect(
+			document.querySelector('[data-testid="time-range-rejected-output"]')?.textContent
+		).toContain('|2');
+		expect(new FormData(form).get('rejected.start')).toBe('09:30:00');
+		expect(new FormData(form).get('rejected.end')).toBe('10:30:00');
+		expect(trigger('time-range-rejected').getAttribute('aria-expanded')).toBe('true');
 	});
 });

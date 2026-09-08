@@ -8199,7 +8199,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelect authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57)"
+						"detail": "ZSelect authored visual contract: allows intrinsic content width when matchWidth is disabled (line 94)"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -8313,7 +8313,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectContent authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57)"
+						"detail": "ZSelectContent authored visual contract: allows intrinsic content width when matchWidth is disabled (line 94)"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -8427,7 +8427,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectItem authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57)"
+						"detail": "ZSelectItem authored visual contract: allows intrinsic content width when matchWidth is disabled (line 94)"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -8519,7 +8519,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "cb6b569843b3bccdd691f4c7cf4fc327cf7f31118a13d0ad09f31b354cd11935 API snapshot entry"
+						"detail": "965cf8de3419c19013a6df337db2322aeb3eeb80fc6c8ed2d96b98cc83a4119c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8541,7 +8541,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectTrigger authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57)"
+						"detail": "ZSelectTrigger authored visual contract: allows intrinsic content width when matchWidth is disabled (line 94)"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -9922,7 +9922,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/tree-production.browser.spec.ts",
-						"detail": "ZTree authored visual contract: keeps virtual tree viewport bounded to configured height and item size (line 118)"
+						"detail": "ZTree authored visual contract: keeps virtual tree viewport bounded to configured height and item size (line 263)"
 					},
 					{
 						"path": "ui/zui/tests/TreeProductionFixture.svelte",
@@ -19786,7 +19786,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/time-range-picker-production.browser.spec.ts",
-						"detail": "ZTimeRangePicker authored visual contract: keeps one owner, partial FormData, external sync, clear and owner-realm reset real (line 19)"
+						"detail": "ZTimeRangePicker authored visual contract: keeps one owner, partial FormData, external sync, clear and owner-realm reset real (line 20)"
 					},
 					{
 						"path": "ui/zui/tests/TimeRangePickerProductionFixture.svelte",

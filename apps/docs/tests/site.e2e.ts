@@ -850,7 +850,9 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	await page.goto('/#/components/time-field');
 	const timeFieldDemo = demo(page, 'time-field-segments-form');
 	const timeForm = timeFieldDemo.locator('form');
-	const minute = timeFieldDemo.getByRole('textbox', { name: '分钟', exact: true });
+	const minute = timeFieldDemo
+		.getByTestId('time-field-enabled')
+		.getByRole('textbox', { name: '分钟', exact: true });
 	await minute.press('ArrowUp');
 	await expect(timeFieldDemo.getByText('value = 09:31:15')).toBeVisible();
 	await expect

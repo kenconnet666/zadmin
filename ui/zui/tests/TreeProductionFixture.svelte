@@ -11,35 +11,55 @@
 	} from '../src/entrypoints/index.js';
 
 	let lazyNodes = $state<readonly TreeNode<string>[]>([
-		{ hasChildren: true, key: 'workspace', label: 'Workspace' }
+		{ hasChildren: true, key: 'workspace', label: 'Workspace' },
+		{ hasChildren: true, key: 'idle', label: 'Idle' }
 	]);
 	let lazySelected = $state<readonly string[]>([]);
 	let loadAttempts = $state(0);
-	let pendingResolve: (() => void) | undefined;
+	let abortedLoads = $state(0);
+	let loadSignal: AbortSignal | undefined;
+	let pendingResolve: ((appendChildren: boolean) => void) | undefined;
 	let pendingReject: ((error: unknown) => void) | undefined;
 	let treeController = $state<ZTreeController<string> | null>(null);
+	let heldTreeController = $state<ZTreeController<string> | null>(null);
+	let replacementLoader = $state(false);
+	let lazyDisabled = $state(false);
+	let retryOnAbort = false;
+	const abortRetryResults: boolean[] = [];
+	let preloadedNodes = $state<readonly TreeNode<string>[]>([
+		{ hasChildren: true, key: 'cached', label: 'Cached' },
+		{ key: 'cached-child', label: 'Cached child', parentKey: 'cached' }
+	]);
+	let preloadedAttempts = $state(0);
 
-	function loadChildren(
-		node: TreeNode<string>,
-		{ signal }: TreeLoadContext<string>
-	): Promise<void> {
+	$effect(() => {
+		if (treeController) heldTreeController = treeController;
+	});
+
+	function beginLoad(node: TreeNode<string>, { signal }: TreeLoadContext<string>): Promise<void> {
 		loadAttempts += 1;
+		loadSignal = signal;
 		return new Promise<void>((resolve, reject) => {
-			const abort = (): void => reject(new DOMException('Aborted', 'AbortError'));
+			const abort = (): void => {
+				abortedLoads += 1;
+				if (retryOnAbort) abortRetryResults.push(heldTreeController?.retryLoad(node.key) ?? false);
+				reject(new DOMException('Aborted', 'AbortError'));
+			};
 			signal.addEventListener('abort', abort, { once: true });
-			pendingResolve = () => {
+			pendingResolve = (appendChildren) => {
 				signal.removeEventListener('abort', abort);
-				lazyNodes = [
-					...lazyNodes,
-					{ key: 'api', label: 'API', parentKey: node.key },
-					{ key: 'docs', label: 'Docs', parentKey: node.key },
-					{
-						key: 'archive',
-						label: 'Archive',
-						parentKey: node.key,
-						selectionDisabled: true
-					}
-				];
+				if (appendChildren)
+					lazyNodes = [
+						...lazyNodes,
+						{ key: 'api', label: 'API', parentKey: node.key },
+						{ key: 'docs', label: 'Docs', parentKey: node.key },
+						{
+							key: 'archive',
+							label: 'Archive',
+							parentKey: node.key,
+							selectionDisabled: true
+						}
+					];
 				resolve();
 			};
 			pendingReject = (error) => {
@@ -49,6 +69,19 @@
 		});
 	}
 
+	function loadChildren(node: TreeNode<string>, context: TreeLoadContext<string>): Promise<void> {
+		return beginLoad(node, context);
+	}
+
+	function replacementLoadChildren(
+		node: TreeNode<string>,
+		context: TreeLoadContext<string>
+	): Promise<void> {
+		return beginLoad(node, context);
+	}
+
+	const activeLoader = $derived(replacementLoader ? replacementLoadChildren : loadChildren);
+
 	function failLoad(): void {
 		pendingReject?.(new Error('Fixture load failed'));
 		pendingReject = undefined;
@@ -56,13 +89,59 @@
 	}
 
 	function resolveLoad(): void {
-		pendingResolve?.();
+		pendingResolve?.(true);
 		pendingReject = undefined;
 		pendingResolve = undefined;
 	}
 
 	function removeDocs(): void {
 		lazyNodes = lazyNodes.filter((node) => node.key !== 'docs');
+	}
+
+	export function renameWorkspace(): void {
+		lazyNodes = [{ hasChildren: true, key: 'workspace', label: 'Workspace replacement' }];
+	}
+
+	export function replaceLoader(): void {
+		replacementLoader = true;
+	}
+
+	export function setLazyDisabled(value: boolean): void {
+		lazyDisabled = value;
+	}
+
+	export function setRetryOnAbort(value: boolean): void {
+		retryOnAbort = value;
+	}
+
+	export function lastAbortRetryResult(): boolean | undefined {
+		return abortRetryResults.at(-1);
+	}
+
+	export function loadAttemptCount(): number {
+		return loadAttempts;
+	}
+
+	export function retryHeldIdle(): boolean {
+		return heldTreeController?.retryLoad('idle') ?? false;
+	}
+
+	export function removePreloadedBranch(): void {
+		preloadedNodes = [];
+	}
+
+	export function restorePreloadedLazyBranch(): void {
+		preloadedNodes = [{ hasChildren: true, key: 'cached', label: 'Cached replacement' }];
+	}
+
+	export function resolveEmptyLoad(): void {
+		pendingResolve?.(false);
+		pendingReject = undefined;
+		pendingResolve = undefined;
+	}
+
+	export function currentLoadSignal(): AbortSignal | undefined {
+		return loadSignal;
 	}
 
 	const virtualNodes: readonly TreeNode<string>[] = Array.from({ length: 2000 }, (_, index) => ({
@@ -87,9 +166,10 @@
 		bind:controller={treeController}
 		bind:selectedKeys={lazySelected}
 		defaultExpandedKeys={['workspace']}
+		disabled={lazyDisabled}
 		name="lazy-node"
 		nodes={lazyNodes}
-		onLoadChildren={loadChildren}
+		onLoadChildren={activeLoader}
 		selectionMode="multiple"
 		selectionStyle="checkbox"
 		data-testid="tree-production-lazy"
@@ -104,8 +184,19 @@
 	<button type="reset">Reset lazy tree</button>
 </form>
 <output data-testid="tree-production-output">
-	{lazySelected.join(',')}:{loadAttempts}:{treeController?.activeKey ?? 'none'}
+	{lazySelected.join(',')}:{loadAttempts}:{treeController?.activeKey ?? 'none'}:{abortedLoads}
 </output>
+
+<ZTree
+	aria-label="Preloaded cache tree"
+	defaultExpandedKeys={['cached']}
+	nodes={preloadedNodes}
+	onLoadChildren={() => {
+		preloadedAttempts += 1;
+	}}
+	data-testid="tree-production-preloaded"
+/>
+<output data-testid="tree-production-preloaded-output">{preloadedAttempts}</output>
 
 <form data-testid="tree-production-single-form">
 	<ZTree
