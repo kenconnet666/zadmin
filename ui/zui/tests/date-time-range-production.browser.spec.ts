@@ -21,15 +21,22 @@ describe('ZDateTimeRangePicker production contracts', () => {
 	it('restores a directly edited endpoint when its form model rejects the write', async () => {
 		await render(DateTimeRangePickerProductionFixture);
 		const target = root('date-time-range-rejected');
+		const form = root('date-time-range-rejected-form') as HTMLFormElement;
 		const day = target.querySelector<HTMLInputElement>(
 			'[data-slot="start-field"] input[id$="-day"]'
 		)!;
 		day.focus();
 		day.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true }));
 		await expect.poll(() => day.value).toBe('07');
-		expect(
-			new FormData(root('date-time-range-rejected-form') as HTMLFormElement).get('window.start')
-		).toBe('2026-09-07T09:30:00');
+		expect(new FormData(form).get('window.start')).toBe('2026-09-07T09:30:00');
+		expect(root('date-time-range-rejected-output').textContent).toBe('0:0');
+
+		const clear = target.querySelector<HTMLButtonElement>('[data-slot="clear"]');
+		expect(clear).not.toBeNull();
+		clear!.click();
+		await tick();
+		expect(new FormData(form).getAll('window.start')).toEqual(['2026-09-07T09:30:00']);
+		expect(new FormData(form).getAll('window.end')).toEqual(['2026-09-08T17:30:00']);
 		expect(root('date-time-range-rejected-output').textContent).toBe('0:0');
 	});
 	it('keeps one root owner, partial FormData, disabled/readonly semantics and reset real', async () => {
@@ -50,6 +57,41 @@ describe('ZDateTimeRangePicker production contracts', () => {
 		expect(getComputedStyle(trigger('date-time-range-disabled')).opacity).toBe('1');
 		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('deployment.start')).toBe('2026-09-07T09:30:00');
+	});
+
+	it('allows readonly inline range navigation without writing either endpoint', async () => {
+		await render(DateTimeRangePickerProductionFixture);
+		const form = root('date-time-range-form') as HTMLFormElement;
+		const inline = root('date-time-range-inline-readonly');
+		const parts = inline.querySelectorAll<HTMLButtonElement>('[data-slot="range-parts"] button');
+		const clear = inline.querySelector<HTMLButtonElement>('[data-slot="clear"]')!;
+		const confirm = inline.querySelector<HTMLButtonElement>(
+			'[data-slot="date-time-footer"] button:last-child'
+		)!;
+
+		expect(inline.dataset.presentation).toBe('inline');
+		expect(inline.dataset.rangePart).toBe('start');
+		expect(parts[1]?.disabled).toBe(false);
+		parts[1]!.click();
+		await tick();
+		expect(inline.dataset.rangePart).toBe('end');
+		expect(parts[1]?.getAttribute('aria-pressed')).toBe('true');
+		const readableDate = [
+			...inline.querySelectorAll<HTMLButtonElement>('[role="gridcell"] button')
+		].find((button) => button.dataset.outside !== 'true')!;
+		expect(readableDate.isConnected).toBe(true);
+		expect(clear.disabled).toBe(true);
+		expect(confirm.disabled).toBe(true);
+		readableDate.click();
+		clear.click();
+		confirm.click();
+		await tick();
+		expect(new FormData(form).getAll('inline-readonly-window.start')).toEqual([
+			'2026-09-07T09:30:00'
+		]);
+		expect(new FormData(form).getAll('inline-readonly-window.end')).toEqual([
+			'2026-09-08T17:30:00'
+		]);
 	});
 
 	it('keeps raw field drafts out of the owner and rolls both composite fields back on Escape', async () => {

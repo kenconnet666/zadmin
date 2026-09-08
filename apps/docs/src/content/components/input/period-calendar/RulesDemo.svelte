@@ -29,15 +29,17 @@
 			: '空'}。</ZText
 	>
 	<ZPeriodCalendar
+		data-testid="period-rules-week"
 		granularity="week"
 		bind:value={week}
+		isPeriodUnavailable={(period) => period.kind === 'week' && period.week === 2}
 		weekRules={{ firstDayOfWeek: 'sun', minimalDaysInFirstWeek: 1 }}
 		showWeekNumbers
 		calendarLabel="周日起始的工作周"
 	/>
 	<ZText tone="muted"
-		>周日开始、首周至少一天：{week
-			? `${periodStart(week)} — ${periodEnd(week)}`
-			: '空'}。规则保存在值中，locale 只改变显示。</ZText
+		>周日开始、首周至少一天：{week ? `${periodStart(week)} — ${periodEnd(week)}` : '空'} · 当前周：{week
+			? `${week.year}-W${week.week}`
+			: '空'}。第2周不可用，键盘会跳过它；规则保存在值中，locale 只改变显示。</ZText
 	>
 </ZStack>

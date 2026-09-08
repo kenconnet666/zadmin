@@ -139,6 +139,28 @@ test('DataTable server owner preserves global row semantics, empty filtering and
 	await expect(demo).toContainText('跨页selected = api, docs');
 });
 
+test('PeriodCalendar rules expose an unavailable week and skip it by keyboard', async ({
+	page
+}) => {
+	await page.goto('/#/components/period-calendar');
+	const demo = page.getByTestId('demo-period-calendar-rules');
+	const weekCalendar = demo.getByTestId('period-rules-week');
+	const grid = weekCalendar.getByRole('grid');
+	const unavailable = grid.locator('button[data-disabled="true"]');
+	await expect(unavailable).toHaveCount(1);
+	await expect(unavailable).toBeDisabled();
+
+	const selected = grid.locator('button[data-selected="true"]');
+	await expect(selected).toHaveCount(1);
+	await selected.focus();
+	await selected.press('ArrowRight');
+	await expect
+		.poll(() => page.evaluate(() => document.activeElement?.getAttribute('data-disabled')))
+		.not.toBe('true');
+	await page.keyboard.press('Enter');
+	await expect(demo.getByText(/当前周：2026-W3/u)).toBeVisible();
+});
+
 test('leaving async demos releases their tasks without late page errors or state on remount', async ({
 	page
 }) => {

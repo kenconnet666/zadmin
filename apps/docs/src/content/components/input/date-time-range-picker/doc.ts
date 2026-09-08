@@ -20,6 +20,7 @@ export const dateTimeRangePickerDoc = defineComponentDoc(dateTimeRangePickerMeta
 	accessibility: [
 		'开始与结束字段拥有独立名称，面板端点切换按钮说明当前编辑目标。',
 		'日期边界、完整时刻、排序后的端点角色和整个范围共同参与验证；错误通过共享 locale 消息表达。',
+		'readonly的inline面板仍可切换开始/结束查看另一端；日期、时间、预设、清除与确认不写入业务值，两端FormData保持不变。',
 		'统一禁用、只读、方向和焦点回收；显式取消撤销尚未提交的面板草稿。'
 	],
 	demos: [

@@ -83,6 +83,13 @@
 			readonly
 		/>
 		<ZDateTimeRangePicker
+			data-testid="date-time-range-inline-readonly"
+			defaultValue={initial}
+			name="inline-readonly-window"
+			presentation="inline"
+			readonly
+		/>
+		<ZDateTimeRangePicker
 			data-testid="date-time-range-disabled"
 			defaultValue={initial}
 			disabled

@@ -148,7 +148,8 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P06  | 已提交，CI发现后续阻断 | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
 | P07  | 已提交，CI安装被拦截   | `7969859`组件修复、`c21f3cb`浏览器隔离、`7ae21cd`工具组；新CI因typescript-eslint发布等待期未进入组件验证                                         |
 | P08  | 本地通过，待组合SHA CI | 修正依赖等待策略与锁，DataTable焦点所有权、DateField/TimeField segment一致性及既有DataTable演示验收；完整远端证据尚未闭合                        |
-| P09+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
+| P09  | 本地通过，待推送       | 明确readonly范围面板查看/写值边界，补周期不可用规则的真实演示验收，增加Chromium首个断连/调度/GC诊断；等待上一提交Docs完整结果                    |
+| P10+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
 
 ### P01 集成记录
 
@@ -282,5 +283,16 @@ P07阶段提交为`7969859`（组件/Docs）、`c21f3cb`（CI/证据链）及`7a
 - 当前仍需新组合SHA CI。整库覆盖率预算、剩余组件家族/新能力与依赖组均继续按原计划推进；没有发布、tag或生产部署。
 
 P09入口：先收集上述完整CI与coverage产物，按文件比较未覆盖绝对值，不降低既有预算。Chromium使用根`pnpm test`（包含workspace与ZUI unit/browser），另两浏览器仅执行ZUI browser project；coverage也能完成全部317文件。因此应在远端比较执行入口与provider连接生命周期，保留process stderr/exit和文件初始化证据；单文件绿灯不能排除跨文件问题，也不能直接归因于PinInput、OOM或声称升级Vitest必然修复。Luna完成只读预审，没有据此修改组件或测试框架。
+
+### P09 范围只读合同、周期业务规则与连接诊断
+
+- P08组件组合已提交为`9b9756aaddf94c2672a02c4a26c643b407b2fca2`，对应[CI 34232628520](https://github.com/kenconnet666/zadmin/actions/runs/34232628520)。上一轮`c774ce9`的Static最终通过，但三项Docs任务被新提交取消，不能算已验证；后续先等待当前Docs完整结论，避免连续推送让这条门禁始终被取消。
+- `9b9756a`的Coverage完整317文件2091项全过，未覆盖global为1562/446/2909/3729（lines/functions/statements/branches），仍超既有预算。Chromium非coverage在`form-array-transaction`创建tester前断连，288/317文件2041项通过；不同轮次落点不同，tester与Vite先报告连接丢失，再报createTesters关闭，浏览器随后正常graceful exit。没有PinInput、FormArray断言失败或OOM的充分证据。
+- Sol审计测试清理、直接mount与页面导航，未找到可证明的生命周期违规，因此不改这些文件。根代理核对已安装Vitest4.1.11的browser API、pool和Chromium GC源码，在workspace与coverage对照任务启用这三个精确debug namespace，并记录workspace测试前后的磁盘/共享内存与内存快照。未启用打印认证URL的Playwright provider namespace，未改并行度、移除测试、关闭reporter、强制GC或放宽预算；本次是诊断增强，不是断连已修复。
+- Terra核对DateTimeRangePicker的readonly inline：开始/结束切换属于查看状态，不能因readonly而无依据禁用。实际选择、清除、确认仍禁止写业务值。本轮保留实现，补查看另一端后值不变、两端FormData各仅一条、受控FormModel拒绝clear且不通知onValueChange/onCommit的真实回归；切面板后重新查询仍连接的日期元素，避免对旧DOM空点击。专用Chromium7项通过，Docs同步分层语义。
+- Luna审计两个日期/周期页面后没有按covers相似强行合并独立教学场景。在PeriodCalendar原RulesDemo补`isPeriodUnavailable`，禁用第2周，真实方向键跳过并选择第3周；保留财年与weekRules，仍使用ZUI组件，无新增重复demo。复用5174开发站的Docs Chromium1项通过。
+- 本地最终集成：ZUI/Docs类型0 errors/0 warnings；模拟CI串行策略的11项Chromium（日期时间范围7、PinInput3、ICSS token1）通过，API/pool精确debug namespace实际输出已确认。静态生成、格式、定向lint、audit:system通过，日志见`.codex/production-p09-final.json`。小范围没有复现跨文件断连，不作为整库修复证明。
+- `9b9756a`的Static、build、外部包、Windows WebView2、Drizzle、Firefox/WebKit组件与Docs Chromium已通过；Docs Firefox/WebKit仍运行。P09先本地提交，待这两项结束再推送，保留精确SHA完整诊断。当前主周额度剩余52%，未触及30%停止线。
+- Vitest5.0、browser/coverage5.0与vitest-browser-svelte3.1.0已核对registry基础engines/peer及主要迁移点，支持链具备迁移条件，但尚未安装；官方迁移包括clearMocks默认、inline project server共享、sequential移除、command locator对象和matcher类型等，不能只改版本或声称其必然解决断连。major迁移仍按独立分组验收，先保留本次4.1.11的诊断对照。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

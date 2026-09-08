@@ -145,10 +145,16 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps ${{ matrix.browser }}
 
+      - name: Record browser runner resources before tests
+        run: |
+          df -h /tmp /dev/shm
+          free -h
+
       - name: Run workspace units and isolated browser tests
         env:
-          # Preserve browser process exits/stderr when a Vitest connection closes unexpectedly.
-          DEBUG: pw:browser
+          # Correlate the first API/session disconnect with pool progress and Chromium GC.
+          # Avoid the Playwright-provider debug namespace, which includes authenticated URLs.
+          DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
           ZUI_BROWSER: ${{ matrix.browser }}
           ZUI_EXECUTION_REPORT: test-results/component-execution-vitest-${{ matrix.browser }}.json
         run: |
@@ -157,6 +163,12 @@ jobs:
           else
             pnpm --filter @zadmin/zui exec vitest --run --project=browser
           fi
+
+      - name: Record browser runner resources after tests
+        if: always()
+        run: |
+          df -h /tmp /dev/shm
+          free -h
 
       - name: Upload structured component execution input
         if: always()
@@ -357,6 +369,9 @@ jobs:
 
       - name: Run ZUI coverage
         if: always() && steps.workspace.outcome == 'success' && steps.chromium.outcome == 'success'
+        env:
+          # The successful coverage runner is the control for the non-coverage disconnect.
+          DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
         run: pnpm --filter @zadmin/zui test:coverage
 
       - name: Run SvelteKit integration coverage

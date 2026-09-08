@@ -54,8 +54,9 @@ export const periodCalendarDoc = defineComponentDoc(periodCalendarMetadata, {
 			title: '财年与周规则',
 			component: RulesDemo,
 			source: rulesSource,
-			covers: ['controlled', 'locale'],
-			description: '明确跨年季度与周定义，切换显示locale不会改写业务规则。'
+			covers: ['controlled', 'disabled', 'keyboard', 'locale'],
+			description:
+				'财年与周规则保存在值中；isPeriodUnavailable禁用第2周，方向键跳过后可选择相邻可用周。'
 		},
 		{
 			id: 'period-calendar-form',

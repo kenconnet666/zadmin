@@ -2521,6 +2521,7 @@ export const componentCatalogManifest = Object.freeze([
 			'basic-render',
 			'locale',
 			'controlled',
+			'disabled',
 			'form-data',
 			'form-reset',
 			'invalid'
