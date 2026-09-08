@@ -99,8 +99,8 @@ function dispatchPaste(target: HTMLElement | null | undefined, text: string): vo
 }
 
 describe('compiled ICSS browser updates', () => {
-	it('generates unique native control ids while preserving consumer and Field ownership', () => {
-		render(NativeIdentityFixture);
+	it('generates unique native control ids while preserving consumer and Field ownership', async () => {
+		await render(NativeIdentityFixture);
 		const controls = [
 			...document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
 				'input:not([type="hidden"]):not([hidden]), textarea'
@@ -121,7 +121,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('updates Provider theme recipes through their visual transition', async () => {
-		render(ThemeSwitchFixture);
+		await render(ThemeSwitchFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="theme-switch-target"]')!;
 		const next = document.querySelector<HTMLButtonElement>('[data-testid="theme-switch-next"]')!;
 		expect(getComputedStyle(target).backgroundColor).toBe('rgb(36, 87, 230)');
@@ -278,7 +278,7 @@ describe('compiled ICSS browser updates', () => {
 	);
 
 	it('reports every orphan compound part through a real Svelte error boundary', async () => {
-		render(ContextBoundaryFixture);
+		await render(ContextBoundaryFixture);
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
@@ -456,7 +456,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('portals Toasts, admits FIFO work after exit and removes reduced-motion exits immediately', async () => {
-		render(ToastLifecycleFixture);
+		await render(ToastLifecycleFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-pair"]')?.click();
 		await tick();
 		const target = document.querySelector<HTMLElement>('[data-testid="toast-portal-target"]');
@@ -490,7 +490,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('covers optional display, feedback and reduced non-looping Carousel behavior', async () => {
-		render(CoverageFixture);
+		await render(CoverageFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="coverage-carousel"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="coverage-output"]');
 		const reducedCarousel = document.querySelector<HTMLElement>(
@@ -599,7 +599,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(avatar?.textContent).toContain('IL');
 	});
 	it('coordinates Tour target spotlight, floating steps, completion and focus restoration', async () => {
-		render(TourFixture);
+		await render(TourFixture);
 		const start = document.querySelector<HTMLButtonElement>('#tour-start');
 		start?.focus();
 		start?.click();
@@ -677,7 +677,7 @@ describe('compiled ICSS browser updates', () => {
 		await expect.poll(() => document.activeElement).toBe(persistent);
 	});
 	it('keeps Carousel slides, controls and stable value synchronized', async () => {
-		render(CarouselFixture);
+		await render(CarouselFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="carousel-output"]');
 		expect(
@@ -694,7 +694,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('three:2');
 	});
 	it('keeps Table semantics and VirtualList DOM bounded while scrolling', async () => {
-		render(DataFixture);
+		await render(DataFixture);
 		const table = document.querySelector<HTMLTableElement>('[data-testid="table"]');
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-list"]');
 		const rangeOutput = document.querySelector('[data-testid="virtual-list-output"]');
@@ -713,7 +713,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps DataTable sort, stable selection and virtual rows synchronized', async () => {
-		render(DataFixture);
+		await render(DataFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="data-table"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="data-table-output"]');
 		expect(viewport?.querySelectorAll('tbody tr[data-slot="row"]')).toHaveLength(7);
@@ -744,7 +744,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
-		render(FeedbackFixture);
+		await render(FeedbackFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]');
 		const indeterminate = document.querySelector<HTMLElement>(
 			'[data-testid="loading-indeterminate"]'
@@ -795,7 +795,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps data-display image fallback, document semantics and removal ownership synchronized', async () => {
-		render(DisplayFixture);
+		await render(DisplayFixture);
 		const imageAvatar = document.querySelector<HTMLElement>('[data-testid="avatar-image"]');
 		const image = imageAvatar?.querySelector<HTMLImageElement>('img');
 
@@ -840,7 +840,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Menu roving focus, disabled skipping, typeahead and cancellable action', async () => {
-		render(MenuFixture);
+		await render(MenuFixture);
 		await tick();
 		const alpha = document.querySelector<HTMLElement>('[data-testid="menu-alpha"]');
 		const beta = document.querySelector<HTMLElement>('[data-testid="menu-beta"]');
@@ -866,7 +866,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates DropdownMenu positioning, focus, action dismiss and cancellation', async () => {
-		render(DropdownMenuFixture);
+		await render(DropdownMenuFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="dropdown-output"]');
 		trigger?.focus();
@@ -898,7 +898,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates ContextMenu pointer and keyboard anchors with focus restoration', async () => {
-		render(ContextMenuFixture);
+		await render(ContextMenuFixture);
 		const trigger = document.querySelector<HTMLElement>('[data-testid="context-trigger"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="context-output"]');
 		trigger?.dispatchEvent(
@@ -950,7 +950,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Select listbox focus, selection, form value, Escape and reset', async () => {
-		render(SelectFixture);
+		await render(SelectFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="select-output"]');
@@ -1008,7 +1008,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Combobox filtering, active descendant, selection, form value and reset', async () => {
-		render(ComboboxFixture);
+		await render(ComboboxFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="combobox-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="combobox-output"]');
@@ -1063,7 +1063,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates MultiSelect toggles, persistent content, labels, form values and reset', async () => {
-		render(MultiSelectFixture);
+		await render(MultiSelectFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-select-trigger"]'
 		);
@@ -1116,7 +1116,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Segmented roving selection, disabled skipping, form value and reset', async () => {
-		render(SegmentedFixture);
+		await render(SegmentedFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="segmented-form"]');
 		const beta = document.querySelector<HTMLButtonElement>('[role="radio"][aria-checked="true"]');
 		const delta = [...document.querySelectorAll<HTMLButtonElement>('[role="radio"]')].find(
@@ -1136,7 +1136,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates TagsInput commit, dedupe, paste batch, Backspace, removal and reset', async () => {
-		render(TagsInputFixture);
+		await render(TagsInputFixture);
 		const input = document.querySelector<HTMLInputElement>('[aria-label="Add fixture tag"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="tags-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="tags-output"]');
@@ -1169,7 +1169,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Tree visible navigation, expansion, selection, form value and reset', async () => {
-		render(TreeFixture);
+		await render(TreeFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="tree-form"]');
 		const tree = document.querySelector<HTMLElement>('[aria-label="Fixture tree"]');
 		const worker = document.querySelector<HTMLElement>('[role="treeitem"][data-key="worker"]');
@@ -1226,7 +1226,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps virtual Tree DOM bounded and scrolls keyboard focus to distant nodes', async () => {
-		render(VirtualTreeFixture);
+		await render(VirtualTreeFixture);
 		const tree = document.querySelector<HTMLElement>('[data-testid="virtual-tree"]');
 		expect(tree?.querySelectorAll('[role="treeitem"]').length).toBeLessThan(20);
 		tree?.focus();
@@ -1245,7 +1245,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates TreeSelect popup tree, selection, focus restoration, form value and reset', async () => {
-		render(TreeSelectFixture);
+		await render(TreeSelectFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="tree"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="tree-select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="tree-select-output"]');
@@ -1265,7 +1265,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Cascader columns, leaf path commit, form value and reset', async () => {
-		render(CascaderFixture);
+		await render(CascaderFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="listbox"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="cascader-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="cascader-output"]');
@@ -1371,7 +1371,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Mention caret parsing, active descendant insertion, form value and reset', async () => {
-		render(MentionFixture);
+		await render(MentionFixture);
 		const editor = document.querySelector<HTMLTextAreaElement>('textarea[aria-label="Message"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="mention-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="mention-output"]');
@@ -1410,7 +1410,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Command ranking, active descendant action and form reset', async () => {
-		render(CommandFixture);
+		await render(CommandFixture);
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
 		const status = document.querySelector<HTMLElement>('[data-slot="status"][role="status"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="command-output"]');
@@ -1468,7 +1468,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('reconciles a dynamically removed active Command to its nearest enabled successor', async () => {
-		render(CommandFixture);
+		await render(CommandFixture);
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
 		input?.focus();
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
@@ -1489,7 +1489,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates CommandPalette modal focus, action close, shortcut and Escape', async () => {
-		render(CommandPaletteFixture);
+		await render(CommandPaletteFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open palette"]');
 		trigger?.focus();
 		trigger?.click();
@@ -1530,7 +1530,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Textarea autosize, Field semantics, FormData and reset', async () => {
-		render(TextareaFixture);
+		await render(TextareaFixture);
 		const textarea = document.querySelector<HTMLTextAreaElement>('textarea[name="description"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="textarea-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="textarea-output"]');
@@ -1551,7 +1551,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates InputGroup focus boundary, context state, FormData and reset', async () => {
-		render(InputGroupFixture);
+		await render(InputGroupFixture);
 		const group = document.querySelector<HTMLElement>('[role="group"][aria-label="Endpoint"]');
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Host"]');
 		const disabledInput = document.querySelector<HTMLInputElement>(
@@ -1577,7 +1577,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates NumberField locale parsing, stepping, invalid draft, FormData and reset', async () => {
-		render(NumberFieldFixture);
+		await render(NumberFieldFixture);
 		const input = document.querySelector<HTMLInputElement>('[role="spinbutton"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="number-field-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="number-field-output"]');
@@ -1610,7 +1610,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates PinInput paste, roving deletion, completion, FormData and reset', async () => {
-		render(PinInputFixture);
+		await render(PinInputFixture);
 		const inputs = [...document.querySelectorAll<HTMLInputElement>('[data-slot="input"]')];
 		const form = document.querySelector<HTMLFormElement>('[data-testid="pin-input-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="pin-input-output"]');
@@ -1658,7 +1658,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates ColorPicker RGB, alpha, invalid hex, focus, FormData and reset', async () => {
-		render(ColorPickerFixture);
+		await render(ColorPickerFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="color-picker-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="color-picker-output"]');
@@ -1695,7 +1695,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates FileUpload validation, drop queue, native FormData, removal and reset', async () => {
-		render(FileUploadFixture);
+		await render(FileUploadFixture);
 		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="file-upload-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="file-upload-output"]');
@@ -1755,7 +1755,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Form async validation races, field state, first-error focus, submit and reset', async () => {
-		render(FormFixture);
+		await render(FormFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="z-form"]');
 		const account = document.querySelector<HTMLInputElement>('[data-testid="form-account"]');
 		const email = document.querySelector<HTMLInputElement>('[data-testid="form-email"]');
@@ -1796,7 +1796,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('makes submit the only accepted result when change validation is still pending', async () => {
-		render(FormSubmitEpochFixture);
+		await render(FormSubmitEpochFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="submit-epoch-form"]')!;
 		const input = document.querySelector<HTMLInputElement>('[data-testid="submit-epoch-input"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
@@ -1832,7 +1832,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('covers Form schema failure, delayed change, invalid submit, reset and prevented submit', async () => {
-		render(FormEdgeFixture);
+		await render(FormEdgeFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="edge-input"]');
 		const throwing = document.querySelector<HTMLFormElement>('[data-testid="throwing-form"]');
 		const prevented = document.querySelector<HTMLFormElement>('[data-testid="prevented-form"]');
@@ -1886,7 +1886,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('maps typed FieldPaths, dependencies, controller state and dynamic unmounts', async () => {
-		render(FormGraphFixture);
+		await render(FormGraphFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="form-graph"]');
 		const email = document.querySelector<HTMLInputElement>('[data-testid="graph-email"]');
 		const password = document.querySelector<HTMLInputElement>('[data-testid="graph-password"]');
@@ -1964,7 +1964,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('bridges dynamic external form values and one reset lifecycle without proxy FormData fields', async () => {
-		render(FormValueBridgeFixture);
+		await render(FormValueBridgeFixture);
 		await tick();
 		await Promise.resolve();
 		const first = document.querySelector<HTMLFormElement>('[data-testid="form-value-owner-a"]');
@@ -2045,7 +2045,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Calendar and segmented date/time fields with FormData and reset', async () => {
-		render(DateFixture);
+		await render(DateFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="date-output"]');
 		const selected = document.querySelector<HTMLButtonElement>(
@@ -2081,7 +2081,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('covers Calendar page, week-boundary and month navigation keys', async () => {
-		render(DateFixture);
+		await render(DateFixture);
 		const calendar = document.querySelector<HTMLElement>('[role="grid"]');
 		let active = calendar?.querySelector<HTMLButtonElement>('button[data-selected="true"]');
 		active?.focus();
@@ -2111,8 +2111,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(calendar?.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
 	});
 
-	it('inherits typed Chinese date/time copy and hour cycle from Provider', () => {
-		render(DateLocaleFixture);
+	it('inherits typed Chinese date/time copy and hour cycle from Provider', async () => {
+		await render(DateLocaleFixture);
 		const calendar = document.querySelector<HTMLElement>('[data-testid="localized-calendar"]');
 		expect(calendar?.querySelector('[role="grid"]')?.getAttribute('aria-label')).toContain('日历');
 		expect(calendar?.querySelector('button[aria-label="上个月"]')).not.toBeNull();
@@ -2129,7 +2129,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps date/time explicit-null owners, partial ranges and reset/FormData aligned', async () => {
-		render(DateProductionFixture);
+		await render(DateProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-production-form"]');
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="date-production-output"]'
@@ -2166,7 +2166,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('uses RTL calendar arrows while skipping unavailable dates and publishing focusedValue', async () => {
-		render(DateProductionFixture);
+		await render(DateProductionFixture);
 		const calendar = document.querySelector<HTMLElement>('[data-testid="production-calendar"]');
 		const focused = calendar?.querySelector<HTMLButtonElement>('[tabindex="0"]');
 		focused?.focus();
@@ -2180,7 +2180,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates DatePicker and DateRangePicker popup selection and focus restoration', async () => {
-		render(DateFixture);
+		await render(DateFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
 		const dateTrigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
@@ -2270,7 +2270,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).getAll('readonly-range.end')).toEqual(['2026-08-21']);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
-		render(AlertDialogFixture);
+		await render(AlertDialogFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-dialog-trigger"]'
 		);
@@ -2302,7 +2302,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Dialog modal focus, inert, scroll, dismiss and cleanup', async () => {
-		render(DialogFixture);
+		await render(DialogFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dialog-trigger"]');
 		const inlineHost = document.querySelector<HTMLElement>('[data-testid="dialog-inline-host"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="dialog-output"]');
@@ -2346,7 +2346,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Drawer placement, focus, Escape and Presence cleanup', async () => {
-		render(DrawerFixture);
+		await render(DrawerFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]');
 		trigger?.focus();
 		trigger?.click();
@@ -2369,7 +2369,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Tooltip hover, focus, delay, portal and Escape', async () => {
-		render(TooltipFixture);
+		await render(TooltipFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-trigger"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="tooltip-output"]');
 		trigger?.dispatchEvent(new PointerEvent('pointerenter'));
@@ -2402,7 +2402,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Popover portal, focus, dismiss and Presence cleanup', async () => {
-		render(PopoverFixture);
+		await render(PopoverFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');
 		const inlineHost = document.querySelector<HTMLElement>('[data-testid="popover-inline-host"]');
 		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
@@ -2438,7 +2438,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates modal Popover semantics, width and resource cleanup', async () => {
-		render(PopoverFixture, { matchWidth: true, modal: true });
+		await render(PopoverFixture, { matchWidth: true, modal: true });
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');
 		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
 		// Establish the same visible, actionable interaction as the actual modal UI.
@@ -2507,7 +2507,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Popconfirm focus, explicit actions and safe dismiss paths', async () => {
-		render(PopconfirmFixture);
+		await render(PopconfirmFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-trigger"]');
 		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-outside"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="popconfirm-output"]');
@@ -2545,7 +2545,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps Accordion focus, single/multiple selection and Presence synchronized', async () => {
-		render(AccordionFixture);
+		await render(AccordionFixture);
 		const alpha = document.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]');
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="accordion-b"]');
 		const charlie = document.querySelector<HTMLButtonElement>('[data-testid="accordion-c"]');
@@ -2615,7 +2615,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('lets an established Accordion binding clear externally without reviving its fallback', async () => {
-		render(AccordionFixture);
+		await render(AccordionFixture);
 		const charlie = document.querySelector<HTMLButtonElement>('[data-testid="accordion-c"]');
 		const clear = document.querySelector<HTMLButtonElement>(
 			'[data-testid="accordion-external-clear"]'
@@ -2633,7 +2633,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps typed Accordion active/expanded identity and restores nearest focus after removal', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]');
 		const triggers = root?.querySelectorAll<HTMLButtonElement>('button[aria-expanded]');
 		const numeric = triggers?.[0];
@@ -2665,7 +2665,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('moves focus out of Accordion content before a controlled close enters Presence exit', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]')!;
 		const trigger = root.querySelector<HTMLButtonElement>('button[aria-expanded="true"]')!;
 		const input = root.querySelector<HTMLInputElement>('[data-testid="accordion-panel-input"]')!;
@@ -2681,7 +2681,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps native Slider input, FormData and reset synchronized', async () => {
-		render(SliderFixture);
+		await render(SliderFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="slider"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="slider-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="slider-output"]');
@@ -2701,7 +2701,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps pagination window, current page and callbacks synchronized', async () => {
-		render(PaginationFixture);
+		await render(PaginationFixture);
 		const navigation = document.querySelector<HTMLElement>('[aria-label="Fixture pagination"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="pagination-output"]');
 		const current = navigation?.querySelector<HTMLButtonElement>('[aria-current="page"]');
@@ -2746,7 +2746,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('separates Tabs focus from automatic and manual activation', async () => {
-		render(TabsFixture);
+		await render(TabsFixture);
 		const beta = document.querySelector<HTMLButtonElement>('[data-testid="tab-b"]');
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="tab-c"]');
 		const delta = document.querySelector<HTMLButtonElement>('[data-testid="tab-d"]');
@@ -2781,7 +2781,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps typed Tabs identity and recovers selection/active to the nearest enabled trigger', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-tabs"]');
 		const triggers = root?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
 		const numeric = triggers?.[0];
@@ -2805,7 +2805,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('implements keep-mounted, lazy and active-only Tabs lifecycle policies explicitly', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const lazyA = document.querySelector<HTMLButtonElement>('[data-testid="lazy-trigger-a"]')!;
 		const lazyB = document.querySelector<HTMLButtonElement>('[data-testid="lazy-trigger-b"]')!;
 		expect(document.querySelector('[data-testid="lazy-panel-a"]')).not.toBeNull();
@@ -2837,7 +2837,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('uses RTL logical arrows and ignores IME navigation before manual Tabs activation', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const left = document.querySelector<HTMLButtonElement>('[data-testid="rtl-tab-left"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="rtl-tabs-output"]');
 		left?.focus();
@@ -2857,7 +2857,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps radio roving focus, selection, FormData and reset synchronized', async () => {
-		render(RadioGroupFixture);
+		await render(RadioGroupFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]');
 		const beta = document.querySelector<HTMLInputElement>('[data-testid="radio-b"]');
 		const disabled = document.querySelector<HTMLInputElement>('[data-testid="radio-c"]');
@@ -2882,7 +2882,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps switch state, FormData and reset synchronized', async () => {
-		render(SwitchFixture);
+		await render(SwitchFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="switch"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="switch-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="switch-output"]');
@@ -2902,7 +2902,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps checkbox mixed state, FormData and reset synchronized', async () => {
-		render(CheckboxFixture);
+		await render(CheckboxFixture);
 		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="checkbox"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="checkbox-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="checkbox-output"]');
@@ -2924,7 +2924,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps toggle state controllable and cancellable', async () => {
-		render(ToggleButtonFixture);
+		await render(ToggleButtonFixture);
 		const toggle = document.querySelector<HTMLButtonElement>('[data-testid="toggle"]');
 		const cancelled = document.querySelector<HTMLButtonElement>('[data-testid="cancelled-toggle"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="toggle-output"]');
@@ -2943,7 +2943,7 @@ describe('compiled ICSS browser updates', () => {
 
 	it('runs S1 semantic primitives through their client lifecycle', async () => {
 		let activations = 0;
-		render(ZLink, {
+		await render(ZLink, {
 			href: '#ready',
 			onclick: (event) => {
 				event.preventDefault();
@@ -2956,7 +2956,7 @@ describe('compiled ICSS browser updates', () => {
 		activeLink?.click();
 		expect(activations).toBe(1);
 
-		render(ZLink, {
+		await render(ZLink, {
 			disabled: true,
 			href: '#blocked',
 			onclick: () => (activations += 1),
@@ -2968,24 +2968,24 @@ describe('compiled ICSS browser updates', () => {
 		disabledLink?.click();
 		expect(activations).toBe(1);
 
-		render(ZSeparator, { orientation: 'horizontal' });
-		render(ZSeparator, { orientation: 'vertical' });
-		render(ZSeparator, { decorative: true });
+		await render(ZSeparator, { orientation: 'horizontal' });
+		await render(ZSeparator, { orientation: 'vertical' });
+		await render(ZSeparator, { decorative: true });
 		expect(document.querySelector('hr[data-orientation="horizontal"]')).not.toBeNull();
 		expect(
 			document.querySelector('[role="separator"][aria-orientation="vertical"]')
 		).not.toBeNull();
 		expect(document.querySelector('[role="presentation"][aria-hidden="true"]')).not.toBeNull();
 
-		render(ZKbd, { 'data-testid': 'kbd' });
-		render(ZVisuallyHidden, { 'data-testid': 'visually-hidden' });
+		await render(ZKbd, { 'data-testid': 'kbd' });
+		await render(ZVisuallyHidden, { 'data-testid': 'visually-hidden' });
 		expect(document.querySelector('[data-testid="kbd"]')?.tagName).toBe('KBD');
 		expect(
 			getComputedStyle(document.querySelector('[data-testid="visually-hidden"]')!).position
 		).toBe('absolute');
 
-		render(ZAspectRatio, { 'data-testid': 'ratio-fraction', ratio: '4 / 3' });
-		render(ZAspectRatio, { 'data-testid': 'ratio-number', ratio: 1.5 });
+		await render(ZAspectRatio, { 'data-testid': 'ratio-fraction', ratio: '4 / 3' });
+		await render(ZAspectRatio, { 'data-testid': 'ratio-number', ratio: 1.5 });
 		expect(
 			getComputedStyle(document.querySelector('[data-testid="ratio-fraction"]')!).aspectRatio
 		).toBe('4 / 3');
@@ -2993,14 +2993,14 @@ describe('compiled ICSS browser updates', () => {
 			getComputedStyle(document.querySelector('[data-testid="ratio-number"]')!).aspectRatio
 		).toBe('1.5 / 1');
 
-		render(ZContainer, { 'data-testid': 'container', gutter: 'large', size: 'small' });
+		await render(ZContainer, { 'data-testid': 'container', gutter: 'large', size: 'small' });
 		const container = document.querySelector('[data-testid="container"]');
 		expect(getComputedStyle(container!).maxWidth).toBe('640px');
 		expect(getComputedStyle(container!).paddingInline).toBe('16px');
 	});
 
 	it('enhances ZCode with Shiki tokens without replacing its text semantics', async () => {
-		render(ZCode, {
+		await render(ZCode, {
 			code: 'const answer: number = 42;',
 			highlightedLines: [1],
 			lang: 'typescript',
@@ -3016,14 +3016,14 @@ describe('compiled ICSS browser updates', () => {
 		expect(getComputedStyle(root as Element).backgroundColor).toBe('rgb(13, 17, 23)');
 		expect(getComputedStyle(root as Element).fontSize).toBe('14px');
 
-		render(ZCode, { ariaLabel: 'embedded-code', code: 'embedded', embedded: true });
+		await render(ZCode, { ariaLabel: 'embedded-code', code: 'embedded', embedded: true });
 		const embedded = document.querySelector<HTMLElement>('[aria-label="embedded-code"]');
 		expect(getComputedStyle(embedded as Element).borderWidth).toBe('0px');
 		expect(getComputedStyle(embedded as Element).borderRadius).toBe('0px');
 	});
 
 	it('keeps only the latest asynchronous ZCode highlight result', async () => {
-		render(CodeRaceFixture);
+		await render(CodeRaceFixture);
 		const root = document.querySelector<HTMLElement>('[aria-label="Racing code"]');
 		document.querySelector<HTMLButtonElement>('[data-testid="code-invalid"]')?.click();
 		await tick();
@@ -3034,13 +3034,13 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('keeps ZCode resilient for plain, oversized and invalid language inputs', async () => {
-		render(ZCode, { ariaLabel: 'plain-code', code: 'plain', inline: true, wrap: true });
+		await render(ZCode, { ariaLabel: 'plain-code', code: 'plain', inline: true, wrap: true });
 		const plain = document.querySelector<HTMLElement>('[aria-label="plain-code"]');
 		expect(plain?.tagName).toBe('CODE');
 		expect(plain?.dataset.highlightStatus).toBe('plain');
 		expect(plain?.textContent).toBe('plain');
 
-		render(ZCode, {
+		await render(ZCode, {
 			ariaLabel: 'large-code',
 			code: 'x'.repeat(100_001),
 			lang: 'css'
@@ -3048,7 +3048,7 @@ describe('compiled ICSS browser updates', () => {
 		const large = document.querySelector<HTMLElement>('[aria-label="large-code"]');
 		expect(large?.dataset.highlightStatus).toBe('too-large');
 
-		render(ZCode, {
+		await render(ZCode, {
 			ariaLabel: 'invalid-code',
 			code: 'value',
 			lang: 'missing' as never
@@ -3064,13 +3064,13 @@ describe('compiled ICSS browser updates', () => {
 			['json', '{"ready":true}'],
 			['svelte', '<p>{ready}</p>']
 		] as const) {
-			render(ZCode, { ariaLabel: `${language}-code`, code: source, lang: language });
+			await render(ZCode, { ariaLabel: `${language}-code`, code: source, lang: language });
 			const highlighted = document.querySelector<HTMLElement>(`[aria-label="${language}-code"]`);
 			await expect.poll(() => highlighted?.dataset.highlightStatus).toBe('highlighted');
 		}
 	});
 	it('updates only the inline variable while class and rules stay stable', async () => {
-		render(DynamicBox);
+		await render(DynamicBox);
 		const target = document.querySelector<HTMLElement>('[data-testid="target"]');
 		const increment = document.querySelector<HTMLButtonElement>('[data-testid="increment"]');
 		expect(target).not.toBeNull();
@@ -3117,7 +3117,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('updates and removes component-boundary variables without wrappers', async () => {
-		render(ComponentGallery);
+		await render(ComponentGallery);
 		const manual = document.querySelector<HTMLElement>('[data-testid="manual"]');
 		const change = document.querySelector<HTMLButtonElement>('[data-testid="change"]');
 		const style = document.querySelector<HTMLButtonElement>('[data-testid="style"]');
@@ -3137,8 +3137,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('svelte-css-wrapper')).toBeNull();
 	});
 
-	it('applies provider themes and native button semantics', () => {
-		render(ComponentGallery);
+	it('applies provider themes and native button semantics', async () => {
+		await render(ComponentGallery);
 		const button = document.querySelector<HTMLButtonElement>('[data-testid="button"]');
 		const text = document.querySelector<HTMLElement>('[data-testid="text"]');
 		const stack = document.querySelector<HTMLElement>('[data-testid="stack"]');
@@ -3230,7 +3230,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('links field semantics and calls onValueChange once per user input', async () => {
-		render(FieldFixture);
+		await render(FieldFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="field-input"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');
 		const label = document.querySelector<HTMLLabelElement>('label');
@@ -3356,7 +3356,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('commits Field reset state through provider-level user interaction', async () => {
-		render(FieldFixture);
+		await render(FieldFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="field-form"]');
 		const input = document.querySelector<HTMLInputElement>('[data-testid="field-input"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');

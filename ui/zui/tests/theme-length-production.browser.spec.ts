@@ -8,7 +8,7 @@ describe('display component Theme lengths', () => {
 	it.each([false, true])(
 		'renders numeric or CSS string lengths (strings=%s)',
 		async (stringLengths) => {
-			render(ThemeLengthProductionFixture, { stringLengths });
+			await render(ThemeLengthProductionFixture, { stringLengths });
 			await tick();
 			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
 			const circle = document.querySelector<HTMLElement>('[data-testid="theme-length-circle"]')!;

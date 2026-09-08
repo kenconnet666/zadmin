@@ -8,7 +8,7 @@ import { activateFormReset } from './form-reset.js';
 describe('ZTreeSelect production contract', () => {
 	// @zui-visual ZTreeSelect intrinsic popup geometry
 	it('keeps ZTreeSelect popup ARIA, Field focus owner, selection, clear and FormData reset real', async () => {
-		render(TreeProductionFixture);
+		await render(TreeProductionFixture);
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="tree-production-select-form"]'
 		)!;
@@ -44,7 +44,7 @@ describe('ZTreeSelect production contract', () => {
 	});
 
 	it('keeps ZTreeSelect readonly trigger closed and does not create a second popup owner', async () => {
-		render(TreeProductionFixture);
+		await render(TreeProductionFixture);
 		const readonly = document.querySelector<HTMLElement>(
 			'[data-testid="tree-production-readonly"]'
 		)!;

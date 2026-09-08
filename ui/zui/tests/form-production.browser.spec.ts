@@ -10,7 +10,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZForm and ZFormField production contracts', () => {
 	it('keeps ZForm and ZFormField Standard Schema output, FieldPath dependencies, first-error focus and dynamic unmounts real', async () => {
-		render(FormGraphFixture);
+		await render(FormGraphFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="form-graph"]')!;
 		const email = document.querySelector<HTMLInputElement>('[data-testid="graph-email"]')!;
 		const password = document.querySelector<HTMLInputElement>('[data-testid="graph-password"]')!;
@@ -40,7 +40,7 @@ describe('ZForm and ZFormField production contracts', () => {
 	});
 
 	it('keeps ZForm submit busy state and validation generation race fail-closed', async () => {
-		render(FormSubmitEpochFixture);
+		await render(FormSubmitEpochFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="submit-epoch-form"]')!;
 		const input = document.querySelector<HTMLInputElement>('[data-testid="submit-epoch-input"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
@@ -58,7 +58,7 @@ describe('ZForm and ZFormField production contracts', () => {
 	});
 
 	it('lets submit supersede an already queued change-validation callback', async () => {
-		render(FormQueuedChangeFixture);
+		await render(FormQueuedChangeFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="queued-change-form"]')!;
 		const input = document.querySelector<HTMLInputElement>('[data-testid="queued-change-input"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
@@ -71,7 +71,7 @@ describe('ZForm and ZFormField production contracts', () => {
 	});
 
 	it('lets explicit controller validation retire queued field validation', async () => {
-		render(FormQueuedChangeFixture);
+		await render(FormQueuedChangeFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="queued-change-input"]')!;
 		input.value = 'alice';
 		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
@@ -84,7 +84,7 @@ describe('ZForm and ZFormField production contracts', () => {
 	});
 
 	it('keeps ZForm and ZFormField native busy, schema failure, reset and prevented-submit boundaries real', async () => {
-		render(FormEdgeFixture);
+		await render(FormEdgeFixture);
 		const prevented = document.querySelector<HTMLFormElement>('[data-testid="prevented-form"]')!;
 		expect(prevented.getAttribute('aria-busy')).toBe('true');
 		const throwing = document.querySelector<HTMLFormElement>('[data-testid="throwing-form"]')!;

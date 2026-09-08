@@ -12,7 +12,7 @@ async function settleCollection(): Promise<void> {
 
 describe('RadioGroup and Segmented logical collection integration', () => {
 	it('keeps native RadioGroup typed selection, RTL roving focus and external form ownership coherent', async () => {
-		render(ChoiceControlsCollectionFixture);
+		await render(ChoiceControlsCollectionFixture);
 		await settleCollection();
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-radio-group"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="collection-radio-form"]')!;
@@ -85,7 +85,7 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 	});
 
 	it('keeps Segmented typed selection, nearest focus and FormValueBridge ownership coherent', async () => {
-		render(ChoiceControlsCollectionFixture);
+		await render(ChoiceControlsCollectionFixture);
 		await settleCollection();
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-segmented"]')!;
 		const form = document.querySelector<HTMLFormElement>(
@@ -160,7 +160,7 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 	});
 
 	it('removes disabled RadioGroup and Segmented values from successful form controls', async () => {
-		render(ChoiceControlsCollectionFixture);
+		await render(ChoiceControlsCollectionFixture);
 		await settleCollection();
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="collection-disabled-form"]'

@@ -14,7 +14,7 @@ it('lets the root owner cancel navigation and uses the actual native RTL directi
 	let cancel = true;
 	let listenerTarget: EventTarget | null = null;
 	const changed = vi.fn();
-	render(ZSegmented, {
+	await render(ZSegmented, {
 		'aria-label': 'Native direction',
 		dir: 'rtl',
 		options,

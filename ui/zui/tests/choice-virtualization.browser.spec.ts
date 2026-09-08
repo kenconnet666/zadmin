@@ -10,7 +10,7 @@ function keydown(target: Element | null | undefined, key: string): void {
 
 describe('virtual Select and Combobox choices', () => {
 	it('focuses the Select virtual listbox and exposes an id only after ensure-key mounts the option', async () => {
-		render(ChoiceVirtualizationFixture);
+		await render(ChoiceVirtualizationFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="virtual-select-trigger"]'
 		);
@@ -37,7 +37,7 @@ describe('virtual Select and Combobox choices', () => {
 	});
 
 	it('keeps Combobox input focus while virtual navigation mounts the real active option', async () => {
-		render(ChoiceVirtualizationFixture);
+		await render(ChoiceVirtualizationFixture);
 		const input = document.querySelector<HTMLInputElement>(
 			'[data-testid="virtual-combobox-input"]'
 		);

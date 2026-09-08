@@ -7,8 +7,8 @@ function card(testId: string): HTMLElement {
 	return document.querySelector<HTMLElement>(`[data-testid="${testId}"]`)!;
 }
 
-it('resolves ZCard elevation defaults, explicit overrides and data contract', () => {
-	render(CardElevationFixture);
+it('resolves ZCard elevation defaults, explicit overrides and data contract', async () => {
+	await render(CardElevationFixture);
 
 	expect(card('elevation-default').dataset.elevation).toBe('small');
 	expect(card('elevation-outlined').dataset.elevation).toBe('none');
@@ -18,8 +18,8 @@ it('resolves ZCard elevation defaults, explicit overrides and data contract', ()
 	expect(getComputedStyle(card('elevation-explicit-medium')).boxShadow).not.toBe('none');
 });
 
-it('consumes custom Theme shadow.large through Provider defaults and explicit props', () => {
-	render(CardElevationFixture);
+it('consumes custom Theme shadow.large through Provider defaults and explicit props', async () => {
+	await render(CardElevationFixture);
 
 	for (const testId of ['elevation-provider-default', 'elevation-explicit-large']) {
 		const element = card(testId);

@@ -8,7 +8,7 @@ import DataTableBoundaryFixture from './DataTableBoundaryFixture.svelte';
 
 describe('ZDataTable production contracts', () => {
 	it('rejects invalid state keys, column models, sort descriptors and server offsets', async () => {
-		render(DataTableBoundaryFixture);
+		await render(DataTableBoundaryFixture);
 		await tick();
 		const output = document.querySelector(
 			'[data-testid="data-table-boundary-output"]'
@@ -23,7 +23,7 @@ describe('ZDataTable production contracts', () => {
 	});
 
 	it('keeps typed selection, default sort clearing and expanded relationships controlled', async () => {
-		render(DataTableProductionFixture);
+		await render(DataTableProductionFixture);
 		const table = document.querySelector<HTMLElement>('[data-testid="data-table-production"]');
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="data-table-production-output"]'
@@ -61,7 +61,7 @@ describe('ZDataTable production contracts', () => {
 	});
 
 	it('supports visibility, keyboard resizing, sticky cells and retained async data', async () => {
-		render(DataTableProductionFixture);
+		await render(DataTableProductionFixture);
 		const table = document.querySelector<HTMLElement>('[data-testid="data-table-production"]');
 		document.querySelector<HTMLButtonElement>('[data-testid="data-table-toggle-owner"]')?.click();
 		await tick();
@@ -85,8 +85,8 @@ describe('ZDataTable production contracts', () => {
 		expect(table?.querySelector('[role="alert"]')?.textContent).toContain('Rows failed');
 	});
 
-	it('does not re-sort a server-owned page', () => {
-		render(DataTableProductionFixture);
+	it('does not re-sort a server-owned page', async () => {
+		await render(DataTableProductionFixture);
 		const table = document.querySelector<HTMLElement>('[data-testid="data-table-server"]');
 		expect(table?.querySelector('tbody tr[data-slot="row"]')?.textContent).toContain('Zulu');
 		expect(table?.querySelector('th[data-column-id="name"]')?.getAttribute('aria-sort')).toBe(
@@ -95,7 +95,7 @@ describe('ZDataTable production contracts', () => {
 	});
 
 	it('keeps the virtual window bounded and mounts a keyed row before focus restoration', async () => {
-		render(DataTableProductionFixture);
+		await render(DataTableProductionFixture);
 		const viewport = document.querySelector<HTMLElement>('[data-testid="data-table-virtual"]');
 		expect(viewport?.querySelectorAll('tbody tr[data-slot="row"]')?.length).toBeLessThan(12);
 		document.querySelector<HTMLButtonElement>('[data-testid="data-table-virtual-focus"]')?.click();

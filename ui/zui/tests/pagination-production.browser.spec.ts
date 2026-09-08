@@ -7,7 +7,7 @@ import PaginationFixture from './PaginationFixture.svelte';
 
 describe('ZPagination production contract', () => {
 	it('keeps ZPagination page/count bounds, current ARIA, first/last window and keyboard focus real', async () => {
-		render(PaginationFixture);
+		await render(PaginationFixture);
 		const navigation = document.querySelector<HTMLElement>('[aria-label="Fixture pagination"]')!;
 		const current = navigation.querySelector<HTMLButtonElement>('[aria-current="page"]')!;
 		expect(navigation.tagName).toBe('NAV');
@@ -32,7 +32,7 @@ describe('ZPagination production contract', () => {
 	});
 
 	it('keeps ZPagination controlled page-size changes, dynamic count clamping and RTL direction real', async () => {
-		render(PaginationFixture);
+		await render(PaginationFixture);
 		const dynamic = document.querySelector<HTMLElement>('[aria-label="Dynamic pagination"]')!;
 		const focused = dynamic.querySelector<HTMLButtonElement>('[data-page-number="6"]')!;
 		focused.focus();
@@ -49,7 +49,7 @@ describe('ZPagination production contract', () => {
 		expect(sized.dataset.page).toBe('2');
 		expect(sized.querySelectorAll('option')).toHaveLength(3);
 
-		render(ZPagination, {
+		await render(ZPagination, {
 			'aria-label': 'RTL pagination',
 			dir: 'rtl',
 			page: 2,

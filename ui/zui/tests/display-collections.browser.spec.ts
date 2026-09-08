@@ -6,7 +6,7 @@ import DisplayCollectionsProductionFixture from './DisplayCollectionsProductionF
 
 describe('production display collections', () => {
 	it('keeps typed List keys, native list elements and child-owned actions', async () => {
-		render(DisplayCollectionsProductionFixture);
+		await render(DisplayCollectionsProductionFixture);
 		const list = document.querySelector<HTMLElement>('[data-testid="display-list"]')!;
 		expect(list.tagName).toBe('UL');
 		expect(list.querySelectorAll(':scope > li')).toHaveLength(2);
@@ -23,8 +23,8 @@ describe('production display collections', () => {
 		).toBe('1:UL:DL');
 	});
 
-	it('keeps manual nested ul/li and dl/dt/dd structures intact', () => {
-		render(DisplayCollectionsProductionFixture);
+	it('keeps manual nested ul/li and dl/dt/dd structures intact', async () => {
+		await render(DisplayCollectionsProductionFixture);
 		const manualList = document.querySelector<HTMLElement>('[data-testid="display-manual-list"]')!;
 		const manualDescriptions = document.querySelector<HTMLElement>(
 			'[data-testid="display-manual-descriptions"]'
@@ -35,8 +35,8 @@ describe('production display collections', () => {
 		expect(manualDescriptions.querySelectorAll(':scope > dd')).toHaveLength(1);
 	});
 
-	it('keeps empty and loading feedback outside semantic item counts', () => {
-		render(DisplayCollectionsProductionFixture);
+	it('keeps empty and loading feedback outside semantic item counts', async () => {
+		await render(DisplayCollectionsProductionFixture);
 		for (const testId of ['display-empty-list', 'display-loading-list']) {
 			const root = document.querySelector<HTMLElement>(`[data-testid="${testId}"]`)!;
 			expect(root.querySelectorAll('li')).toHaveLength(0);
@@ -56,8 +56,8 @@ describe('production display collections', () => {
 		).toHaveLength(2);
 	});
 
-	it('renders rich DescriptionList content responsively without physical RTL assumptions', () => {
-		render(DisplayCollectionsProductionFixture);
+	it('renders rich DescriptionList content responsively without physical RTL assumptions', async () => {
+		await render(DisplayCollectionsProductionFixture);
 		const descriptions = document.querySelector<HTMLElement>(
 			'[data-testid="display-descriptions"]'
 		)!;

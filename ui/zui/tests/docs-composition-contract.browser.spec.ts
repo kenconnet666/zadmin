@@ -4,9 +4,9 @@ import { render } from 'vitest-browser-svelte';
 import DocsCompositionContractFixture from './DocsCompositionContractFixture.svelte';
 
 describe('DocsComposition component contracts', () => {
-	it('keeps link button geometry aligned with same-size ZButton references and navigation semantics', () => {
+	it('keeps link button geometry aligned with same-size ZButton references and navigation semantics', async () => {
 		// @zui-visual ZLink button and navigation geometry
-		render(DocsCompositionContractFixture);
+		await render(DocsCompositionContractFixture);
 		const small = document.querySelector<HTMLElement>('[data-testid="link-button-small"]')!;
 		const large = document.querySelector<HTMLElement>('[data-testid="link-button-large"]')!;
 		const medium = document.querySelector<HTMLElement>('[data-testid="link-button-medium"]')!;
@@ -55,8 +55,8 @@ describe('DocsComposition component contracts', () => {
 		expect(document.querySelector('[data-testid="disabled-output"]')?.textContent).toBe('0');
 	});
 
-	it('applies bodyPadding only to the Card body region', () => {
-		render(DocsCompositionContractFixture);
+	it('applies bodyPadding only to the Card body region', async () => {
+		await render(DocsCompositionContractFixture);
 		const none = document.querySelector<HTMLElement>(
 			'[data-testid="card-padding-none"] [data-slot="body"]'
 		)!;
@@ -85,7 +85,7 @@ describe('DocsComposition component contracts', () => {
 	});
 
 	it('creates and removes an accessible focusable region as real table overflow changes', async () => {
-		render(DocsCompositionContractFixture);
+		await render(DocsCompositionContractFixture);
 		const overflow = document.querySelector<HTMLElement>('[data-testid="table-overflow"]')!;
 		const overflowOwner = overflow.parentElement!;
 		const compact = document.querySelector<HTMLElement>('[data-testid="table-no-overflow"]')!;

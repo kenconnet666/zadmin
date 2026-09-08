@@ -5,9 +5,9 @@ import { tick } from 'svelte';
 import GroupCenterSpacerFixture from './GroupCenterSpacerFixture.svelte';
 
 describe('ZGroup, ZCenter and ZSpacer production contracts', () => {
-	it('keeps Group children in DOM order with declared grow, equal-width and shrink boundaries', () => {
+	it('keeps Group children in DOM order with declared grow, equal-width and shrink boundaries', async () => {
 		// @zui-visual ZGroup native flex item sizing
-		render(GroupCenterSpacerFixture);
+		await render(GroupCenterSpacerFixture);
 		const defaultGroup = document.querySelector<HTMLElement>('[data-testid="group-default"]')!;
 		const grow = document.querySelector<HTMLElement>('[data-testid="group-grow"]')!;
 		const equal = document.querySelector<HTMLElement>('[data-testid="group-equal"]')!;
@@ -33,10 +33,10 @@ describe('ZGroup, ZCenter and ZSpacer production contracts', () => {
 		expect(getComputedStyle(rtl).justifyContent).toBe('space-between');
 	});
 
-	it('centers both axes and applies fixed or theme spacer dimensions without changing parent gap', () => {
+	it('centers both axes and applies fixed or theme spacer dimensions without changing parent gap', async () => {
 		// @zui-visual ZCenter measured two-axis alignment
 		// @zui-visual ZSpacer actual logical dimensions
-		render(GroupCenterSpacerFixture);
+		await render(GroupCenterSpacerFixture);
 		const center = document.querySelector<HTMLElement>('[data-testid="center-block"]')!;
 		const centerRect = center.getBoundingClientRect();
 		const childRect = center.firstElementChild!.getBoundingClientRect();
@@ -70,7 +70,7 @@ describe('ZGroup, ZCenter and ZSpacer production contracts', () => {
 });
 
 it('forwards changing native styles through Group to its single Stack DOM owner', async () => {
-	render(GroupCenterSpacerFixture);
+	await render(GroupCenterSpacerFixture);
 	const group = document.querySelector<HTMLElement>('[data-testid="group-reactive-style"]')!;
 	expect(group.getBoundingClientRect().width).toBe(240);
 	document.querySelector<HTMLButtonElement>('[data-testid="group-width-toggle"]')!.click();

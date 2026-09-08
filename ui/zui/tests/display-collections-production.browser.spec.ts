@@ -7,7 +7,7 @@ import DisplayCollectionsProductionFixture from './DisplayCollectionsProductionF
 
 describe('ZList and ZDescriptionList production contracts', () => {
 	it('keeps ZList typed items, native list semantics and child-owned actions', async () => {
-		render(DisplayCollectionsProductionFixture);
+		await render(DisplayCollectionsProductionFixture);
 		const list = document.querySelector<HTMLElement>('[data-testid="display-list"]')!;
 		const ordered = document.querySelector<HTMLOListElement>('[data-testid="display-ordered"]')!;
 
@@ -27,7 +27,7 @@ describe('ZList and ZDescriptionList production contracts', () => {
 	});
 
 	it('keeps ZDescriptionList terms, descriptions, loading/empty status and RTL ownership semantic', async () => {
-		render(DisplayCollectionsProductionFixture);
+		await render(DisplayCollectionsProductionFixture);
 		await tick();
 		const descriptions = document.querySelector<HTMLElement>(
 			'[data-testid="display-descriptions"]'

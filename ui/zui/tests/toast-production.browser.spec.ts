@@ -9,7 +9,7 @@ import ToastQueueReplacementFixture from './ToastQueueReplacementFixture.svelte'
 describe('ZToast and ZToaster production browser contract', () => {
 	it('ZToast keeps standalone announcement, tone, action and dismiss boundaries real', async () => {
 		// @zui-visual ZToast tone and action surface geometry
-		render(CoverageFixture);
+		await render(CoverageFixture);
 		const danger = document.querySelector<HTMLElement>('[data-testid="coverage-toast-danger"]')!;
 		const action = document.querySelector<HTMLElement>('[data-testid="coverage-toast-action"]')!;
 
@@ -27,7 +27,7 @@ describe('ZToast and ZToaster production browser contract', () => {
 	});
 
 	it('ZToast keeps one visual instance for content, action, update and Presence', async () => {
-		render(ToastProductionFixture);
+		await render(ToastProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-update"]')?.click();
 		await tick();
 		const portal = document.querySelector<HTMLElement>('[data-testid="toast-production-portal"]')!;
@@ -60,7 +60,7 @@ describe('ZToast and ZToaster production browser contract', () => {
 
 	it('ZToaster connects the caller queue to viewport, FIFO visibility and live regions', async () => {
 		// @zui-visual ZToaster fixed viewport and queue geometry
-		render(ToastProductionFixture);
+		await render(ToastProductionFixture);
 		const viewport = document.querySelector<HTMLElement>('[data-slot="viewport"]')!;
 		expect(getComputedStyle(viewport).position).toBe('fixed');
 		expect(getComputedStyle(viewport).display).toBe('grid');
@@ -85,7 +85,7 @@ describe('ZToast and ZToaster production browser contract', () => {
 	});
 
 	it('ZToaster deduplicates same-id updates, pauses/resumes and throttles assertive announcements', async () => {
-		render(ToastProductionFixture);
+		await render(ToastProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-alert"]')?.click();
 		await tick();
 		const assertive = document.querySelector<HTMLElement>('[data-slot="assertive-announcer"]')!;
@@ -125,7 +125,7 @@ describe('ZToast and ZToaster production browser contract', () => {
 	});
 
 	it('disconnects an old queue before connecting a replacement without disposing it', async () => {
-		render(ToastQueueReplacementFixture);
+		await render(ToastQueueReplacementFixture);
 		expect(document.querySelector('[data-slot="viewport"]')).not.toBeNull();
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-replace"]')?.click();
 		await tick();

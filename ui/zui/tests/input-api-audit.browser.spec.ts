@@ -17,7 +17,7 @@ function edit(editor: HTMLTextAreaElement, value: string): void {
 describe('input API audit regressions', () => {
 	it('projects Field sizes through Combobox and Segmented with theme typography', async () => {
 		// @zui-visual ZCombobox Field geometry and ZSegmented theme typography
-		render(InputApiAuditFixture);
+		await render(InputApiAuditFixture);
 		await tick();
 		for (const [size, height, font] of [
 			['xsmall', 24, 11],
@@ -41,7 +41,7 @@ describe('input API audit regressions', () => {
 	});
 
 	it('closes open Mention suggestions when Field becomes readonly or disabled', async () => {
-		render(InputApiAuditFixture);
+		await render(InputApiAuditFixture);
 		await tick();
 		const editor = element<HTMLTextAreaElement>('audit-mention');
 		expect(editor.labels).toHaveLength(1);
@@ -69,7 +69,7 @@ describe('input API audit regressions', () => {
 		const mentionReset = Promise.withResolvers<void>();
 		const dateReset = Promise.withResolvers<void>();
 		const timeReset = Promise.withResolvers<void>();
-		render(InputApiAuditFixture, {
+		await render(InputApiAuditFixture, {
 			onMentionReset: () => mentionReset.resolve(),
 			onDateReset: () => dateReset.resolve(),
 			onTimeReset: () => timeReset.resolve()
@@ -92,7 +92,7 @@ describe('input API audit regressions', () => {
 
 	it('dims composite controls once and applies the theme font to native controls', async () => {
 		// @zui-visual ZFileUpload and ZDateRangePicker disabled opacity; ZCalendar theme font
-		render(InputApiAuditFixture);
+		await render(InputApiAuditFixture);
 		await tick();
 		const upload = element('audit-upload');
 		const dropzone = upload.querySelector<HTMLElement>('[data-slot="dropzone"]')!;

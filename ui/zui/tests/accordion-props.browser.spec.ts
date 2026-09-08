@@ -6,7 +6,7 @@ import AccordionPropsFixture from './AccordionPropsFixture.svelte';
 
 describe('ZAccordion flat component props', () => {
 	it('switches an AccordionValue owner atomically between single and multiple runtime contracts', async () => {
-		render(AccordionPropsFixture);
+		await render(AccordionPropsFixture);
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="accordion-props-output"]'
 		)!;

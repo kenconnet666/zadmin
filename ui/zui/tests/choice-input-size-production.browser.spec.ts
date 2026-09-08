@@ -6,7 +6,7 @@ import ChoiceInputSizeFixture from './ChoiceInputSizeFixture.svelte';
 
 describe('choice input size and virtual accessibility contracts', () => {
 	it('resolves Provider, Field, root and explicit Trigger/Item size precedence', async () => {
-		render(ChoiceInputSizeFixture);
+		await render(ChoiceInputSizeFixture);
 		await tick();
 		expect(
 			document.querySelector<HTMLElement>('[data-testid="select-provider-trigger"]')?.dataset.size
@@ -44,7 +44,7 @@ describe('choice input size and virtual accessibility contracts', () => {
 	});
 
 	it('keeps disabled aria semantics identical for virtual and non-virtual Transfer panes', async () => {
-		render(ChoiceInputSizeFixture);
+		await render(ChoiceInputSizeFixture);
 		await tick();
 		const regular = document.querySelector('[data-testid="transfer-disabled"] [role="listbox"]');
 		const virtual = document.querySelector(

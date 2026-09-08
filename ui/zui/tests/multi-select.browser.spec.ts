@@ -15,7 +15,7 @@ function keydown(
 
 describe('ZMultiSelect logical collection integration', () => {
 	it('keeps typed keys, async orphans, container focus and repeated FormData synchronized', async () => {
-		render(MultiSelectCollectionFixture);
+		await render(MultiSelectCollectionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-collection-trigger"]'
 		);
@@ -46,7 +46,7 @@ describe('ZMultiSelect logical collection integration', () => {
 	});
 
 	it('removes tags from the single trigger focus owner, clears explicitly and resets silently', async () => {
-		render(MultiSelectCollectionFixture);
+		await render(MultiSelectCollectionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-collection-trigger"]'
 		);
@@ -66,7 +66,7 @@ describe('ZMultiSelect logical collection integration', () => {
 	});
 
 	it('keeps readonly closed and completes the virtual ensure-key mount handshake', async () => {
-		render(MultiSelectCollectionFixture);
+		await render(MultiSelectCollectionFixture);
 		const readonlyTrigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-readonly-trigger"]'
 		);

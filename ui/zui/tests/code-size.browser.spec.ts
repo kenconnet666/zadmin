@@ -7,8 +7,8 @@ function codeStyle(testId: string): CSSStyleDeclaration {
 	return getComputedStyle(document.querySelector<HTMLElement>(`[data-testid="${testId}"]`)!);
 }
 
-it('keeps ZCode inline and block defaults while allowing explicit Theme font-size overrides', () => {
-	render(CodeSizeFixture);
+it('keeps ZCode inline and block defaults while allowing explicit Theme font-size overrides', async () => {
+	await render(CodeSizeFixture);
 
 	expect(document.querySelector('[data-testid="inline-default"]')?.getAttribute('data-size')).toBe(
 		'small'
@@ -28,8 +28,8 @@ it('keeps ZCode inline and block defaults while allowing explicit Theme font-siz
 	expect(codeStyle('block-small').fontSize).toBe('12px');
 });
 
-it('uses a custom Provider font-size token without changing source text, line height or copy structure', () => {
-	render(CodeSizeFixture);
+it('uses a custom Provider font-size token without changing source text, line height or copy structure', async () => {
+	await render(CodeSizeFixture);
 	const customBlock = document.querySelector<HTMLElement>('[data-testid="custom-block-default"]')!;
 	const customInline = document.querySelector<HTMLElement>('[data-testid="custom-inline-medium"]')!;
 	expect(customBlock.dataset.size).toBe('medium');

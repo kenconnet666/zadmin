@@ -15,7 +15,7 @@ function keydown(
 
 describe('ZTransfer logical collection integration', () => {
 	it('keeps filter drafts auxiliary, select-all view scoped and typed FormData ordered', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-production"]');
 		const form = document.querySelector<HTMLFormElement>(
@@ -64,7 +64,7 @@ describe('ZTransfer logical collection integration', () => {
 	});
 
 	it('preserves async orphan values and reports loading without leaking transport ownership', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		await tick();
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="transfer-production-form"]'
@@ -87,7 +87,7 @@ describe('ZTransfer logical collection integration', () => {
 	});
 
 	it('uses independent virtual pane owners and mounts an End target before selecting and moving it', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-virtual"]');
 		const source = root?.querySelector<HTMLElement>(
@@ -111,7 +111,7 @@ describe('ZTransfer logical collection integration', () => {
 	});
 
 	it('keeps readonly panes navigable while preventing selection and movement', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-readonly"]');
 		const source = root?.querySelector<HTMLElement>(

@@ -8,7 +8,7 @@ import { activateFormReset } from './form-reset.js';
 
 describe('ZInput, ZTextarea and ZInputGroup production contracts', () => {
 	it('preserves native input attrs and resolves Provider defaults across text controls', async () => {
-		render(InputFoundationProductionFixture);
+		await render(InputFoundationProductionFixture);
 		const input = document.querySelector<HTMLInputElement>(
 			'[data-testid="input-foundation-control"]'
 		)!;
@@ -76,8 +76,8 @@ describe('ZInput, ZTextarea and ZInputGroup production contracts', () => {
 		).toContain('changed:changed notes:1:1');
 	});
 
-	it('projects inherited disabled and readonly states without replacing native controls', () => {
-		render(InputFoundationProductionFixture);
+	it('projects inherited disabled and readonly states without replacing native controls', async () => {
+		await render(InputFoundationProductionFixture);
 		const disabled = document.querySelector<HTMLInputElement>(
 			'[data-testid="input-foundation-disabled"]'
 		)!;
@@ -104,7 +104,7 @@ describe('ZInput, ZTextarea and ZInputGroup production contracts', () => {
 	});
 
 	it('resets input and textarea state through the native form without user callbacks', async () => {
-		render(InputFoundationProductionFixture);
+		await render(InputFoundationProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="input-foundation-form"]')!;
 		const input = document.querySelector<HTMLInputElement>(
 			'[data-testid="input-foundation-control"]'

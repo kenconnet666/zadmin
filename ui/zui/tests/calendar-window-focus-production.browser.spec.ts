@@ -5,7 +5,7 @@ import Fixture from './CalendarWindowFocusFixture.svelte';
 
 describe('Calendar window focus and era boundaries', () => {
 	it('keeps a wholly unavailable month browseable with one grid focus target', async () => {
-		render(Fixture);
+		await render(Fixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="closed-month"]')!;
 		root.querySelector<HTMLButtonElement>('[data-slot="header"] button:last-child')!.click();
@@ -23,7 +23,7 @@ describe('Calendar window focus and era boundaries', () => {
 		expect(document.querySelector('[data-testid="closed-value"]')!.textContent).toBe('2026-09-15');
 	});
 	it('uses day arithmetic across a Japanese era change inside one month', async () => {
-		render(Fixture);
+		await render(Fixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="era-month"]')!;
 		root.querySelector<HTMLButtonElement>('[data-slot="header"] button:last-child')!.click();

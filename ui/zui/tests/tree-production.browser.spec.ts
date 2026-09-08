@@ -19,7 +19,7 @@ async function settle(): Promise<void> {
 
 describe('ZTree production contracts', () => {
 	it('renders typed and virtual ZTree roots for production evidence', async () => {
-		render(TreeProductionFixture);
+		await render(TreeProductionFixture);
 		await tick();
 
 		const lazyTree = document.querySelector<HTMLElement>('[data-testid="tree-production-lazy"]');
@@ -116,7 +116,7 @@ describe('ZTree production contracts', () => {
 
 	// @zui-visual ZTree virtual viewport and item geometry
 	it('keeps virtual tree viewport bounded to configured height and item size', async () => {
-		render(TreeProductionFixture);
+		await render(TreeProductionFixture);
 		await tick();
 		const tree = document.querySelector<HTMLElement>('[data-testid="tree-production-virtual"]')!;
 		const rect = tree.getBoundingClientRect();

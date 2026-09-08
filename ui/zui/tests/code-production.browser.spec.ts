@@ -20,7 +20,7 @@ function installClipboard(writeText: (text: string) => Promise<void>): () => voi
 describe('ZCode production copy contract', () => {
 	it('preserves inline source text and line height when syntax highlighting resolves', async () => {
 		const source = "import { ZButton } from '@zadmin/zui';";
-		render(ZCode, { code: source, inline: true, wrap: true, lang: 'typescript' });
+		await render(ZCode, { code: source, inline: true, wrap: true, lang: 'typescript' });
 		const code = document.querySelector<HTMLElement>('code[data-highlight-status]')!;
 		await expect.poll(() => code.dataset.highlightStatus).toBe('highlighted');
 		expect(code.textContent).toBe(source);
@@ -34,7 +34,7 @@ describe('ZCode production copy contract', () => {
 
 	it('preserves source newlines and reserves space for the copy action', async () => {
 		const source = 'const first = 1;\n\nconst second = 2;';
-		render(ZCode, { code: source, copyable: true, lang: 'typescript' });
+		await render(ZCode, { code: source, copyable: true, lang: 'typescript' });
 		const pre = document.querySelector<HTMLElement>('pre[data-highlight-status]')!;
 		await expect.poll(() => pre.dataset.highlightStatus).toBe('highlighted');
 		expect(pre.textContent).toBe(source);
@@ -52,7 +52,7 @@ describe('ZCode production copy contract', () => {
 		const writeText = vi.fn(async () => undefined);
 		const restore = installClipboard(writeText);
 		try {
-			render(CodeProductionFixture);
+			await render(CodeProductionFixture);
 			const button = document.querySelector<HTMLButtonElement>('[data-slot="copy-action"]')!;
 			button.focus();
 			button.click();
@@ -77,7 +77,7 @@ describe('ZCode production copy contract', () => {
 			throw new Error('private permission detail');
 		});
 		try {
-			render(CodeProductionFixture);
+			await render(CodeProductionFixture);
 			const button = document.querySelector<HTMLButtonElement>('[data-slot="copy-action"]')!;
 			button.click();
 			await expect

@@ -13,7 +13,7 @@ async function finishPresence(): Promise<void> {
 
 describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	it('ZMenu uses logical order for roving focus, locale typeahead and dynamic nearest recovery', async () => {
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 		const first = document.querySelector<HTMLElement>('[data-testid="menu-first"]')!;
 		const middle = document.querySelector<HTMLElement>('[data-testid="menu-middle"]')!;
 		first.focus();
@@ -36,7 +36,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	it('ZMenu projects checkbox, mixed, typed radio, real link and cancellable action contracts', async () => {
 		// @zui-visual ZMenuCheckboxItem checked state and indicator geometry
 		// @zui-visual ZMenuRadioItem selected state and indicator geometry
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 		const checkbox = document.querySelector<HTMLElement>('[data-testid="menu-check"]')!;
 		expect(checkbox.getAttribute('role')).toBe('menuitemcheckbox');
 		expect(checkbox.getAttribute('aria-checked')).toBe('mixed');
@@ -78,7 +78,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		// @zui-visual ZMenuSub
 		// @zui-visual ZMenuSubTrigger
 		// @zui-visual ZMenuSubContent
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 
 		const menu = document.querySelector<HTMLElement>('[role="menu"][aria-label="Production menu"]');
 		expect(menu).not.toBeNull();
@@ -130,7 +130,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 
 	it('ZDropdownMenu opens from both arrow edges and preserves close-on-select policy', async () => {
 		// @zui-visual ZDropdownMenu
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
 		trigger.focus();
 		trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
@@ -156,7 +156,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		// @zui-visual ZDropdownMenuContent
 		// @zui-visual ZContextMenuTrigger
 		// @zui-visual ZContextMenuContent
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 
 		const dropdownTrigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dropdown-trigger"]'
@@ -219,7 +219,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZDropdownMenu coordinates nested layers, RTL submenu keys, action bubbling and trigger focus restore', async () => {
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
 		await userEvent.click(trigger);
 		let subTrigger = document.querySelector<HTMLElement>('[data-testid="dropdown-sub-trigger"]')!;
@@ -258,7 +258,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 
 	it('ZContextMenu anchors at pointer and RTL keyboard logical start while exposing shortcuts', async () => {
 		// @zui-visual ZContextMenu
-		render(MenuFamilyProductionFixture);
+		await render(MenuFamilyProductionFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="context-trigger"]')!;
 		expect(target.getAttribute('aria-keyshortcuts')).toBe('ContextMenu Shift+F10');
 		target.dispatchEvent(

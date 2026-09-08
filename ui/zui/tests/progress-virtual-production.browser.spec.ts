@@ -7,7 +7,7 @@ import VirtualListFixture from './VirtualListFixture.svelte';
 
 describe('ZMeter, ZProgress, ZSkeleton and ZVirtualList production contracts', () => {
 	it('keeps ZProgress and ZMeter native ranges and accessible value text', async () => {
-		render(ProgressMeterSkeletonFixture);
+		await render(ProgressMeterSkeletonFixture);
 		await tick();
 		const progress = document.querySelector<HTMLProgressElement>(
 			'[data-testid="progress-line-production"]'
@@ -27,7 +27,7 @@ describe('ZMeter, ZProgress, ZSkeleton and ZVirtualList production contracts', (
 	});
 
 	it('keeps ZSkeleton hidden semantics and reduced-motion animation cleanup', async () => {
-		render(ProgressMeterSkeletonFixture);
+		await render(ProgressMeterSkeletonFixture);
 		await tick();
 		const lines = document.querySelector<HTMLElement>('[data-testid="skeleton-lines-production"]')!;
 		const staticSkeleton = document.querySelector<HTMLElement>(
@@ -46,7 +46,7 @@ describe('ZMeter, ZProgress, ZSkeleton and ZVirtualList production contracts', (
 	});
 
 	it('keeps ZVirtualList keyed focus ownership, bounded window and prepend anchor', async () => {
-		render(VirtualListFixture);
+		await render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-dynamic"]')!;
 		await expect.poll(() => viewport.querySelector('[data-measured="true"]')).not.toBeNull();
 		expect(viewport.querySelector('[role="option"]')).not.toBeNull();

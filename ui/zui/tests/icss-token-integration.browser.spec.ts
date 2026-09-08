@@ -2,8 +2,8 @@ import { expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import IcssTokenIntegrationFixture from './IcssTokenIntegrationFixture.svelte';
 
-it('applies custom media/focus/easing tokens and keeps system colors independent of theme colors', () => {
-	render(IcssTokenIntegrationFixture);
+it('applies custom media/focus/easing tokens and keeps system colors independent of theme colors', async () => {
+	await render(IcssTokenIntegrationFixture);
 	const node = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 	expect(node('responsive').getBoundingClientRect().width).toBe(240);
 	expect(getComputedStyle(node('responsive')).backgroundColor).toBe('rgb(17, 34, 51)');

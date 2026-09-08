@@ -5,8 +5,8 @@ import FeedbackDisplayVisualContractFixture from './FeedbackDisplayVisualContrac
 
 describe('feedback and data-display visual contracts', () => {
 	// @zui-visual ZAlert tone border geometry
-	it('maps Alert tone to distinct computed border colors', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('maps Alert tone to distinct computed border colors', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const info = document.querySelector<HTMLElement>('[data-testid="alert-info"]')!;
 		const danger = document.querySelector<HTMLElement>('[data-testid="alert-danger"]')!;
 		expect(info.dataset.tone).toBe('info');
@@ -16,8 +16,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZProgress line and circle geometry
-	it('maps Progress view to the line and circle geometry contracts', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('maps Progress view to the line and circle geometry contracts', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const line = document.querySelector<HTMLElement>('[data-testid="progress-line"]')!;
 		const circle = document.querySelector<HTMLElement>('[data-testid="progress-circle"]')!;
 		expect(line.tagName).toBe('PROGRESS');
@@ -34,8 +34,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZMeter threshold state geometry
-	it('reflects Meter threshold state in the rendered native meter', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('reflects Meter threshold state in the rendered native meter', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const critical = document.querySelector<HTMLElement>('[data-testid="meter-critical"]')!;
 		const optimal = document.querySelector<HTMLElement>('[data-testid="meter-optimal"]')!;
 		expect(critical.dataset.state).toBe('critical');
@@ -46,8 +46,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZSkeleton explicit shape dimensions
-	it('applies Skeleton shape and explicit dimensions to computed geometry', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('applies Skeleton shape and explicit dimensions to computed geometry', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const circle = document.querySelector<HTMLElement>('[data-testid="skeleton-circle"]')!;
 		const rectangle = document.querySelector<HTMLElement>('[data-testid="skeleton-rectangle"]')!;
 		expect(circle.getBoundingClientRect().width).toBe(40);
@@ -59,8 +59,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZEmpty heading and padded layout geometry
-	it('renders Empty with the requested heading level and bounded layout', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('renders Empty with the requested heading level and bounded layout', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const empty = document.querySelector<HTMLElement>('[data-testid="empty"]')!;
 		expect(empty.querySelector('h3')).not.toBeNull();
 		const style = getComputedStyle(empty);
@@ -73,8 +73,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZToggleButton pressed state geometry
-	it('exposes ToggleButton pressed state with stable button geometry', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('exposes ToggleButton pressed state with stable button geometry', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const toggle = document.querySelector<HTMLButtonElement>('[data-testid="toggle-pressed"]')!;
 		const idle = document.querySelector<HTMLButtonElement>('[data-testid="toggle-idle"]')!;
 		expect(toggle.dataset.state).toBe('on');
@@ -86,8 +86,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZSeparator orientation geometry
-	it('maps Separator orientation to horizontal and vertical dimensions', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('maps Separator orientation to horizontal and vertical dimensions', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const horizontal = document.querySelector<HTMLElement>('[data-testid="separator-horizontal"]')!;
 		const vertical = document.querySelector<HTMLElement>('[data-testid="separator-vertical"]')!;
 		expect(horizontal.dataset.orientation).toBe('horizontal');
@@ -97,8 +97,8 @@ describe('feedback and data-display visual contracts', () => {
 	});
 
 	// @zui-visual ZKbd mono nowrap geometry
-	it('keeps Kbd content on one line with the mono visual contract', () => {
-		render(FeedbackDisplayVisualContractFixture);
+	it('keeps Kbd content on one line with the mono visual contract', async () => {
+		await render(FeedbackDisplayVisualContractFixture);
 		const kbd = document.querySelector<HTMLElement>('[data-testid="kbd"]')!;
 		const style = getComputedStyle(kbd);
 		expect(style.whiteSpace).toBe('nowrap');
@@ -108,7 +108,7 @@ describe('feedback and data-display visual contracts', () => {
 
 	// @zui-visual ZCode highlighted block geometry
 	it('keeps Code content visible with its highlighted block surface', async () => {
-		render(FeedbackDisplayVisualContractFixture);
+		await render(FeedbackDisplayVisualContractFixture);
 		const code = document.querySelector<HTMLElement>('[data-testid="code"]')!;
 		await expect.poll(() => code.dataset.highlightStatus, { timeout: 10_000 }).toBe('highlighted');
 		expect(code.textContent).toContain('const ready = true;');

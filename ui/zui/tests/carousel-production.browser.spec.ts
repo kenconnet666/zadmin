@@ -8,7 +8,7 @@ import CoverageFixture from './CoverageFixture.svelte';
 describe('ZCarousel production contracts', () => {
 	it('keeps ZCarousel controlled typed slides, current state and navigation controls synchronized', async () => {
 		// @zui-visual ZCarousel bounded slide and control surface geometry
-		render(CarouselFixture);
+		await render(CarouselFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]')!;
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="carousel-output"]')!;
 
@@ -40,7 +40,7 @@ describe('ZCarousel production contracts', () => {
 	});
 
 	it('keeps ZCarousel non-looping boundaries and reduced-motion autoplay controls accessible', async () => {
-		render(CoverageFixture);
+		await render(CoverageFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="coverage-carousel"]')!;
 		const reducedCarousel = document.querySelector<HTMLElement>(
 			'[data-testid="coverage-carousel-reduced"]'
@@ -67,7 +67,7 @@ describe('ZCarousel production contracts', () => {
 	});
 
 	it('pauses ZCarousel autoplay through its explicit control without waiting for a timer', async () => {
-		render(CoverageFixture);
+		await render(CoverageFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="coverage-carousel"]')!;
 
 		expect(carousel.dataset.paused).toBeUndefined();

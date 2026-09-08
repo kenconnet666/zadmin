@@ -10,7 +10,7 @@ import { resetForm } from './form-reset.js';
 
 describe('foundation controls production contracts', () => {
 	it('ZCheckbox preserves mixed state, native FormData and reset', async () => {
-		render(CheckboxFixture);
+		await render(CheckboxFixture);
 		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="checkbox"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="checkbox-form"]')!;
 		expect(checkbox.type).toBe('checkbox');
@@ -28,7 +28,7 @@ describe('foundation controls production contracts', () => {
 	});
 
 	it('ZSwitch preserves required semantics, readonly boundaries and external reset owners', async () => {
-		render(SwitchProductionFixture);
+		await render(SwitchProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="switch-production-form"]')!;
 		const control = document.querySelector<HTMLInputElement>(
 			'[data-testid="switch-production-control"]'
@@ -57,7 +57,7 @@ describe('foundation controls production contracts', () => {
 	});
 
 	it('ZSlider keeps native range keyboard values, FormData and reset', async () => {
-		render(SliderFixture);
+		await render(SliderFixture);
 		const slider = document.querySelector<HTMLInputElement>('[data-testid="slider"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="slider-form"]')!;
 		expect(slider.type).toBe('range');

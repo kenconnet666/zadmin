@@ -5,8 +5,8 @@ import { render } from 'vitest-browser-svelte';
 import AvatarProductionFixture from './AvatarProductionFixture.svelte';
 
 describe('ZAvatar production browser contract', () => {
-	it('projects native image props and distinguishes named from decorative fallbacks', () => {
-		render(AvatarProductionFixture);
+	it('projects native image props and distinguishes named from decorative fallbacks', async () => {
+		await render(AvatarProductionFixture);
 		const named = document.querySelector<HTMLElement>('[data-testid="avatar-named"]')!;
 		const decorative = document.querySelector<HTMLElement>('[data-testid="avatar-decorative"]')!;
 		const image = document.querySelector<HTMLImageElement>(
@@ -31,7 +31,7 @@ describe('ZAvatar production browser contract', () => {
 	});
 
 	it('isolates keyed source attempts and only accepts current image events', async () => {
-		render(AvatarProductionFixture);
+		await render(AvatarProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="avatar-responsive"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="avatar-production-output"]'

@@ -12,7 +12,7 @@ describe('ZMultiSelect production contract', () => {
 		// @zui-visual ZMultiSelectTrigger
 		// @zui-visual ZMultiSelectContent
 		// @zui-visual ZMultiSelectItem
-		render(MultiSelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		await render(MultiSelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-select-trigger"]'
 		)!;
@@ -36,7 +36,7 @@ describe('ZMultiSelect production contract', () => {
 		expect(getComputedStyle(content).overflowY).toBe('auto');
 	});
 	it('preserves typed values and orphan labels through filtering, clear/reset, readonly and virtual navigation', async () => {
-		render(MultiSelectCollectionFixture);
+		await render(MultiSelectCollectionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="multi-collection-form"]')!;
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-collection-trigger"]'
@@ -60,7 +60,7 @@ describe('ZMultiSelect production contract', () => {
 	});
 
 	it('keeps ZMultiSelectTrigger, ZMultiSelectContent and ZMultiSelectItem ARIA, keyboard and Field boundaries real', async () => {
-		render(MultiSelectFixture, { defaultOpen: true });
+		await render(MultiSelectFixture, { defaultOpen: true });
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-select-trigger"]'
 		)!;

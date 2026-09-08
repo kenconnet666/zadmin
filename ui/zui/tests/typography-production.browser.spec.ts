@@ -6,7 +6,7 @@ import TypographyFixture from './TypographyFixture.svelte';
 
 describe('ZHeading and ZText production browser semantics', () => {
 	it('binds real heading/text elements and applies overflow contracts', async () => {
-		render(TypographyFixture);
+		await render(TypographyFixture);
 		await tick();
 		const h1 = document.querySelector<HTMLElement>('[data-testid="heading-h1"]');
 		const h4 = document.querySelector<HTMLElement>('[data-testid="heading-h4-large"]');

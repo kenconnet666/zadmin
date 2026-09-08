@@ -20,8 +20,8 @@ function sourceItem(list: HTMLOListElement, key: string): HTMLLIElement {
 }
 
 describe('ZBreadcrumb production contract', () => {
-	it('keeps native hierarchy and makes only non-current routed entries anchors', () => {
-		render(BreadcrumbFixture);
+	it('keeps native hierarchy and makes only non-current routed entries anchors', async () => {
+		await render(BreadcrumbFixture);
 		const navigation = document.querySelector<HTMLElement>('[aria-label="Fixture breadcrumb"]')!;
 		const list = navigation.querySelector<HTMLOListElement>('ol')!;
 		const items = list.querySelectorAll<HTMLLIElement>(':scope > li');
@@ -40,9 +40,9 @@ describe('ZBreadcrumb production contract', () => {
 		}
 	});
 
-	it('uses logical layout and wraps long labels within narrow and RTL owners', () => {
+	it('uses logical layout and wraps long labels within narrow and RTL owners', async () => {
 		// @zui-visual ZBreadcrumb native path geometry and wrapping
-		render(BreadcrumbFixture);
+		await render(BreadcrumbFixture);
 		const longOwner = document.querySelector<HTMLElement>(
 			'[data-testid="breadcrumb-long-boundary"]'
 		)!;
@@ -57,7 +57,7 @@ describe('ZBreadcrumb production contract', () => {
 	});
 
 	it('protects the current, last and configured first items while exposing real ancestor links', async () => {
-		render(BreadcrumbFixture);
+		await render(BreadcrumbFixture);
 		const navigation = document.querySelector<HTMLElement>('[aria-label="Collapsed breadcrumb"]')!;
 		const list = navigation.querySelector<HTMLOListElement>('ol')!;
 		await expect.poll(() => list.dataset.measured).toBe('true');
@@ -102,7 +102,7 @@ describe('ZBreadcrumb production contract', () => {
 	});
 
 	it('retains one source item DOM identity while owner width collapses and expands', async () => {
-		render(BreadcrumbFixture);
+		await render(BreadcrumbFixture);
 		const owner = document.querySelector<HTMLElement>(
 			'[data-testid="breadcrumb-responsive-owner"]'
 		)!;
@@ -150,7 +150,7 @@ describe('ZBreadcrumb production contract', () => {
 
 	it('keeps a collapsed RTL breadcrumb inside its mobile owner without horizontal scrolling', async () => {
 		await page.viewport(390, 844);
-		render(BreadcrumbFixture);
+		await render(BreadcrumbFixture);
 		const owner = document.querySelector<HTMLElement>(
 			'[data-testid="breadcrumb-collapse-rtl-owner"]'
 		)!;

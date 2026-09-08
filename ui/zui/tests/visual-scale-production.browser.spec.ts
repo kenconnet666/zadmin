@@ -14,7 +14,7 @@ function element(id: string): HTMLElement {
 
 describe('shared visual scales and semantic colors', () => {
 	it('uses five control heights with independent indicator, avatar and badge proportions', async () => {
-		render(VisualScaleProductionFixture);
+		await render(VisualScaleProductionFixture);
 		await tick();
 		for (const [size, control, font, indicator, avatar, badge, dot] of [
 			['xsmall', 24, 11, 12, 24, 14, 4],
@@ -56,8 +56,8 @@ describe('shared visual scales and semantic colors', () => {
 		}
 	});
 
-	it('shares eight text sizes while preserving heading semantics and balanced wrapping', () => {
-		render(VisualScaleProductionFixture);
+	it('shares eight text sizes while preserving heading semantics and balanced wrapping', async () => {
+		await render(VisualScaleProductionFixture);
 		for (const [size, expected] of [
 			['xsmall', 11],
 			['small', 12],
@@ -78,7 +78,7 @@ describe('shared visual scales and semantic colors', () => {
 	});
 
 	it('preserves all semantic colors across solid, outline, ghost, links and pressed toggles', async () => {
-		render(VisualScaleProductionFixture);
+		await render(VisualScaleProductionFixture);
 		await userEvent.hover(element('trend-improved'));
 		for (const tone of ['primary', ...semanticTones] as const) {
 			const expected = visualScaleTheme.color[tone];
@@ -117,8 +117,8 @@ describe('shared visual scales and semantic colors', () => {
 		}
 	});
 
-	it('keeps raw trend direction neutral and lets business meaning color a negative improvement', () => {
-		render(VisualScaleProductionFixture);
+	it('keeps raw trend direction neutral and lets business meaning color a negative improvement', async () => {
+		await render(VisualScaleProductionFixture);
 		const raw = element('trend-neutral').querySelector<HTMLElement>('[data-slot="trend"]')!;
 		const improved = element('trend-improved').querySelector<HTMLElement>('[data-slot="trend"]')!;
 		expect(raw.dataset.trend).toBe('up');

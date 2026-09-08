@@ -11,7 +11,7 @@ function element<T extends HTMLElement>(id: string): T {
 
 it('preserves native legend exceptions, successful controls and a single disabled visual owner', async () => {
 	// @zui-visual ZFieldset disabled family opacity and legend exception
-	render(FieldsetFixture);
+	await render(FieldsetFixture);
 	await tick();
 	const form = element<HTMLFormElement>('form');
 	const group = element<HTMLFieldSetElement>('main');
@@ -56,7 +56,7 @@ it('wraps a long legend within narrow layouts without imposing its size on child
 	const viewport = { width: innerWidth, height: innerHeight };
 	try {
 		await page.viewport(390, 844);
-		render(FieldsetFixture);
+		await render(FieldsetFixture);
 		await tick();
 		const group = element<HTMLFieldSetElement>('long');
 		expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth + 1);

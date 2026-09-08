@@ -15,7 +15,7 @@ const rows = [
 describe('five input sizes', () => {
 	it('keeps compound outer rows aligned after accounting for their border', async () => {
 		// @zui-visual ZInput ZInputGroup ZNumberField ZDateField ZTimeField ZDatePicker ZDateRangePicker ZPinInput geometry
-		render(InputFiveSizesFixture);
+		await render(InputFiveSizesFixture);
 		await tick();
 		for (const [size, height] of rows) {
 			const row = document.querySelector<HTMLElement>(`[data-testid="size-${size}"]`)!;
@@ -40,7 +40,7 @@ describe('five input sizes', () => {
 
 	it('scales inner tags and actions while virtual row height remains independent', async () => {
 		// @zui-visual ZTagsInput ZMultiSelect ZFileUpload ZTransfer inner control geometry
-		render(InputFiveSizesFixture);
+		await render(InputFiveSizesFixture);
 		await tick();
 		for (const [size, height] of rows) {
 			const row = document.querySelector<HTMLElement>(`[data-testid="size-${size}"]`)!;
@@ -66,7 +66,7 @@ describe('five input sizes', () => {
 
 	it('keeps switch thumb end gaps symmetric in actual LTR and RTL DOM', async () => {
 		// @zui-visual ZSwitch five track and thumb sizes, endpoint geometry and RTL
-		render(InputFiveSizesFixture, { mode: 'switch' });
+		await render(InputFiveSizesFixture, { mode: 'switch' });
 		await tick();
 		const metrics = {
 			xsmall: [28, 16, 12, 2],
@@ -100,7 +100,7 @@ describe('five input sizes', () => {
 	});
 
 	it('forwards TreeSelect virtual dimensions through its renamed public props', async () => {
-		render(InputFiveSizesFixture, { mode: 'virtual-tree' });
+		await render(InputFiveSizesFixture, { mode: 'virtual-tree' });
 		await tick();
 		const tree = document.querySelector<HTMLElement>('[role="tree"]')!;
 		expect(tree.getBoundingClientRect().height).toBe(144);

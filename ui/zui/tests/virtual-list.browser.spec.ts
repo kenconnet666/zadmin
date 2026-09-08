@@ -8,7 +8,7 @@ import VirtualListBoundaryFixture from './VirtualListBoundaryFixture.svelte';
 
 describe('ZVirtualList', () => {
 	it('reports invalid size, identity, semantic and initial-position contracts', async () => {
-		render(VirtualListBoundaryFixture);
+		await render(VirtualListBoundaryFixture);
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="virtual-boundary-output"]')?.textContent;
@@ -26,7 +26,7 @@ describe('ZVirtualList', () => {
 	});
 
 	it('measures variable rows and keeps the DOM window bounded', async () => {
-		render(VirtualListFixture);
+		await render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-dynamic"]');
 		expect(viewport?.dataset.dynamic).toBe('true');
 		expect(viewport?.dataset.reducedMotion).toBe('true');
@@ -45,7 +45,7 @@ describe('ZVirtualList', () => {
 	});
 
 	it('provides an active-descendant mount handshake and reduced-motion scrolling', async () => {
-		render(VirtualListFixture);
+		await render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-dynamic"]');
 		document.querySelector<HTMLButtonElement>('[data-testid="virtual-activate"]')?.click();
 		await tick();
@@ -69,7 +69,7 @@ describe('ZVirtualList', () => {
 	});
 
 	it('preserves the visible keyed anchor across prepends', async () => {
-		render(VirtualListFixture);
+		await render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-dynamic"]');
 		if (!viewport) throw new Error('Missing virtual viewport.');
 		viewport.scrollTop = 1600;
@@ -84,7 +84,7 @@ describe('ZVirtualList', () => {
 	});
 
 	it('distinguishes loading and empty states without fake collection items', async () => {
-		render(VirtualListFixture);
+		await render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-state"]');
 		expect(viewport?.getAttribute('aria-busy')).toBe('true');
 		expect(document.querySelector('[data-slot="loading"]')?.textContent).toContain('Loading');

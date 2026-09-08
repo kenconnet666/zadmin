@@ -4,9 +4,9 @@ import { render } from 'vitest-browser-svelte';
 import FoundationPrimitivesFixture from './FoundationPrimitivesFixture.svelte';
 
 describe('foundation utility production contracts', () => {
-	it('ZSeparator and ZVisuallyHidden preserve semantic and visual-only boundaries', () => {
+	it('ZSeparator and ZVisuallyHidden preserve semantic and visual-only boundaries', async () => {
 		// @zui-visual ZVisuallyHidden clipped one-pixel geometry
-		render(FoundationPrimitivesFixture);
+		await render(FoundationPrimitivesFixture);
 		const named = document.querySelector<HTMLElement>('[data-testid="separator-named"]')!;
 		const decorative = document.querySelector<HTMLElement>('[data-testid="separator-decorative"]')!;
 		const vertical = document.querySelector<HTMLElement>('[data-testid="separator-vertical"]')!;
@@ -41,8 +41,8 @@ describe('foundation utility production contracts', () => {
 		}
 	});
 
-	it('ZAspectRatio and ZContainer preserve native layout contracts without observers', () => {
-		render(FoundationPrimitivesFixture);
+	it('ZAspectRatio and ZContainer preserve native layout contracts without observers', async () => {
+		await render(FoundationPrimitivesFixture);
 		const ratio = document.querySelector<HTMLElement>('[data-testid="aspect-ratio"]')!;
 		const emptyRatio = document.querySelector<HTMLElement>('[data-testid="aspect-ratio-empty"]')!;
 		const outer = document.querySelector<HTMLElement>('[data-testid="container-outer"]')!;

@@ -6,7 +6,7 @@ import ChoiceSemanticThemeFixture from './ChoiceSemanticThemeFixture.svelte';
 
 describe('choice item semantic theme colors', () => {
 	it('uses custom semantic tokens for selected, selected-active and unselected-active states', async () => {
-		render(ChoiceSemanticThemeFixture);
+		await render(ChoiceSemanticThemeFixture);
 		await tick();
 
 		for (const listbox of document.querySelectorAll<HTMLElement>('[role="listbox"]'))
@@ -41,7 +41,7 @@ describe('choice item semantic theme colors', () => {
 	});
 
 	it('renders non-empty default dark theme colors without collapsing selected and plain states', async () => {
-		render(ChoiceSemanticThemeFixture);
+		await render(ChoiceSemanticThemeFixture);
 		await tick();
 		const selected = document.querySelector<HTMLElement>('[data-testid="default-menu-selected"]')!;
 		const plain = document.querySelector<HTMLElement>('[data-testid="default-menu-item"]')!;

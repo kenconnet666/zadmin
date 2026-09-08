@@ -10,7 +10,7 @@ describe('production Accordion and Tabs compound family', () => {
 		// @zui-visual ZAccordionItem layout geometry
 		// @zui-visual ZAccordionTrigger computed button geometry
 		// @zui-visual ZAccordionContent bounded panel geometry
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]')!;
 		const accordion = root.querySelector<HTMLElement>('[data-testid="production-accordion-root"]')!;
 		const activeItem = root.querySelector<HTMLElement>(
@@ -67,7 +67,7 @@ describe('production Accordion and Tabs compound family', () => {
 		// @zui-visual ZTabsList tab-list layout geometry
 		// @zui-visual ZTabsTrigger computed tab geometry
 		// @zui-visual ZTabsPanel bounded panel geometry
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-tabs"]')!;
 		const tabs = root.querySelector<HTMLElement>('[data-testid="production-tabs-root"]')!;
 		const list = root.querySelector<HTMLElement>('[data-testid="production-tabs-list"]')!;
@@ -120,7 +120,7 @@ describe('production Accordion and Tabs compound family', () => {
 	});
 
 	it('ZTabs activationMode, RTL logical navigation and lazy/active-only panel presence remain distinct', async () => {
-		render(AccordionTabsProductionFixture);
+		await render(AccordionTabsProductionFixture);
 		const rtl = document.querySelector<HTMLElement>('[data-testid="rtl-tabs"]')!;
 		const left = rtl.querySelector<HTMLButtonElement>('[data-testid="rtl-tab-left"]')!;
 		const right = rtl.querySelector<HTMLButtonElement>('[data-testid="rtl-tab-right"]')!;

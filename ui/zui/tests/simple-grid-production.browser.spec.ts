@@ -4,8 +4,8 @@ import { render } from 'vitest-browser-svelte';
 import SimpleGridFixture from './SimpleGridFixture.svelte';
 
 describe('ZSimpleGrid production contract', () => {
-	it('keeps ordinary children in fixed equal tracks with independent row and column spacing', () => {
-		render(SimpleGridFixture);
+	it('keeps ordinary children in fixed equal tracks with independent row and column spacing', async () => {
+		await render(SimpleGridFixture);
 		const grid = document.querySelector<HTMLElement>('[data-testid="simple-grid-columns"]')!;
 		const style = getComputedStyle(grid);
 		expect(grid.tagName).toBe('DIV');
@@ -20,9 +20,9 @@ describe('ZSimpleGrid production contract', () => {
 		}
 	});
 
-	it('uses CSS auto-fit minimum tracks that stay within a narrow owner and inherits RTL', () => {
+	it('uses CSS auto-fit minimum tracks that stay within a narrow owner and inherits RTL', async () => {
 		// @zui-visual ZSimpleGrid real auto-fit track geometry
-		render(SimpleGridFixture);
+		await render(SimpleGridFixture);
 		const owner = document.querySelector<HTMLElement>(
 			'[data-testid="simple-grid-adaptive-owner"]'
 		)!;

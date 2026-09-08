@@ -18,7 +18,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		// @zui-visual ZPopconfirmDescription
 		// @zui-visual ZPopconfirmAction
 		// @zui-visual ZPopconfirmCancel
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
 		const content = document.querySelector<HTMLElement>('[data-testid="confirm-content"]')!;
@@ -85,7 +85,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZPopconfirmContent, ZPopconfirmTitle and ZPopconfirmDescription keep reject open with a safe announcement', async () => {
-		render(TooltipPopconfirmProductionFixture, { mode: 'reject' });
+		await render(TooltipPopconfirmProductionFixture, { mode: 'reject' });
 		await userEvent.click(document.querySelector('[data-testid="confirm-trigger"]')!);
 		await userEvent.click(document.querySelector('[data-testid="confirm-action"]')!);
 		await expect
@@ -113,7 +113,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZPopconfirmCancel invalidates pending work when Cancel closes the Popconfirm', async () => {
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		await userEvent.click(document.querySelector('[data-testid="confirm-trigger"]')!);
 		await userEvent.click(document.querySelector('[data-testid="confirm-action"]')!);
 		await userEvent.click(document.querySelector('[data-testid="confirm-cancel"]')!);
@@ -128,7 +128,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZPopconfirm dismisses pending work on Escape and idle content on outside pointer', async () => {
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
 		await userEvent.click(document.querySelector('[data-testid="confirm-action"]')!);
@@ -151,7 +151,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		// @zui-visual ZTooltipGroup coordinated visibility
 		// @zui-visual ZTooltipTrigger
 		// @zui-visual ZTooltipContent
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
 		first.focus();
@@ -190,7 +190,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZTooltipTrigger restores focus ownership after a competing pointer tooltip closes', async () => {
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
 		first.focus();
@@ -227,7 +227,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZTooltipTrigger invalidates its pending hover timer when disabled changes', async () => {
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const delayed = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-delayed"]')!;
 		delayed.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
 		document.querySelector<HTMLButtonElement>('[data-testid="tooltip-disable-delayed"]')?.click();
@@ -240,7 +240,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZTooltipContent stays non-interactive while ZTooltipTrigger supports disabled and hoverable paths', async () => {
-		render(TooltipPopconfirmProductionFixture);
+		await render(TooltipPopconfirmProductionFixture);
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-disabled"]')!;
 		const wrapper = disabled.closest<HTMLElement>('[data-slot="disabled-trigger"]')!;
 		expect(disabled.disabled).toBe(true);

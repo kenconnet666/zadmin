@@ -19,7 +19,7 @@ function dialog(): HTMLElement {
 
 describe('ZDateTimeRangePicker production contracts', () => {
 	it('restores a directly edited endpoint when its form model rejects the write', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		const target = root('date-time-range-rejected');
 		const day = target.querySelector<HTMLInputElement>(
 			'[data-slot="start-field"] input[id$="-day"]'
@@ -33,7 +33,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 		expect(root('date-time-range-rejected-output').textContent).toBe('0:0');
 	});
 	it('keeps one root owner, partial FormData, disabled/readonly semantics and reset real', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		const form = root('date-time-range-form') as HTMLFormElement;
 		expect(new FormData(form).get('deployment.start')).toBe('2026-09-07T09:30:00');
 		expect(new FormData(form).get('deployment.end')).toBe('2026-09-08T17:30:00');
@@ -53,7 +53,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 	});
 
 	it('keeps raw field drafts out of the owner and rolls both composite fields back on Escape', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		const picker = root('date-time-range');
 		const day = picker.querySelector<HTMLInputElement>(
 			'[data-slot="start-field"] input[aria-label="Day"]'
@@ -72,7 +72,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 	});
 
 	it('keeps confirm presets draft-only until footer confirmation and cancel discards', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		const form = root('date-time-range-form') as HTMLFormElement;
 		trigger('date-time-range').click();
 		await tick();
@@ -98,7 +98,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 	});
 
 	it('commits immediate presets without closing and preserves zoned instants plus instance direction', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		trigger('date-time-range-immediate').click();
 		await tick();
 		const popup = dialog();
@@ -118,7 +118,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 	});
 
 	it('keeps a boundary-day draft when its carried time is invalid so a valid time remains reachable', async () => {
-		render(DateTimeRangePickerProductionFixture);
+		await render(DateTimeRangePickerProductionFixture);
 		const form = root('date-time-range-form') as HTMLFormElement;
 		trigger('date-time-range-boundary').click();
 		await tick();

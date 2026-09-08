@@ -4,8 +4,8 @@ import { render } from 'vitest-browser-svelte';
 import PrimitiveTypographyFixture from './PrimitiveTypographyFixture.svelte';
 
 describe('primitive typography and surface contracts', () => {
-	it('uses shared title tokens and exact navigation control heights', () => {
-		render(PrimitiveTypographyFixture);
+	it('uses shared title tokens and exact navigation control heights', async () => {
+		await render(PrimitiveTypographyFixture);
 		const style = (id: string) =>
 			getComputedStyle(document.querySelector(`[data-testid="${id}"]`)!);
 		expect(style('heading-xxlarge').fontSize).toBe('32px');
@@ -21,8 +21,8 @@ describe('primitive typography and surface contracts', () => {
 			).toBe(height);
 		}
 	});
-	it('keeps default ZList string labels at normal body weight while preserving description hierarchy', () => {
-		render(PrimitiveTypographyFixture);
+	it('keeps default ZList string labels at normal body weight while preserving description hierarchy', async () => {
+		await render(PrimitiveTypographyFixture);
 		const list = document.querySelector<HTMLElement>('[data-testid="primitive-list"]')!;
 		const label = list.querySelector<HTMLElement>('[data-slot="content"] > span')!;
 		expect(label.tagName).toBe('SPAN');
@@ -33,8 +33,8 @@ describe('primitive typography and surface contracts', () => {
 		expect(getComputedStyle(term).fontSize).toBe('12px');
 	});
 
-	it('keeps ZCard bodyPadding none and large as explicit body-region contracts', () => {
-		render(PrimitiveTypographyFixture);
+	it('keeps ZCard bodyPadding none and large as explicit body-region contracts', async () => {
+		await render(PrimitiveTypographyFixture);
 		const noneBody = document.querySelector<HTMLElement>(
 			'[data-testid="card-padding-none"] [data-slot="body"]'
 		)!;

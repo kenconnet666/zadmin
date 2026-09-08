@@ -5,9 +5,9 @@ import { render } from 'vitest-browser-svelte';
 import ResultEmptyProductionFixture from './ResultEmptyProductionFixture.svelte';
 
 describe('ZResult and ZEmpty production browser contracts', () => {
-	it('uses real headings, decorative default icons and Alert-compatible Result tones', () => {
+	it('uses real headings, decorative default icons and Alert-compatible Result tones', async () => {
 		// @zui-visual ZResult tone and content layout geometry
-		render(ResultEmptyProductionFixture);
+		await render(ResultEmptyProductionFixture);
 		for (const tone of ['info', 'success', 'warning', 'danger']) {
 			const root = document.querySelector<HTMLElement>(`[data-testid="result-${tone}"]`)!;
 			expect(root.dataset.tone).toBe(tone);
@@ -42,8 +42,8 @@ describe('ZResult and ZEmpty production browser contracts', () => {
 		);
 	});
 
-	it('keeps Empty neutral, named by a real heading and independently actionable', () => {
-		render(ResultEmptyProductionFixture);
+	it('keeps Empty neutral, named by a real heading and independently actionable', async () => {
+		await render(ResultEmptyProductionFixture);
 		const defaultEmpty = document.querySelector<HTMLElement>('[data-testid="empty-default"]')!;
 		const customEmpty = document.querySelector<HTMLElement>('[data-testid="empty-custom"]')!;
 		expect(defaultEmpty.querySelector('[data-slot="title"]')?.tagName).toBe('H2');
@@ -60,7 +60,7 @@ describe('ZResult and ZEmpty production browser contracts', () => {
 	});
 
 	it('preserves native attributes, wrapped actions and callback ownership', async () => {
-		render(ResultEmptyProductionFixture);
+		await render(ResultEmptyProductionFixture);
 		const result = document.querySelector<HTMLElement>('[data-testid="result-detailed"]')!;
 		const empty = document.querySelector<HTMLElement>('[data-testid="empty-custom"]')!;
 		expect(result.dataset.nativeResult).toBe('true');

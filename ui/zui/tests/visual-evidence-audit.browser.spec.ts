@@ -7,9 +7,9 @@ import PaginationFixture from './PaginationFixture.svelte';
 import StatisticTimelineProductionFixture from './StatisticTimelineProductionFixture.svelte';
 
 describe('visual evidence audit for mature display contracts', () => {
-	it('ZLink keeps long targets inside their owner geometry', () => {
+	it('ZLink keeps long targets inside their owner geometry', async () => {
 		// @zui-visual ZLink bounded long-target geometry
-		render(LinkProductionFixture);
+		await render(LinkProductionFixture);
 		const owner = document.querySelector<HTMLElement>('[data-testid="link-long-owner"]')!;
 		const long = document.querySelector<HTMLAnchorElement>('[data-testid="link-long"]')!;
 		expect(getComputedStyle(long).overflowWrap).toBe('anywhere');
@@ -18,9 +18,9 @@ describe('visual evidence audit for mature display contracts', () => {
 		);
 	});
 
-	it('ZDescriptionList keeps RTL descriptions within the collection width', () => {
+	it('ZDescriptionList keeps RTL descriptions within the collection width', async () => {
 		// @zui-visual ZDescriptionList responsive description geometry
-		render(DisplayCollectionsProductionFixture);
+		await render(DisplayCollectionsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="display-rtl-descriptions"]')!;
 		const description = root.querySelector<HTMLElement>('dd')!;
 		expect(root.getBoundingClientRect().width).toBeGreaterThan(0);
@@ -30,9 +30,9 @@ describe('visual evidence audit for mature display contracts', () => {
 		);
 	});
 
-	it('ZTimeline keeps alternate items inside the RTL timeline owner', () => {
+	it('ZTimeline keeps alternate items inside the RTL timeline owner', async () => {
 		// @zui-visual ZTimeline alternate item geometry
-		render(StatisticTimelineProductionFixture);
+		await render(StatisticTimelineProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="timeline-alternate"]')!;
 		const item = root.querySelector<HTMLElement>(':scope > li')!;
 		expect(getComputedStyle(item).gridTemplateColumns).not.toBe('none');
@@ -41,9 +41,9 @@ describe('visual evidence audit for mature display contracts', () => {
 		);
 	});
 
-	it('ZStatistic renders a non-zero visual value region', () => {
+	it('ZStatistic renders a non-zero visual value region', async () => {
 		// @zui-visual ZStatistic value geometry
-		render(StatisticTimelineProductionFixture);
+		await render(StatisticTimelineProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="statistic-intl"]')!;
 		const value =
 			root.querySelector<HTMLElement>('[data-slot="value"]') ?? root.querySelector('data')!;
@@ -51,9 +51,9 @@ describe('visual evidence audit for mature display contracts', () => {
 		expect(value.getBoundingClientRect().width).toBeGreaterThan(0);
 	});
 
-	it('ZPagination keeps navigation controls measurable within the nav owner', () => {
+	it('ZPagination keeps navigation controls measurable within the nav owner', async () => {
 		// @zui-visual ZPagination navigation geometry
-		render(PaginationFixture);
+		await render(PaginationFixture);
 		const root = document.querySelector<HTMLElement>('[aria-label="Fixture pagination"]')!;
 		const controls = [...root.querySelectorAll<HTMLButtonElement>('button')];
 		expect(root.getBoundingClientRect().width).toBeGreaterThan(0);

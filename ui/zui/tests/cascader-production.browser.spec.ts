@@ -9,7 +9,7 @@ import { activateFormReset, resetForm } from './form-reset.js';
 describe('ZCascader production collection contract', () => {
 	// @zui-visual ZCascader bounded multi-column popup geometry
 	it('keeps typed paths, Field ownership, auxiliary search and reset synchronized', async () => {
-		render(CascaderProductionFixture, { mode: 'main' });
+		await render(CascaderProductionFixture, { mode: 'main' });
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="cascader-production-form"]'
 		)!;
@@ -52,7 +52,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('does not commit a selectionDisabled leaf', async () => {
-		render(CascaderProductionFixture, { mode: 'main' });
+		await render(CascaderProductionFixture, { mode: 'main' });
 		const root = document.querySelector<HTMLElement>('[data-testid="cascader-production"]')!;
 		const trigger = root.querySelector<HTMLButtonElement>('[aria-haspopup="listbox"]')!;
 		trigger.click();
@@ -76,7 +76,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('deduplicates lazy loads, exposes retry and aborts when the branch disappears', async () => {
-		render(CascaderProductionFixture, { mode: 'lazy' });
+		await render(CascaderProductionFixture, { mode: 'lazy' });
 		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Remote')
 		)!;
@@ -103,7 +103,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('aborts pending lazy work and clears status on form reset', async () => {
-		render(CascaderProductionFixture, { mode: 'lazy' });
+		await render(CascaderProductionFixture, { mode: 'lazy' });
 		const form = document.querySelector<HTMLFormElement>('[data-testid="cascader-lazy-form"]')!;
 		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Remote')
@@ -117,7 +117,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('invalidates pending lazy work when the source node identity changes under the same key', async () => {
-		render(CascaderProductionFixture, { mode: 'lazy' });
+		await render(CascaderProductionFixture, { mode: 'lazy' });
 		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Remote')
 		)!;
@@ -136,7 +136,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('uses logical expand and collapse keys in RTL', async () => {
-		render(CascaderProductionFixture, { direction: 'rtl', mode: 'main' });
+		await render(CascaderProductionFixture, { direction: 'rtl', mode: 'main' });
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="listbox"]')!;
 		trigger.click();
 		await tick();
@@ -152,7 +152,7 @@ describe('ZCascader production collection contract', () => {
 	});
 
 	it('keeps virtual columns bounded and mounts a distant active option before selection', async () => {
-		render(CascaderProductionFixture, { mode: 'virtual' });
+		await render(CascaderProductionFixture, { mode: 'virtual' });
 		const rootColumn = document.querySelector<HTMLElement>('[role="listbox"]')!;
 		rootColumn.focus();
 		rootColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));

@@ -11,7 +11,7 @@ describe('ZCombobox production contract', () => {
 		// @zui-visual ZComboboxInput
 		// @zui-visual ZComboboxContent
 		// @zui-visual ZComboboxItem
-		render(ComboboxFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		await render(ComboboxFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="combobox-content"]')!;
 		await tick();
@@ -36,7 +36,7 @@ describe('ZCombobox production contract', () => {
 		expect(getComputedStyle(content).overflowY).toBe('auto');
 	});
 	it('keeps typed keys, filtering, active descendant selection, readonly and form ownership coherent', async () => {
-		render(ChoiceCollectionFixture);
+		await render(ChoiceCollectionFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="typed-combobox-input"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="choice-collection-form"]')!;
 		input.focus();
@@ -57,7 +57,7 @@ describe('ZCombobox production contract', () => {
 	});
 
 	it('keeps ZComboboxInput, ZComboboxContent and ZComboboxItem ARIA, keyboard and form boundaries real', async () => {
-		render(ComboboxFixture, { defaultOpen: true });
+		await render(ComboboxFixture, { defaultOpen: true });
 		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="combobox-content"]')!;
 		const items = [...content.querySelectorAll<HTMLElement>('[role="option"]')];

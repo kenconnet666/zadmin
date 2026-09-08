@@ -28,7 +28,7 @@ describe('ZTextarea production contract', () => {
 	});
 
 	it('synchronizes native input, IME, external clear, FormData and external form reset', async () => {
-		render(TextareaProductionFixture);
+		await render(TextareaProductionFixture);
 		const textarea = document.querySelector<HTMLTextAreaElement>(
 			'[data-testid="textarea-production-control"]'
 		)!;
@@ -65,7 +65,7 @@ describe('ZTextarea production contract', () => {
 	});
 
 	it('bounds autosize, shares one measurement per document and recovers from hidden mount', async () => {
-		render(TextareaProductionFixture);
+		await render(TextareaProductionFixture);
 		const textarea = document.querySelector<HTMLTextAreaElement>(
 			'[data-testid="textarea-production-control"]'
 		)!;
@@ -124,8 +124,8 @@ describe('ZTextarea production contract', () => {
 		frame.remove();
 	});
 
-	it('projects readonly, disabled and autosize state without replacing the native element', () => {
-		render(TextareaProductionFixture);
+	it('projects readonly, disabled and autosize state without replacing the native element', async () => {
+		await render(TextareaProductionFixture);
 		const readonly = document.querySelector<HTMLTextAreaElement>(
 			'[data-testid="textarea-production-readonly"]'
 		)!;

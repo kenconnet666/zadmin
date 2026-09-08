@@ -33,7 +33,7 @@ function input(input: HTMLInputElement, value: string, isComposing = false): voi
 
 describe('NumberField production contracts', () => {
 	it('preserves the locale draft on focus, steps with precision and resets through FormValueBridge', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const field = fixture('locale-number');
 		const control = spinbutton('locale-number');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="number-production-form"]')!;
@@ -65,7 +65,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('synchronizes an external undefined clear even while editing', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const control = spinbutton('controlled-number');
 		control.focus();
 		await tick();
@@ -85,7 +85,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('steps from a valid live draft before controlled formatting flushes', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const control = spinbutton('controlled-number');
 		control.focus();
 		control.value = '12.75';
@@ -95,7 +95,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('defers IME parsing and supports paired parser and formatter contracts', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const localeControl = spinbutton('locale-number');
 		localeControl.focus();
 		localeControl.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
@@ -120,7 +120,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('retains direct out-of-range input but clamps every step interaction', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const field = fixture('range-number');
 		const control = spinbutton('range-number');
 		control.focus();
@@ -141,8 +141,8 @@ describe('NumberField production contracts', () => {
 		expect(control.checkValidity()).toBe(true);
 	});
 
-	it('keeps readonly values focusable and successful while disabling redundant steppers', () => {
-		render(NumberFieldProductionFixture);
+	it('keeps readonly values focusable and successful while disabling redundant steppers', async () => {
+		await render(NumberFieldProductionFixture);
 		const field = fixture('readonly-number');
 		const control = spinbutton('readonly-number');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="number-production-form"]')!;
@@ -155,8 +155,8 @@ describe('NumberField production contracts', () => {
 		expect(new FormData(form).get('replicas')).toBe('4');
 	});
 
-	it('does not consume navigation keys on readonly inputs', () => {
-		render(NumberFieldProductionFixture);
+	it('does not consume navigation keys on readonly inputs', async () => {
+		await render(NumberFieldProductionFixture);
 		const readonlyControl = spinbutton('readonly-number');
 		const event = new KeyboardEvent('keydown', {
 			bubbles: true,
@@ -168,7 +168,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('rejects a partial draft for required form validation', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const control = spinbutton('required-number');
 		control.focus();
 		input(control, '-');
@@ -179,7 +179,7 @@ describe('NumberField production contracts', () => {
 	});
 
 	it('preserves the last committed value but blocks submission of an optional partial draft', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const control = spinbutton('controlled-number');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="number-production-form"]')!;
 		control.focus();

@@ -18,7 +18,7 @@ function dialog(label: string): HTMLElement {
 describe('ZTimeRangePicker production contracts', () => {
 	it('keeps one owner, partial FormData, external sync, clear and owner-realm reset real', async () => {
 		// @zui-visual ZTimeRangePicker resolved range InputGroup geometry
-		render(TimeRangePickerProductionFixture);
+		await render(TimeRangePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-range-form"]')!;
 		const range = root('time-range');
 		expect(range.querySelectorAll('[data-zui-composite-control]')).toHaveLength(2);
@@ -66,7 +66,7 @@ describe('ZTimeRangePicker production contracts', () => {
 	});
 
 	it('keeps panel edits draft-only, cancel discards and confirm commits the complete range', async () => {
-		render(TimeRangePickerProductionFixture);
+		await render(TimeRangePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-range-form"]')!;
 		trigger('time-range').click();
 		await tick();
@@ -109,7 +109,7 @@ describe('ZTimeRangePicker production contracts', () => {
 	});
 
 	it('keeps range presets draft-only, overnight order explicit and instance direction authoritative', async () => {
-		render(TimeRangePickerProductionFixture);
+		await render(TimeRangePickerProductionFixture);
 		const overnight = root('time-range-overnight');
 		expect(overnight.dataset.overnight).toBe('true');
 		expect(overnight.dir).toBe('ltr');
@@ -139,7 +139,7 @@ describe('ZTimeRangePicker production contracts', () => {
 	});
 
 	it('resynchronizes both fields and keeps the popover open when a controlled owner rejects confirm', async () => {
-		render(TimeRangePickerProductionFixture);
+		await render(TimeRangePickerProductionFixture);
 		trigger('time-range-rejected').click();
 		await tick();
 		const popup = dialog('Choose time range');

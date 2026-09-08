@@ -6,7 +6,7 @@ import ProgressMeterSkeletonFixture from './ProgressMeterSkeletonFixture.svelte'
 
 describe('Progress Meter and Skeleton production contracts', () => {
 	it('keeps native linear and semantic circular Progress on one normalized range contract', async () => {
-		render(ProgressMeterSkeletonFixture);
+		await render(ProgressMeterSkeletonFixture);
 		await tick();
 		const line = document.querySelector<HTMLProgressElement>(
 			'[data-testid="progress-line-production"]'
@@ -30,8 +30,8 @@ describe('Progress Meter and Skeleton production contracts', () => {
 		expect(circle.querySelectorAll('svg circle')).toHaveLength(2);
 	});
 
-	it('preserves native Meter thresholds, formatter and description relationship', () => {
-		render(ProgressMeterSkeletonFixture);
+	it('preserves native Meter thresholds, formatter and description relationship', async () => {
+		await render(ProgressMeterSkeletonFixture);
 		const meter = document.querySelector<HTMLMeterElement>('[data-testid="meter-production"]')!;
 		expect(meter.tagName).toBe('METER');
 		expect(meter.min).toBe(0);
@@ -46,7 +46,7 @@ describe('Progress Meter and Skeleton production contracts', () => {
 	});
 
 	it('renders finite Skeleton lines and disables animation for static or reduced owners', async () => {
-		render(ProgressMeterSkeletonFixture);
+		await render(ProgressMeterSkeletonFixture);
 		await tick();
 		const lines = document.querySelector<HTMLElement>('[data-testid="skeleton-lines-production"]')!;
 		const staticSkeleton = document.querySelector<HTMLElement>(

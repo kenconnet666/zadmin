@@ -10,7 +10,7 @@ function output(): string {
 
 describe('ZNavLink production contract', () => {
 	it('keeps anchor navigation attributes and forwards modified native clicks to the primary once', async () => {
-		render(NavLinkProductionFixture);
+		await render(NavLinkProductionFixture);
 		const anchor = document.querySelector<HTMLAnchorElement>('.consumer-nav-link')!;
 		const row = anchor.closest<HTMLElement>('[data-slot="row"]')!;
 		expect(anchor.tagName).toBe('A');
@@ -33,7 +33,7 @@ describe('ZNavLink production contract', () => {
 	});
 
 	it('keeps navigation and disclosure as sibling controls with stable focus and relations', async () => {
-		render(NavLinkProductionFixture);
+		await render(NavLinkProductionFixture);
 		const anchor = document.querySelector<HTMLAnchorElement>('.consumer-nav-link')!;
 		const disclosure = anchor
 			.closest('[data-slot="row"]')!
@@ -58,7 +58,7 @@ describe('ZNavLink production contract', () => {
 	});
 
 	it('uses one native button as both the primary and disclosure when href is absent', async () => {
-		render(NavLinkProductionFixture);
+		await render(NavLinkProductionFixture);
 		const button = document.querySelector<HTMLButtonElement>('[aria-controls="settings-panel"]')!;
 		expect(button.tagName).toBe('BUTTON');
 		expect(button.getAttribute('aria-expanded')).toBe('false');
@@ -70,7 +70,7 @@ describe('ZNavLink production contract', () => {
 	});
 
 	it('uses rendered RTL direction for disclosure arrow keys', async () => {
-		render(NavLinkProductionFixture);
+		await render(NavLinkProductionFixture);
 		const disclosure = document.querySelector<HTMLButtonElement>('[aria-controls="rtl-panel"]')!;
 		disclosure.dispatchEvent(
 			new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'ArrowLeft' })
@@ -84,8 +84,8 @@ describe('ZNavLink production contract', () => {
 		expect(disclosure.getAttribute('aria-expanded')).toBe('false');
 	});
 
-	it('retains compact accessible names and a visible fallback while hiding text beside a start icon', () => {
-		render(NavLinkProductionFixture);
+	it('retains compact accessible names and a visible fallback while hiding text beside a start icon', async () => {
+		await render(NavLinkProductionFixture);
 		const fallback = document.querySelector<HTMLElement>('[data-testid="compact-fallback"]')!;
 		const icon = document.querySelector<HTMLElement>('[data-testid="compact-icon"]')!;
 		expect(fallback.getAttribute('aria-label')).toBe('Analytics');
@@ -95,8 +95,8 @@ describe('ZNavLink production contract', () => {
 		expect(icon.querySelector('[data-slot="label"]')).toBeNull();
 	});
 
-	it('exposes all five resolved sizes with increasing primary geometry', () => {
-		render(NavLinkProductionFixture);
+	it('exposes all five resolved sizes with increasing primary geometry', async () => {
+		await render(NavLinkProductionFixture);
 		const heights = [
 			['xsmall', '11px'],
 			['small', '11px'],
@@ -130,8 +130,8 @@ describe('ZNavLink production contract', () => {
 		);
 	});
 
-	it('keeps disabled link and disclosure independently exposed but non-actionable', () => {
-		render(NavLinkProductionFixture);
+	it('keeps disabled link and disclosure independently exposed but non-actionable', async () => {
+		await render(NavLinkProductionFixture);
 		const primary = document.querySelector<HTMLElement>('[data-testid="disabled-link"]')!;
 		const disclosure = primary
 			.closest('[data-slot="row"]')!

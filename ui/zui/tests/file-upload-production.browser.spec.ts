@@ -16,7 +16,7 @@ function selectFiles(input: HTMLInputElement | null, files: readonly File[]): vo
 
 describe('ZFileUpload production queue', () => {
 	it('validates type, size, duplicate and count while preserving exact File FormData', async () => {
-		render(FileUploadProductionFixture);
+		await render(FileUploadProductionFixture);
 		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="file-upload-production-form"]'
@@ -62,7 +62,7 @@ describe('ZFileUpload production queue', () => {
 			});
 		});
 		const file = new File(['{}'], 'manual.json', { type: 'application/json' });
-		render(FileUploadProductionFixture, {
+		await render(FileUploadProductionFixture, {
 			defaultFiles: [createFileUploadItem('manual', file)],
 			transport
 		});
@@ -99,7 +99,7 @@ describe('ZFileUpload production queue', () => {
 			if (attempt === 1) throw new Error('private transport detail');
 		});
 		const file = new File(['{}'], 'retry.json', { type: 'application/json' });
-		render(FileUploadProductionFixture, {
+		await render(FileUploadProductionFixture, {
 			defaultFiles: [createFileUploadItem('retry', file)],
 			transport
 		});
@@ -129,7 +129,7 @@ describe('ZFileUpload production queue', () => {
 			'same-id',
 			new File(['replacement'], 'replacement.json', { type: 'application/json' })
 		);
-		render(FileUploadProductionFixture, {
+		await render(FileUploadProductionFixture, {
 			defaultFiles: [createFileUploadItem('same-id', oldFile)],
 			replacementFiles: [replacement],
 			transport
@@ -150,7 +150,7 @@ describe('ZFileUpload production queue', () => {
 	it('keeps readonly focus and FormData while blocking all queue writes', async () => {
 		const file = new File(['{}'], 'readonly.json', { type: 'application/json' });
 		const transport = vi.fn();
-		render(FileUploadProductionFixture, {
+		await render(FileUploadProductionFixture, {
 			defaultFiles: [createFileUploadItem('readonly', file)],
 			readonly: true,
 			transport

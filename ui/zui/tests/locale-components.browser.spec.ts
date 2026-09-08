@@ -13,7 +13,7 @@ function byTestId<TElement extends Element>(id: string): TElement {
 
 describe('component locale defaults', () => {
 	it('updates Provider defaults dynamically while preserving explicit props', async () => {
-		render(LocaleComponentDefaultsFixture);
+		await render(LocaleComponentDefaultsFixture);
 
 		expect(byTestId('select-default').textContent?.trim()).toBe('Select an option');
 		expect(byTestId('multi-select-default').textContent?.trim()).toBe('Select options');

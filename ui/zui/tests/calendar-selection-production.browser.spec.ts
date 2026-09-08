@@ -15,8 +15,8 @@ function dateButton(calendar: HTMLElement, month: string, dayValue: number): HTM
 }
 
 describe('ZCalendar multiple, range and visible-month contracts', () => {
-	it('keeps decorative highlighting separate from the actual accessible selection', () => {
-		render(CalendarSelectionProductionFixture);
+	it('keeps decorative highlighting separate from the actual accessible selection', async () => {
+		await render(CalendarSelectionProductionFixture);
 		const calendar = root('calendar-highlight');
 		expect(
 			calendar.querySelector('[role="grid"]')?.getAttribute('aria-multiselectable')
@@ -26,7 +26,7 @@ describe('ZCalendar multiple, range and visible-month contracts', () => {
 		expect(calendar.querySelectorAll('button[data-selected="true"]')).toHaveLength(1);
 	});
 	it('keeps one multiple owner, input order, repeated FormData and required empty feedback', async () => {
-		render(CalendarSelectionProductionFixture);
+		await render(CalendarSelectionProductionFixture);
 		const calendar = root('calendar-multiple');
 		const form = root('calendar-selection-form') as HTMLFormElement;
 		expect(new FormData(form).getAll('days')).toEqual(['2026-09-10', '2026-09-05']);
@@ -42,7 +42,7 @@ describe('ZCalendar multiple, range and visible-month contracts', () => {
 	});
 
 	it('shares focus across three months, avoids duplicate outside controls and pages the whole window', async () => {
-		render(CalendarSelectionProductionFixture);
+		await render(CalendarSelectionProductionFixture);
 		const calendar = root('calendar-multiple');
 		expect(calendar.querySelectorAll('[data-slot="grid"]')).toHaveLength(3);
 		expect(calendar.querySelectorAll('[data-slot="grid"] thead th').length).toBe(24);
@@ -75,7 +75,7 @@ describe('ZCalendar multiple, range and visible-month contracts', () => {
 	});
 
 	it('previews and rejects non-contiguous ranges while the explicit bridge policy accepts them', async () => {
-		render(CalendarSelectionProductionFixture);
+		await render(CalendarSelectionProductionFixture);
 		const strict = root('calendar-range');
 		const form = root('calendar-selection-form') as HTMLFormElement;
 		dateButton(strict, '2026-09', 14).click();

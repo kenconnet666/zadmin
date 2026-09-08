@@ -6,7 +6,7 @@ import TourFixture from './TourFixture.svelte';
 
 describe('ZTour production overlay contract', () => {
 	it('ZTour resolves targets, navigates steps and restores focus after close', async () => {
-		render(TourFixture);
+		await render(TourFixture);
 		const start = document.querySelector<HTMLButtonElement>('#tour-start')!;
 		start.focus();
 		start.click();
@@ -41,7 +41,7 @@ describe('ZTour production overlay contract', () => {
 	});
 
 	it('ZTour keeps missing-target policy, non-modal outside behavior and Escape contracts', async () => {
-		render(TourFixture);
+		await render(TourFixture);
 		const missingStart = document.querySelector<HTMLButtonElement>('#tour-missing-start')!;
 		missingStart.click();
 		await tick();
@@ -65,7 +65,7 @@ describe('ZTour production overlay contract', () => {
 
 	// @zui-visual ZTour placement and dialog geometry
 	it('keeps the first tour dialog visible for its resolved target', async () => {
-		render(TourFixture);
+		await render(TourFixture);
 		const start = document.querySelector<HTMLButtonElement>('#tour-start')!;
 		start.click();
 		await tick();

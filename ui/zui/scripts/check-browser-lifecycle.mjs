@@ -3,6 +3,12 @@ import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import ts from 'typescript';
+import {
+	auditBrowserRenderProgram,
+	auditBrowserRenderPromises,
+	createRenderAuditFixtureProgram,
+	renderPromiseViolations
+} from './browser-render-promise-audit.mjs';
 
 function auditLifecycleSource(source) {
 	const ast = ts.createSourceFile('browser.spec.ts', source, ts.ScriptTarget.Latest, true);
@@ -75,6 +81,65 @@ if (process.argv.includes('--self-test')) {
 		auditLifecycleSource("// mount(Component)\nconst example = 'unmount(instance)';"),
 		{ directImport: false, untrackedCall: false }
 	);
+	const auditFixture = (source) => {
+		const fixture = createRenderAuditFixtureProgram(source);
+		if (!fixture.sourceFile) throw new Error('Render audit fixture did not load.');
+		return renderPromiseViolations(
+			auditBrowserRenderProgram(fixture.program, [fixture.sourceFile])
+		);
+	};
+	assert.equal(
+		auditFixture("import { render as paint } from 'vitest-browser-svelte'; paint(Component);")
+			.length,
+		1
+	);
+	assert.equal(
+		auditFixture(
+			"import * as BrowserSvelte from 'vitest-browser-svelte'; BrowserSvelte.render(Component);"
+		).length,
+		1
+	);
+	assert.equal(
+		auditFixture(
+			"import * as BrowserSvelte from 'vitest-browser-svelte'; BrowserSvelte['render'](Component);"
+		).length,
+		1
+	);
+	assert.equal(
+		auditFixture(
+			"import { render } from 'vitest-browser-svelte'; function shadow(render: () => void) { render(); }"
+		).length,
+		0
+	);
+	assert.equal(auditFixture('const render = () => undefined; render();').length, 0);
+	assert.equal(
+		auditFixture(
+			"import { render } from 'vitest-browser-svelte/pure'; async function test() { await (render(Component)); return (render(Component)); }"
+		).length,
+		0
+	);
+	assert.equal(
+		auditFixture(
+			"import { render } from 'vitest-browser-svelte'; Promise.resolve().then(() => render(Component));"
+		).length,
+		0
+	);
+	assert.equal(
+		auditFixture(
+			"import { render } from 'vitest-browser-svelte'; const mountFixture = () => render(Component); async function test() { await mountFixture(); }"
+		).length,
+		0
+	);
+	assert.equal(
+		auditFixture("import { render } from 'vitest-browser-svelte'; void render(Component);").length,
+		1
+	);
+	assert.equal(
+		auditFixture(
+			"import { render } from 'vitest-browser-svelte'; const pending = render(Component);"
+		).length,
+		1
+	);
 	console.log('Browser lifecycle audit self-test passed.');
 	process.exit(0);
 }
@@ -96,6 +161,13 @@ for (const entry of readdirSync(testsRoot, { withFileTypes: true })) {
 			`${entry.name} uses imperative mount/unmount without the tracked lifecycle adapter.`
 		);
 	}
+}
+
+for (const violation of renderPromiseViolations(auditBrowserRenderPromises(packageRoot))) {
+	failures.push(
+		`${relative(packageRoot, violation.fileName).replaceAll('\\', '/')}:${violation.line}:${violation.column} ` +
+			`must transfer vitest-browser-svelte render Promise ownership with await, return, or Promise.then; found ${violation.ownership}.`
+	);
 }
 
 const setupPath = join(testsRoot, 'browser.setup.ts');

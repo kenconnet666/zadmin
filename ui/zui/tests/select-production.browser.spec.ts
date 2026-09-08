@@ -7,7 +7,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZSelect production contract', () => {
 	it('supports default, controlled updates, Field/Form reset and vetoed selection', async () => {
-		render(SelectFixture, { defaultOpen: true, prevent: true });
+		await render(SelectFixture, { defaultOpen: true, prevent: true });
 		const form = document.querySelector<HTMLFormElement>('[data-testid="select-form"]')!;
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
 		await tick();
@@ -27,7 +27,7 @@ describe('ZSelect production contract', () => {
 	});
 
 	it('keeps ZSelectTrigger, ZSelectContent and ZSelectItem ARIA, keyboard and Field boundaries real', async () => {
-		render(SelectFixture, { defaultOpen: true });
+		await render(SelectFixture, { defaultOpen: true });
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
 		const items = [...content.querySelectorAll<HTMLElement>('[role="option"]')];
@@ -59,7 +59,7 @@ describe('ZSelect production contract', () => {
 		// @zui-visual ZSelectTrigger
 		// @zui-visual ZSelectContent
 		// @zui-visual ZSelectItem
-		render(SelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		await render(SelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
 		const item = document.querySelector<HTMLElement>('[data-testid="select-c"]')!;

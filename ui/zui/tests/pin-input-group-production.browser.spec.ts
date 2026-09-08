@@ -9,7 +9,7 @@ import { activateFormReset } from './form-reset.js';
 
 describe('ZPinInput and ZInputGroup production browser contracts', () => {
 	it('projects Field ownership to exactly one grouped control and keeps actions independent', async () => {
-		render(PinInputGroupProductionFixture);
+		await render(PinInputGroupProductionFixture);
 		const group = document.querySelector<HTMLElement>('[data-testid="input-group-owner"]')!;
 		const control = document.querySelector<HTMLInputElement>(
 			'[data-testid="input-group-control"]'
@@ -44,7 +44,7 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 	});
 
 	it('normalizes external values, supports null clear and keeps one external-form value bridge', async () => {
-		render(PinInputGroupProductionFixture);
+		await render(PinInputGroupProductionFixture);
 		await Promise.resolve();
 		const pin = document.querySelector<HTMLElement>('[data-testid="pin-production"]')!;
 		const inputs = [...pin.querySelectorAll<HTMLInputElement>('input')];
@@ -79,8 +79,8 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 		).toBe('2468');
 	});
 
-	it('commits one Unicode grapheme after IME composition instead of processing interim input', () => {
-		render(PinInputGroupProductionFixture);
+	it('commits one Unicode grapheme after IME composition instead of processing interim input', async () => {
+		await render(PinInputGroupProductionFixture);
 		const pin = document.querySelector<HTMLElement>('[data-testid="pin-unicode"]')!;
 		const input = pin.querySelectorAll<HTMLInputElement>('input')[2]!;
 		input.focus();
@@ -112,8 +112,8 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 		);
 	});
 
-	it('keeps RTL and long affixes within the narrow owner width', () => {
-		render(PinInputGroupProductionFixture);
+	it('keeps RTL and long affixes within the narrow owner width', async () => {
+		await render(PinInputGroupProductionFixture);
 		const group = document.querySelector<HTMLElement>('[data-testid="input-group-rtl"]')!;
 		expect(group.closest('[dir="rtl"]')).not.toBeNull();
 		expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
@@ -123,7 +123,7 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 	});
 
 	it('projects disabled and readonly state, preserves readonly FormData and keeps actions explicit', async () => {
-		render(PinInputGroupProductionFixture);
+		await render(PinInputGroupProductionFixture);
 		const stateGroup = document.querySelector<HTMLElement>('[data-testid="input-group-state"]')!;
 		const stateControl = document.querySelector<HTMLInputElement>(
 			'[data-testid="input-group-state-control"]'
@@ -165,8 +165,8 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 		expect(document.activeElement).not.toBe(disabledControl);
 	});
 
-	it('keeps explicit Group invalid and Field invalid=false override distinct', () => {
-		render(PinInputGroupProductionFixture);
+	it('keeps explicit Group invalid and Field invalid=false override distinct', async () => {
+		await render(PinInputGroupProductionFixture);
 		const explicitGroup = document.querySelector<HTMLElement>(
 			'[data-testid="input-group-explicit-invalid"]'
 		)!;

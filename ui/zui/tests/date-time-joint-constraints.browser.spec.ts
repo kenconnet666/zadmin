@@ -10,7 +10,7 @@ function panel(testId: string): HTMLElement {
 
 describe('date-time joint panel constraints', () => {
 	it('keeps an empty same-day boundary reachable at hidden minute, second and millisecond precision', async () => {
-		render(DateTimeJointConstraintsFixture);
+		await render(DateTimeJointConstraintsFixture);
 		const target = panel('joint-boundary-panel');
 		const hour = target.querySelector<HTMLElement>('[role="listbox"] [aria-selected="true"]')!;
 		expect(hour.textContent?.trim()).toBe('10');
@@ -22,7 +22,7 @@ describe('date-time joint panel constraints', () => {
 	});
 
 	it('keeps readonly time columns focusable and navigable while blocking every write action', async () => {
-		render(DateTimeJointConstraintsFixture);
+		await render(DateTimeJointConstraintsFixture);
 		const target = panel('joint-readonly-panel');
 		const hourColumn = target.querySelector<HTMLElement>('[role="listbox"]')!;
 		expect(hourColumn.tabIndex).toBe(0);
@@ -46,7 +46,7 @@ describe('date-time joint panel constraints', () => {
 	});
 
 	it('evaluates a controlled preset once and returns to the unchanged parent value', async () => {
-		render(DateTimeJointConstraintsFixture);
+		await render(DateTimeJointConstraintsFixture);
 		const target = panel('joint-controlled-panel');
 		const preset = [...target.querySelectorAll<HTMLButtonElement>('button')].find(
 			(button) => button.textContent?.trim() === 'Rejected preset'

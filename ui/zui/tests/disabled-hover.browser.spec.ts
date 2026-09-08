@@ -12,7 +12,7 @@ async function hover(testId: string): Promise<void> {
 }
 
 it('keeps disabled and aria-disabled controls visually stable while enabled hover remains active', async () => {
-	render(DisabledHoverFixture);
+	await render(DisabledHoverFixture);
 
 	const enabledButtonBefore = style('button-enabled').backgroundColor;
 	await hover('button-enabled');

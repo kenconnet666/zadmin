@@ -23,7 +23,7 @@ function element<T extends HTMLElement>(testId: string): T {
 
 describe('ZPasswordInput production contract', () => {
 	it('keeps one native value owner, pointer focus/caret, FormData and reset stable while visibility changes', async () => {
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const form = element<HTMLFormElement>('password-form');
 		const input = element<HTMLInputElement>('password-main');
@@ -74,7 +74,7 @@ describe('ZPasswordInput production contract', () => {
 
 	it('inherits readonly and disabled Field state, keeps readonly reveal available and exposes five sizes', async () => {
 		// @zui-visual ZPasswordInput Field state and five-size geometry
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const readonly = element<HTMLInputElement>('password-readonly');
 		const readonlyRoot = readonly.parentElement!;
@@ -118,7 +118,7 @@ describe('ZPasswordInput production contract', () => {
 	});
 
 	it('acts as one grouped control with Group size, state, focus chrome and disabled opacity ownership', async () => {
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const group = element('password-group-readonly');
 		const input = element<HTMLInputElement>('password-group-readonly-input');
@@ -156,7 +156,7 @@ describe('ZPasswordInput production contract', () => {
 
 describe('ZNativeSelect production contract', () => {
 	it('keeps native options, optgroups, Field semantics, events, FormData and reset synchronized', async () => {
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const form = element<HTMLFormElement>('native-select-form');
 		const select = element<HTMLSelectElement>('native-select-single');
@@ -191,7 +191,7 @@ describe('ZNativeSelect production contract', () => {
 	});
 
 	it('uses native multiple string arrays, repeated FormData, row size and frozen change snapshots', async () => {
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const form = element<HTMLFormElement>('native-select-multiple-form');
 		const select = element<HTMLSelectElement>('native-select-multiple');
@@ -216,7 +216,7 @@ describe('ZNativeSelect production contract', () => {
 	});
 
 	it('preserves readonly FormData, disabled exclusion and an undefined children-source native default', async () => {
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		const readonly = element<HTMLSelectElement>('native-select-readonly');
 		const readonlyForm = element<HTMLFormElement>('native-select-readonly-form');
@@ -246,7 +246,7 @@ describe('ZNativeSelect production contract', () => {
 
 	it('shares the five input chrome sizes while keeping visual size separate from native rows', async () => {
 		// @zui-visual ZNativeSelect shared input chrome and five-size geometry
-		render(InputPrimitivesFixture);
+		await render(InputPrimitivesFixture);
 		await tick();
 		for (const [size, height] of [
 			['xsmall', 24],

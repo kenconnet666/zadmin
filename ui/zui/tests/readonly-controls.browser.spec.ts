@@ -7,7 +7,7 @@ import { activateFormReset } from './form-reset.js';
 
 describe('readonly native choice and range controls', () => {
 	it('keeps controls focusable and successful while suppressing user mutations and callbacks', async () => {
-		render(ReadonlyControlsFixture);
+		await render(ReadonlyControlsFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="readonly-controls-form"]')!;
 		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="readonly-checkbox"]')!;
 		const slider = document.querySelector<HTMLInputElement>('[data-testid="readonly-slider"]')!;
@@ -101,7 +101,7 @@ describe('readonly native choice and range controls', () => {
 	});
 
 	it('accepts owner updates and reset without synthesizing user callbacks', async () => {
-		render(ReadonlyControlsFixture);
+		await render(ReadonlyControlsFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="readonly-controls-form"]')!;
 		const values = document.querySelector<HTMLOutputElement>(
 			'[data-testid="readonly-control-values"]'
@@ -132,7 +132,7 @@ describe('readonly native choice and range controls', () => {
 	});
 
 	it('does not let explicit false bypass inherited Field readonly safety boundaries', async () => {
-		render(ReadonlyControlsFixture);
+		await render(ReadonlyControlsFixture);
 		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="boundary-checkbox"]')!;
 		const slider = document.querySelector<HTMLInputElement>('[data-testid="boundary-slider"]')!;
 		const radioGroup = document.querySelector<HTMLElement>('[data-testid="boundary-radio-group"]')!;

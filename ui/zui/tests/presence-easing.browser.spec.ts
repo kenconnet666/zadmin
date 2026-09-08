@@ -9,7 +9,7 @@ function element(testId: string): HTMLElement {
 }
 
 it('uses Theme easing.enter for open Presence surfaces and forwards it to every overlay surface', async () => {
-	render(PresenceEasingFixture);
+	await render(PresenceEasingFixture);
 	await tick();
 
 	for (const testId of [
@@ -27,7 +27,7 @@ it('uses Theme easing.enter for open Presence surfaces and forwards it to every 
 });
 
 it('uses Theme easing.exit while Dialog Presence remains mounted for close', async () => {
-	render(PresenceEasingFixture);
+	await render(PresenceEasingFixture);
 	await tick();
 
 	element('presence-dialog-close').click();

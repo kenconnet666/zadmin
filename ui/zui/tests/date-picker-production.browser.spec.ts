@@ -8,7 +8,7 @@ import { resetForm } from './form-reset.js';
 
 describe('date picker production contracts', () => {
 	it('keeps ZDatePicker trigger ARIA, dialog keyboard dismissal, Field owner and FormData real', async () => {
-		render(DateFixture);
+		await render(DateFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]')!;
 		const trigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
@@ -48,7 +48,7 @@ describe('date picker production contracts', () => {
 	it('keeps ZDateRangePicker ordered values, partial FormData and reset owner realm real', async () => {
 		// @zui-visual ZDatePicker resolved input-group size geometry
 		// @zui-visual ZDateRangePicker resolved input-group size geometry
-		render(DateProductionFixture);
+		await render(DateProductionFixture);
 		const dateGroup = document.querySelector<HTMLElement>(
 			'[data-testid="production-date-picker"] [role="group"][data-size]'
 		)!;

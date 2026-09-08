@@ -15,7 +15,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		// @zui-visual ZDialogTitle
 		// @zui-visual ZDialogDescription
 		// @zui-visual ZDialogClose
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
 		)!;
@@ -96,7 +96,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZDialog and ZDialogTrigger/ZDialogOverlay/ZDialogContent dismiss and restore focus as a family', async () => {
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
 		)!;
@@ -137,7 +137,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		// @zui-visual ZAlertDialogDescription
 		// @zui-visual ZAlertDialogCancel
 		// @zui-visual ZAlertDialogAction
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-production-trigger"]'
 		)!;
@@ -229,7 +229,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZAlertDialogAction rejection keeps ZAlertDialogContent open and restores ZAlertDialogAction focus', async () => {
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="alert-production-trigger"]')?.click();
 		await tick();
 		const action = document.querySelector<HTMLButtonElement>(
@@ -248,7 +248,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZAlertDialog, ZAlertDialogOverlay and ZAlertDialogContent require ZAlertDialogCancel or ZAlertDialogAction for dismissal', async () => {
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-production-trigger"]'
 		)!;
@@ -280,7 +280,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		// @zui-visual ZPopover
 		// @zui-visual ZPopoverTrigger
 		// @zui-visual ZPopoverContent
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="popover-production-trigger"]'
 		)!;
@@ -310,7 +310,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZPopoverTrigger and ZPopoverContent preserve ARIA identity and focus lifecycle', async () => {
-		render(OverlayProductionFixture);
+		await render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="popover-production-trigger"]'
 		)!;

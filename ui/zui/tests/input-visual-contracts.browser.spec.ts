@@ -6,7 +6,7 @@ import InputVisualContractsFixture from './InputVisualContractsFixture.svelte';
 describe('input component visual contracts', () => {
 	// @zui-visual ZRadioGroup orientation and selection geometry
 	it('keeps RadioGroup orientation and item geometry observable', async () => {
-		render(InputVisualContractsFixture);
+		await render(InputVisualContractsFixture);
 		const group = document.querySelector<HTMLElement>('[data-testid="radio-horizontal"]')!;
 		expect(group.dataset.orientation).toBe('horizontal');
 		expect(group.getAttribute('aria-orientation')).toBe('horizontal');
@@ -21,7 +21,7 @@ describe('input component visual contracts', () => {
 
 	// @zui-visual ZCalendar size and invalid state geometry
 	it('keeps Calendar size and invalid state in the rendered geometry', async () => {
-		render(InputVisualContractsFixture);
+		await render(InputVisualContractsFixture);
 		const small = document.querySelector<HTMLElement>('[data-testid="calendar-small"]')!;
 		const large = document.querySelector<HTMLElement>('[data-testid="calendar-large"]')!;
 		expect(small.dataset.size).toBe('small');
@@ -34,7 +34,7 @@ describe('input component visual contracts', () => {
 
 	// @zui-visual ZTagsInput size and invalid state geometry
 	it('keeps TagsInput size and invalid state geometry distinct', async () => {
-		render(InputVisualContractsFixture);
+		await render(InputVisualContractsFixture);
 		const small = document.querySelector<HTMLElement>('[data-testid="tags-small"]')!;
 		const large = document.querySelector<HTMLElement>('[data-testid="tags-large"]')!;
 		expect(small.dataset.size).toBe('small');
@@ -47,7 +47,7 @@ describe('input component visual contracts', () => {
 
 	// @zui-visual ZFileUpload invalid state geometry
 	it('exposes FileUpload invalid state on a measurable root', async () => {
-		render(InputVisualContractsFixture);
+		await render(InputVisualContractsFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="file-upload-invalid"]')!;
 		const valid = document.querySelector<HTMLElement>('[data-testid="file-upload-valid"]')!;
 		const dropzone = root.querySelector<HTMLButtonElement>('[data-slot="dropzone"]')!;
@@ -62,7 +62,7 @@ describe('input component visual contracts', () => {
 
 	// @zui-visual ZTransfer two-pane layout geometry
 	it('exposes Transfer invalid state and pane geometry', async () => {
-		render(InputVisualContractsFixture);
+		await render(InputVisualContractsFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-invalid"]')!;
 		const panels = [...root.querySelectorAll<HTMLElement>('[data-slot="panel"]')];
 		expect(root.dataset.invalid).toBe('true');

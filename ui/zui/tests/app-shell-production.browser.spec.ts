@@ -14,9 +14,9 @@ afterEach(async () => {
 });
 
 describe('ZAppShell production contract', () => {
-	it('keeps native regions in deterministic grid offsets and gives main the bounded scroll owner', () => {
+	it('keeps native regions in deterministic grid offsets and gives main the bounded scroll owner', async () => {
 		// @zui-visual ZAppShell native region geometry and bounded main scrolling
-		render(AppShellFixture);
+		await render(AppShellFixture);
 		const shell = document.querySelector<HTMLElement>('[data-testid="app-shell-default"]')!;
 		const header = shell.querySelector<HTMLElement>('[data-region="header"]')!;
 		const navbar = shell.querySelector<HTMLElement>('[data-region="navbar"]')!;
@@ -52,7 +52,7 @@ describe('ZAppShell production contract', () => {
 
 	it('supports alternative regions, responsive collapsed base state, root scrolling and RTL without DOM reordering', async () => {
 		await page.viewport(390, 844);
-		render(AppShellFixture);
+		await render(AppShellFixture);
 		const alternative = document.querySelector<HTMLElement>(
 			'[data-testid="app-shell-alternative"]'
 		)!;
@@ -88,8 +88,8 @@ describe('ZAppShell production contract', () => {
 		]);
 	});
 
-	it('consumes dedicated AppShell purpose tokens instead of generic control or menu dimensions', () => {
-		render(AppShellFixture);
+	it('consumes dedicated AppShell purpose tokens instead of generic control or menu dimensions', async () => {
+		await render(AppShellFixture);
 		const shell = document.querySelector<HTMLElement>('[data-testid="app-shell-theme-defaults"]')!;
 		const header = shell.querySelector<HTMLElement>('[data-region="header"]')!;
 		const navbar = shell.querySelector<HTMLElement>('[data-region="navbar"]')!;

@@ -6,7 +6,7 @@ import FieldAuditFixture from './FieldAuditFixture.svelte';
 const element = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
 it('focuses the compound owner from label text without intercepting nested links', async () => {
-	render(FieldAuditFixture);
+	await render(FieldAuditFixture);
 	const trigger = element('field-audit-trigger');
 	element('field-audit-label-text').click();
 	await tick();
@@ -29,7 +29,7 @@ it('focuses the compound owner from label text without intercepting nested links
 });
 
 it('reserves a theme-relative feedback line without moving the following action', async () => {
-	render(FieldAuditFixture);
+	await render(FieldAuditFixture);
 	const feedback =
 		element('field-audit-reserved').querySelector<HTMLElement>('[data-slot="messages"]')!;
 	const action = element('field-audit-toggle-reserved');
@@ -54,7 +54,7 @@ it('reserves a theme-relative feedback line without moving the following action'
 });
 
 it('ignores blank messages and updates described-by targets with compact, wrapping feedback', async () => {
-	render(FieldAuditFixture);
+	await render(FieldAuditFixture);
 	const field = element('field-audit-messages');
 	const input = element('field-audit-input');
 	expect(field.hasAttribute('data-invalid')).toBe(false);

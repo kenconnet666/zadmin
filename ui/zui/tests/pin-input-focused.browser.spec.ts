@@ -18,7 +18,7 @@ function dispatchPaste(target: HTMLInputElement, text: string): void {
 }
 
 it('keeps readonly immutable while preserving roving navigation', async () => {
-	render(PinInputFocusedFixture);
+	await render(PinInputFocusedFixture);
 	const readonlySlots = slots('pin-focused-readonly');
 	readonlySlots[1]?.focus();
 	for (const key of ['Backspace', 'Delete']) {
@@ -34,7 +34,7 @@ it('keeps readonly immutable while preserving roving navigation', async () => {
 });
 
 it('clears a slot from a native input event and accepts OTP autofill/paste', async () => {
-	render(PinInputFocusedFixture);
+	await render(PinInputFocusedFixture);
 	const editableSlots = slots('pin-focused-editable');
 	const editable = editableSlots[1]!;
 	editable.value = '';
@@ -53,7 +53,7 @@ it('clears a slot from a native input event and accepts OTP autofill/paste', asy
 });
 
 it('keeps the single bridge value and focus safe when length shrinks', async () => {
-	render(PinInputFocusedFixture);
+	await render(PinInputFocusedFixture);
 	const dynamic = document.querySelector<HTMLElement>('[data-testid="pin-focused-dynamic"]')!;
 	const form = document.querySelector<HTMLFormElement>('[data-testid="pin-focused-form"]')!;
 	dynamic.querySelectorAll<HTMLInputElement>('[data-slot="input"]')[5]?.focus();

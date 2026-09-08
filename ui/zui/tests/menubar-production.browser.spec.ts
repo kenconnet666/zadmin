@@ -12,7 +12,7 @@ function trigger(name: string): HTMLButtonElement {
 
 describe('ZMenubar production contract', () => {
 	it('keeps one root Tab stop and opens first or last Menu item from native trigger keys', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="menubar-root"]')!;
 		const file = trigger('file');
@@ -35,7 +35,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('uses root LTR and RTL navigation while keeping Home and End in DOM order', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const file = trigger('file');
 		const edit = trigger('edit');
@@ -58,7 +58,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('switches the single open root from keyboard and pointer without restoring the old trigger', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const file = trigger('file');
 		const edit = trigger('edit');
@@ -84,7 +84,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('closes the menu and leaves the whole menubar on Tab in either direction', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const file = trigger('file');
 		const before = document.querySelector<HTMLButtonElement>('[data-testid="menubar-before"]')!;
@@ -103,7 +103,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('keeps nested submenu arrows inside ZMenu and restores its parent item', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const view = trigger('view');
 		view.focus();
@@ -120,7 +120,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('reuses Menu action, checkbox and radio ownership without a second selection engine', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		const file = trigger('file');
 		file.focus();
@@ -172,7 +172,7 @@ describe('ZMenubar production contract', () => {
 	});
 
 	it('projects all five sizes through the real root triggers', async () => {
-		render(MenubarFixture);
+		await render(MenubarFixture);
 		await tick();
 		for (const [size, height] of [
 			['xsmall', 24],

@@ -7,7 +7,7 @@ import CardProductionFixture from './CardProductionFixture.svelte';
 describe('ZCard production contract', () => {
 	it('keeps semantic roots, anatomy, actions and loading ownership synchronized', async () => {
 		// @zui-visual ZCard variant and anatomy geometry
-		render(CardProductionFixture);
+		await render(CardProductionFixture);
 		const neutral = document.querySelector<HTMLElement>('[data-testid="card-production-default"]')!;
 		const article = document.querySelector<HTMLElement>('[data-testid="card-production-article"]')!;
 

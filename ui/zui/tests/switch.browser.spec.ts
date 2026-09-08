@@ -12,7 +12,7 @@ function control(testId: string): HTMLInputElement {
 
 describe('ZSwitch production contract', () => {
 	it('keeps native FormData, required validation and reset synchronized', async () => {
-		render(SwitchProductionFixture);
+		await render(SwitchProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="switch-production-form"]')!;
 		const editable = control('switch-production-control');
 		const output = document.querySelector<HTMLOutputElement>(
@@ -41,7 +41,7 @@ describe('ZSwitch production contract', () => {
 	});
 
 	it('blocks busy, readonly and cancelled changes without dropping their submitted values', async () => {
-		render(SwitchProductionFixture);
+		await render(SwitchProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="switch-production-form"]')!;
 		const loading = control('switch-production-loading');
 		const readonly = control('switch-production-readonly');
@@ -77,7 +77,7 @@ describe('ZSwitch production contract', () => {
 	});
 
 	it('tracks a DOM-external native form owner through FormData and reset', async () => {
-		render(SwitchProductionFixture);
+		await render(SwitchProductionFixture);
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="switch-production-external-form"]'
 		)!;
@@ -102,7 +102,7 @@ describe('ZSwitch production contract', () => {
 	});
 
 	it('distinguishes external synchronization from native Space changes', async () => {
-		render(SwitchProductionFixture);
+		await render(SwitchProductionFixture);
 		const editable = control('switch-production-control');
 		const external = document.querySelector<HTMLButtonElement>(
 			'[data-testid="switch-production-external"]'
@@ -122,8 +122,8 @@ describe('ZSwitch production contract', () => {
 		expect(output.textContent).toBe('true:1');
 	});
 
-	it('projects RTL, compact density and reduced motion onto the visual root', () => {
-		render(SwitchProductionFixture);
+	it('projects RTL, compact density and reduced motion onto the visual root', async () => {
+		await render(SwitchProductionFixture);
 		const preferences = control('switch-production-preferences');
 		const root = preferences.closest<HTMLElement>('[data-slot="root"]')!;
 

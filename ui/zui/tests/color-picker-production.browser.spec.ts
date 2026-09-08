@@ -9,7 +9,7 @@ import { resetForm } from './form-reset.js';
 describe('ZColorPicker production contract', () => {
 	// @zui-visual ZColorPicker bounded fixed-panel geometry
 	it('coordinates Field, hex drafts, presets, clear, FormData and reset', async () => {
-		render(ColorPickerProductionFixture);
+		await render(ColorPickerProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="color-production"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="color-production-form"]')!;
 		const trigger = root.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]')!;
@@ -60,7 +60,7 @@ describe('ZColorPicker production contract', () => {
 	});
 
 	it('keeps allowAlpha variants and invalid drafts out of the committed value', async () => {
-		render(ColorPickerAllowAlphaFixture);
+		await render(ColorPickerAllowAlphaFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="color-alpha-form"]')!;
 		const opaque = document.querySelector<HTMLElement>('[data-testid="color-opaque"]')!;
 		const alpha = document.querySelector<HTMLElement>('[data-testid="color-alpha"]')!;

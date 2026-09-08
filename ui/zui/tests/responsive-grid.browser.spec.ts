@@ -17,7 +17,7 @@ afterEach(async () => {
 it('coordinates native container tracks, spans and axis overrides while resizing without JS measurement', async () => {
 	// @zui-visual ZGrid responsive CSS track geometry
 	// @zui-visual ZGridItem clamped span and start geometry
-	render(ResponsiveGridFixture);
+	await render(ResponsiveGridFixture);
 	const container = document.querySelector<HTMLElement>('[data-testid="query-container"]')!;
 	const grid = document.querySelector<HTMLElement>('[data-testid="responsive-grid"]')!;
 	const first = document.querySelector<HTMLElement>('[data-testid="clamped-span"]')!;
@@ -54,7 +54,7 @@ it('coordinates native container tracks, spans and axis overrides while resizing
 
 it('updates the requested Container width while preserving the narrower viewport boundary', async () => {
 	await page.viewport(414, 896);
-	render(ResponsiveGridFixture);
+	await render(ResponsiveGridFixture);
 	const container = document.querySelector<HTMLElement>('[data-testid="query-container"]')!;
 	const grid = document.querySelector<HTMLElement>('[data-testid="responsive-grid"]')!;
 	document.querySelector<HTMLButtonElement>('[data-testid="resize-grid"]')!.click();

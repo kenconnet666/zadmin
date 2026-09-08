@@ -7,7 +7,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZTagsInput production contract', () => {
 	it('clears the native draft value when add and clear occur in one Svelte flush', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-static"]')!;
 		const input = root.querySelector<HTMLInputElement>('[data-slot="input"]')!;
 		input.value = 'three';
@@ -21,7 +21,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('coordinates Field, overflow, keyboard editing, removal, FormData and reset', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="tags-production-form"]')!;
 		const input = root.querySelector<HTMLInputElement>('[data-slot="input"]')!;
@@ -98,7 +98,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('keeps duplicate-tag navigation and edit focus valid after removing a preceding tag', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const tags = root.querySelectorAll<HTMLElement>('[data-slot="tag"]');
 		expect(tags).toHaveLength(3);
@@ -125,7 +125,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('preserves duplicate identities when removing the second duplicate', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
 		const remove = initial[1]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
@@ -137,7 +137,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('preserves duplicate identities when removing the first duplicate', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
 		const remove = initial[0]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
@@ -149,7 +149,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('preserves identities while editing a duplicate and appending or pasting tags', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
 		initial[0]!.querySelector<HTMLButtonElement>('[data-slot="edit"]')!.click();
@@ -178,7 +178,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('reconciles controlled prepend and duplicate replacement in occurrence order', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
 		document
@@ -200,7 +200,7 @@ describe('ZTagsInput production contract', () => {
 	});
 
 	it('does not commit during real composition and honors commitOnBlur and readonly boundaries', async () => {
-		render(TagsInputProductionFixture);
+		await render(TagsInputProductionFixture);
 		const staticRoot = document.querySelector<HTMLElement>(
 			'[data-testid="tags-production-static"]'
 		)!;

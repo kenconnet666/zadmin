@@ -4,8 +4,8 @@ import { render } from 'vitest-browser-svelte';
 import FoundationPrimitivesFixture from './FoundationPrimitivesFixture.svelte';
 
 describe('small foundation primitives', () => {
-	it('keeps Separator semantic, decorative, named and orientation contracts', () => {
-		render(FoundationPrimitivesFixture);
+	it('keeps Separator semantic, decorative, named and orientation contracts', async () => {
+		await render(FoundationPrimitivesFixture);
 		const named = document.querySelector<HTMLElement>('[data-testid="separator-named"]')!;
 		const decorative = document.querySelector<HTMLElement>('[data-testid="separator-decorative"]')!;
 		const vertical = document.querySelector<HTMLElement>('[data-testid="separator-vertical"]')!;
@@ -26,8 +26,8 @@ describe('small foundation primitives', () => {
 		expect(verticalStyle.borderInlineStartColor).toBe('rgb(226, 232, 240)');
 	});
 
-	it('keeps VisuallyHidden accessible and Kbd native/nestable without platform logic', () => {
-		render(FoundationPrimitivesFixture);
+	it('keeps VisuallyHidden accessible and Kbd native/nestable without platform logic', async () => {
+		await render(FoundationPrimitivesFixture);
 		const hidden = document.querySelector<HTMLElement>('[data-testid="visually-hidden"]')!;
 		const combination = document.querySelector<HTMLElement>('[data-testid="kbd-combination"]')!;
 		expect(hidden.getAttribute('aria-hidden')).toBeNull();
@@ -39,8 +39,8 @@ describe('small foundation primitives', () => {
 		expect(combination.textContent).toContain('Ctrl + K');
 	});
 
-	it('validates responsive AspectRatio and border-box nested Container geometry', () => {
-		render(FoundationPrimitivesFixture);
+	it('validates responsive AspectRatio and border-box nested Container geometry', async () => {
+		await render(FoundationPrimitivesFixture);
 		const ratio = document.querySelector<HTMLElement>('[data-testid="aspect-ratio"]')!;
 		const empty = document.querySelector<HTMLElement>('[data-testid="aspect-ratio-empty"]')!;
 		const outer = document.querySelector<HTMLElement>('[data-testid="container-outer"]')!;

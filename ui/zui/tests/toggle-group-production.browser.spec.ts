@@ -66,7 +66,7 @@ describe('ZToggleGroup production browser contract', () => {
 	});
 
 	it('clears a single selection by default and honors allowEmpty=false', async () => {
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		const empty = buttons(group('toggle-single-empty'));
 		const required = buttons(group('toggle-single-required'));
@@ -88,7 +88,7 @@ describe('ZToggleGroup production browser contract', () => {
 	});
 
 	it('preserves number and string identities while serializing repeated native FormData and resetting defaults', async () => {
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		const form = document.querySelector<HTMLFormElement>('[data-testid="toggle-typed-form"]')!;
 		const typedButtons = buttons(group('toggle-typed'));
@@ -113,7 +113,7 @@ describe('ZToggleGroup production browser contract', () => {
 	});
 
 	it('moves focus without selection on arrows and activates the focused native button with Space', async () => {
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		const root = group('toggle-keyboard');
 		const keyboardButtons = buttons(root);
@@ -134,7 +134,7 @@ describe('ZToggleGroup production browser contract', () => {
 	});
 
 	it('honors caller keydown cancellation before roving navigation and native Space activation', async () => {
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		const cancelledButtons = buttons(group('toggle-keydown-cancelled'));
 		cancelledButtons[0]!.focus();
@@ -152,7 +152,7 @@ describe('ZToggleGroup production browser contract', () => {
 	});
 
 	it('keeps readonly and disabled groups inert without notifying owners', async () => {
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		const readonlyRoot = group('toggle-readonly');
 		const readonlyButtons = buttons(readonlyRoot);
@@ -181,7 +181,7 @@ describe('ZToggleGroup production browser contract', () => {
 
 	it('projects all five sizes to real button geometry and native pressed-button ARIA', async () => {
 		// @zui-visual ZToggleGroup five-size button geometry and ARIA
-		render(ToggleGroupFixture);
+		await render(ToggleGroupFixture);
 		await tick();
 		for (const [size, height] of [
 			['xsmall', 24],

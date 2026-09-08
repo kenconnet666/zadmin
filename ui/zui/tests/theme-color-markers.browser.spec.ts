@@ -33,8 +33,8 @@ function computed(testId: string, selector = ''): CSSStyleDeclaration {
 
 it.each(themes)(
 	'consumes overridden semantic surfaces and readable foregrounds: %s',
-	(_name, theme) => {
-		render(ThemeColorMarkerFixture, { theme });
+	async (_name, theme) => {
+		await render(ThemeColorMarkerFixture, { theme });
 
 		for (const [component, marker] of [
 			['tag-info', 'marker-info-subtle'],
@@ -85,7 +85,7 @@ it.each(themes)(
 it.each(themes)(
 	'uses custom primarySubtle for enabled outline and ghost states: %s',
 	async (_name, theme) => {
-		render(ThemeColorMarkerFixture, { theme });
+		await render(ThemeColorMarkerFixture, { theme });
 		const markerBackground = computed('marker-primary-subtle').backgroundColor;
 		for (const testId of ['button-outline', 'button-ghost']) {
 			await userEvent.hover(document.querySelector<HTMLElement>(`[data-testid="${testId}"]`)!);

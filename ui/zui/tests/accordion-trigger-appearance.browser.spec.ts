@@ -7,7 +7,7 @@ import AccordionTriggerAppearanceFixture from './AccordionTriggerAppearanceFixtu
 describe('ZAccordionTrigger appearance contract', () => {
 	it('supports block and inline geometry, open state and disabled hover semantics', async () => {
 		// @zui-visual ZAccordionTrigger block and inline appearance geometry
-		render(AccordionTriggerAppearanceFixture);
+		await render(AccordionTriggerAppearanceFixture);
 		const block = document.querySelector<HTMLButtonElement>('[data-testid="trigger-block"]')!;
 		const inline = document.querySelector<HTMLButtonElement>('[data-testid="trigger-inline"]')!;
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="trigger-disabled"]')!;

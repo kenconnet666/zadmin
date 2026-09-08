@@ -11,8 +11,8 @@ const sizes = [
 
 describe('size visual contracts for foundational controls', () => {
 	// @zui-visual ZButton size geometry and typography
-	it('keeps Button size geometry and typography distinct', () => {
-		render(SizeVisualContractFixture);
+	it('keeps Button size geometry and typography distinct', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, height, fontSize] of sizes) {
 			const node = document.querySelector<HTMLButtonElement>(`[data-testid="button-${size}"]`)!;
 			const style = getComputedStyle(node);
@@ -25,8 +25,8 @@ describe('size visual contracts for foundational controls', () => {
 
 	// @zui-visual ZInput size geometry and box sizing
 	// @zui-visual ZTextarea size typography and box sizing
-	it('keeps text controls border-box and size geometry', () => {
-		render(SizeVisualContractFixture);
+	it('keeps text controls border-box and size geometry', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, height, fontSize] of sizes) {
 			for (const kind of ['input', 'textarea'] as const) {
 				const node = document.querySelector<HTMLElement>(`[data-testid="${kind}-${size}"]`)!;
@@ -42,8 +42,8 @@ describe('size visual contracts for foundational controls', () => {
 	// @zui-visual ZCheckbox native size geometry
 	// @zui-visual ZSwitch size geometry
 	// @zui-visual ZSlider native size geometry
-	it('keeps native control visual size mappings explicit', () => {
-		render(SizeVisualContractFixture);
+	it('keeps native control visual size mappings explicit', async () => {
+		await render(SizeVisualContractFixture);
 		const checkboxWidths: number[] = [];
 		const switchWidths: number[] = [];
 		const sliderHeights: number[] = [];
@@ -70,8 +70,8 @@ describe('size visual contracts for foundational controls', () => {
 
 	// @zui-visual ZNumberField size geometry
 	// @zui-visual ZPinInput size geometry
-	it('keeps composite control size state and primary geometry', () => {
-		render(SizeVisualContractFixture);
+	it('keeps composite control size state and primary geometry', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, height] of sizes) {
 			for (const kind of ['number', 'pin'] as const) {
 				const node = document.querySelector<HTMLElement>(`[data-testid="${kind}-${size}"]`)!;
@@ -83,8 +83,8 @@ describe('size visual contracts for foundational controls', () => {
 
 	// @zui-visual ZTag size typography and geometry
 	// @zui-visual ZBadge size typography and geometry
-	it('keeps compact display sizes distinct', () => {
-		render(SizeVisualContractFixture);
+	it('keeps compact display sizes distinct', async () => {
+		await render(SizeVisualContractFixture);
 		const smallTag = document.querySelector<HTMLElement>('[data-testid="tag-small"]')!;
 		const mediumTag = document.querySelector<HTMLElement>('[data-testid="tag-medium"]')!;
 		expect(getComputedStyle(smallTag).fontSize).toBe('12px');
@@ -108,8 +108,8 @@ describe('size visual contracts for foundational controls', () => {
 	// @zui-visual ZAvatar size geometry
 	// @zui-visual ZSpinner size geometry
 	// @zui-visual ZIcon size geometry
-	it('keeps avatars and indicators on their independent token scales', () => {
-		render(SizeVisualContractFixture);
+	it('keeps avatars and indicators on their independent token scales', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, avatarSize, indicatorSize, fontSize] of [
 			['small', 32, 14, 12],
 			['medium', 40, 16, 14],
@@ -129,8 +129,8 @@ describe('size visual contracts for foundational controls', () => {
 
 	// @zui-visual ZText typography
 	// @zui-visual ZHeading typography
-	it('keeps typography size families separate from control heights', () => {
-		render(SizeVisualContractFixture);
+	it('keeps typography size families separate from control heights', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, , fontSize] of sizes) {
 			const text = document.querySelector<HTMLElement>(`[data-testid="text-${size}"]`)!;
 			const heading = document.querySelector<HTMLElement>(`[data-testid="heading-${size}"]`)!;
@@ -140,8 +140,8 @@ describe('size visual contracts for foundational controls', () => {
 	});
 
 	// @zui-visual ZContainer size max-width
-	it('keeps surface size families mapped to max-width tokens', () => {
-		render(SizeVisualContractFixture);
+	it('keeps surface size families mapped to max-width tokens', async () => {
+		await render(SizeVisualContractFixture);
 		for (const [size, expected] of [
 			['small', '640px'],
 			['medium', '1024px'],
@@ -156,8 +156,8 @@ describe('size visual contracts for foundational controls', () => {
 	// @zui-visual ZForm size propagation geometry
 	// @zui-visual ZFormField inherited size geometry
 	// @zui-visual ZInputGroup size geometry
-	it('propagates form-family sizes to the owned control', () => {
-		render(SizeVisualContractFixture);
+	it('propagates form-family sizes to the owned control', async () => {
+		await render(SizeVisualContractFixture);
 		const form = document.querySelector<HTMLElement>('[data-testid="form-large"]')!;
 		const directInput = document.querySelector<HTMLInputElement>('[data-testid="form-input"]')!;
 		const formFieldInput = document.querySelector<HTMLInputElement>(

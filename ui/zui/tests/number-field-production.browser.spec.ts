@@ -8,7 +8,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZNumberField production contract', () => {
 	it('keeps ZNumberField draft parsing, spinbutton ARIA, precision step and Field FormData real', async () => {
-		render(NumberFieldProductionFixture);
+		await render(NumberFieldProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="number-production-form"]')!;
 		const field = document.querySelector<HTMLElement>('[data-testid="locale-number"]')!;
 		const control = field.querySelector<HTMLInputElement>('[role="spinbutton"]')!;

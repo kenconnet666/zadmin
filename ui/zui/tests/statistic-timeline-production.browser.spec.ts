@@ -4,8 +4,8 @@ import { render } from 'vitest-browser-svelte';
 import StatisticTimelineProductionFixture from './StatisticTimelineProductionFixture.svelte';
 
 describe('ZStatistic and ZTimeline production browser contracts', () => {
-	it('formats static statistics with deterministic locale, precision and formatter ownership', () => {
-		render(StatisticTimelineProductionFixture);
+	it('formats static statistics with deterministic locale, precision and formatter ownership', async () => {
+		await render(StatisticTimelineProductionFixture);
 		const statistic = document.querySelector<HTMLElement>('[data-testid="statistic-intl"]')!;
 		const expected = new Intl.NumberFormat('de-DE', {
 			maximumFractionDigits: 2,
@@ -27,16 +27,16 @@ describe('ZStatistic and ZTimeline production browser contracts', () => {
 		);
 	});
 
-	it('keeps loading structure busy without rendering stale values', () => {
-		render(StatisticTimelineProductionFixture);
+	it('keeps loading structure busy without rendering stale values', async () => {
+		await render(StatisticTimelineProductionFixture);
 		const loading = document.querySelector<HTMLElement>('[data-testid="statistic-loading"]')!;
 		expect(loading.getAttribute('aria-busy')).toBe('true');
 		expect(loading.querySelector('data')).toBeNull();
 		expect(loading.querySelector('[data-slot="loading"] [aria-hidden="true"]')).not.toBeNull();
 	});
 
-	it('keeps number and string keys distinct inside real ordered-list items', () => {
-		render(StatisticTimelineProductionFixture);
+	it('keeps number and string keys distinct inside real ordered-list items', async () => {
+		await render(StatisticTimelineProductionFixture);
 		const timeline = document.querySelector<HTMLElement>('[data-testid="timeline-typed"]')!;
 		const items = [...timeline.querySelectorAll<HTMLElement>(':scope > li')];
 		expect(timeline.tagName).toBe('OL');
@@ -49,8 +49,8 @@ describe('ZStatistic and ZTimeline production browser contracts', () => {
 		expect(timeline.textContent).toContain('at 09:20');
 	});
 
-	it('places pending at the reversed chronological edge and retains RTL alternate semantics', () => {
-		render(StatisticTimelineProductionFixture);
+	it('places pending at the reversed chronological edge and retains RTL alternate semantics', async () => {
+		await render(StatisticTimelineProductionFixture);
 		const pending = document.querySelector<HTMLElement>('[data-testid="timeline-pending"]')!;
 		const alternate = document.querySelector<HTMLElement>('[data-testid="timeline-alternate"]')!;
 		expect(pending.getAttribute('aria-busy')).toBe('true');

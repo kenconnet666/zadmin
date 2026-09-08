@@ -15,7 +15,7 @@ function trigger(testId: string): HTMLButtonElement {
 describe('ZTimePicker production contracts', () => {
 	it('keeps one Time owner, bounded columns, active-descendant keyboard, FormData and reset real', async () => {
 		// @zui-visual ZTimePicker field, action and bounded column geometry
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
 		const fieldLabel = [...form.querySelectorAll<HTMLLabelElement>('label')].find((label) =>
 			label.textContent?.includes('Deployment time')
@@ -61,7 +61,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('finds constrained empty references, exact predicate values and reports a truly empty domain', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
 		trigger('time-picker-bounded').click();
 		await tick();
@@ -98,7 +98,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('keeps xlarge 12-hour second columns inside the available viewport width', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		trigger('time-picker-narrow').click();
 		await tick();
 		const dialog = document.querySelector<HTMLElement>(
@@ -113,7 +113,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('keeps instance direction through the portal and lets InputGroup own disabled opacity', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		trigger('time-picker-instance-rtl').click();
 		await tick();
 		const dialog = document.querySelector<HTMLElement>(
@@ -133,7 +133,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('keeps presets and Now as live panel drafts and announces rejected candidates', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
 		trigger('time-picker-actions').click();
 		await tick();
@@ -191,7 +191,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('reconciles an external Time update into an open panel while preserving hidden milliseconds', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
 		trigger('time-picker').click();
 		await tick();
@@ -211,7 +211,7 @@ describe('ZTimePicker production contracts', () => {
 	});
 
 	it('discards Escape drafts, keeps clear singular and does not close for a rejecting value owner', async () => {
-		render(TimePickerProductionFixture);
+		await render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
 		trigger('time-picker').click();
 		await tick();

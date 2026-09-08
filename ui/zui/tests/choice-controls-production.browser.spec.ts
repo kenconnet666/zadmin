@@ -36,7 +36,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 
 	it('keeps composed ZRadioGroupItem native selection, disabled state and reset ownership real', async () => {
 		// @zui-visual ZRadioGroupItem
-		render(RadioGroupFixture);
+		await render(RadioGroupFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]')!;
 		const alpha = form.querySelector<HTMLInputElement>('[data-testid="radio-a"]')!;
 		const beta = form.querySelector<HTMLInputElement>('[data-testid="radio-b"]')!;
@@ -61,7 +61,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 	});
 
 	it('preserves typed identity, native FormData, required/invalid and RTL roving focus', async () => {
-		render(ChoiceControlsCollectionFixture);
+		await render(ChoiceControlsCollectionFixture);
 		await settle();
 
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-radio-group"]')!;
@@ -101,7 +101,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 	});
 
 	it('preserves Segmented typed identity, disabled state and external FormValueBridge reset', async () => {
-		render(ChoiceControlsCollectionFixture);
+		await render(ChoiceControlsCollectionFixture);
 		await settle();
 
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-segmented"]')!;
@@ -141,7 +141,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 
 	it('keeps readonly RadioGroup selection and callbacks inert', async () => {
 		const onValueChange = vi.fn();
-		render(ZRadioGroup, {
+		await render(ZRadioGroup, {
 			'aria-label': 'Readonly radio group',
 			onValueChange,
 			options: [
@@ -165,7 +165,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 	it('keeps readonly Segmented selection and callbacks inert', async () => {
 		// @zui-visual ZSegmented selected item and group geometry
 		const onValueChange = vi.fn();
-		render(ZSegmented, {
+		await render(ZSegmented, {
 			'aria-label': 'Readonly segmented',
 			onValueChange,
 			options: [

@@ -6,7 +6,7 @@ import ChoiceCollectionFixture from './ChoiceCollectionFixture.svelte';
 
 describe('ZSelect and ZCombobox logical collection integration', () => {
 	it('keeps typed keys, mounted active descendants, groups and async orphan labels distinct', async () => {
-		render(ChoiceCollectionFixture);
+		await render(ChoiceCollectionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="typed-select-trigger"]'
 		);

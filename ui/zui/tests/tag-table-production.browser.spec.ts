@@ -8,7 +8,7 @@ describe('ZTag and ZTable production browser contracts', () => {
 	it('keeps a deferred resize fallback when ResizeObserver is unavailable', async () => {
 		vi.stubGlobal('ResizeObserver', undefined);
 		try {
-			render(TagTableProductionFixture);
+			await render(TagTableProductionFixture);
 			const table = document.querySelector('[data-testid="table-wide"]')!;
 			await expect.poll(() => table.parentElement?.getAttribute('role')).toBe('region');
 			expect(table.parentElement?.tabIndex).toBe(0);
@@ -47,7 +47,7 @@ describe('ZTag and ZTable production browser contracts', () => {
 		});
 		vi.stubGlobal('ResizeObserver', DeferredResizeObserver);
 		try {
-			render(TagTableProductionFixture);
+			await render(TagTableProductionFixture);
 			expect(deliver.length).toBeGreaterThan(0);
 			expect(reads).toBe(0);
 			for (const callback of deliver) callback();
@@ -61,7 +61,7 @@ describe('ZTag and ZTable production browser contracts', () => {
 		}
 	});
 	it('localizes Tag removal, resolves finite size/tone and isolates remove propagation', async () => {
-		render(TagTableProductionFixture);
+		await render(TagTableProductionFixture);
 		const tag = document.querySelector<HTMLElement>('[data-testid="tag-localized"]')!;
 		const remove = tag.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
 		expect(tag.dataset.size).toBe('small');
@@ -96,7 +96,7 @@ describe('ZTag and ZTable production browser contracts', () => {
 	});
 
 	it('keeps the real table ref and only promotes a measured overflow wrapper to a region', async () => {
-		render(TagTableProductionFixture);
+		await render(TagTableProductionFixture);
 		const simple = document.querySelector<HTMLTableElement>('[data-testid="table-simple"]')!;
 		const simpleWrapper = simple.parentElement!;
 		expect(simple.tagName).toBe('TABLE');
@@ -126,7 +126,7 @@ describe('ZTag and ZTable production browser contracts', () => {
 	});
 
 	it('inherits spacious RTL density and leaves interactive cell ownership intact', async () => {
-		render(TagTableProductionFixture);
+		await render(TagTableProductionFixture);
 		const rtl = document.querySelector<HTMLTableElement>('[data-testid="table-rtl"]')!;
 		expect(rtl.dataset.density).toBe('spacious');
 		expect(rtl.closest('[dir="rtl"]')).not.toBeNull();

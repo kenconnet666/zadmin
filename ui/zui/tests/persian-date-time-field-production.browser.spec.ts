@@ -7,7 +7,7 @@ import PersianDateTimeFieldFixture from './PersianDateTimeFieldFixture.svelte';
 
 describe('Persian DateTimeField locale numerals', () => {
 	it('uses the same locale digits for date and time while preserving hidden milliseconds', async () => {
-		render(PersianDateTimeFieldFixture);
+		await render(PersianDateTimeFieldFixture);
 		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="persian-date-time-field"]')!;
 		const year = root.querySelector<HTMLInputElement>('input[aria-label="Year"]')!;

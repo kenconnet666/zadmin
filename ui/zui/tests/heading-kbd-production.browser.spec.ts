@@ -5,8 +5,8 @@ import FoundationPrimitivesFixture from './FoundationPrimitivesFixture.svelte';
 import TypographyFixture from './TypographyFixture.svelte';
 
 describe('ZHeading and ZKbd production browser contracts', () => {
-	it('keeps ZHeading semantic levels independent from visual tokens', () => {
-		render(TypographyFixture);
+	it('keeps ZHeading semantic levels independent from visual tokens', async () => {
+		await render(TypographyFixture);
 		const h1 = document.querySelector<HTMLElement>('[data-testid="heading-h1"]')!;
 		const h4 = document.querySelector<HTMLElement>('[data-testid="heading-h4-large"]')!;
 		expect(h1.tagName).toBe('H1');
@@ -18,8 +18,8 @@ describe('ZHeading and ZKbd production browser contracts', () => {
 		expect(h1.getAttribute('aria-label')).toBeNull();
 	});
 
-	it('keeps ZKbd native, nestable and independent from platform detection', () => {
-		render(FoundationPrimitivesFixture);
+	it('keeps ZKbd native, nestable and independent from platform detection', async () => {
+		await render(FoundationPrimitivesFixture);
 		const single = document.querySelector<HTMLElement>('[data-testid="kbd-single"]')!;
 		const combination = document.querySelector<HTMLElement>('[data-testid="kbd-combination"]')!;
 		expect(single.tagName).toBe('KBD');

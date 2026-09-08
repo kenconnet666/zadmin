@@ -27,7 +27,7 @@ function transition(element: Element): void {
 
 describe('native callback forwarding', () => {
 	it('forwards carousel and toast hover/focus callbacks while preserving internal pause state', async () => {
-		render(NativeCallbackForwardingFixture);
+		await render(NativeCallbackForwardingFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]')!;
 
 		carousel.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
@@ -55,7 +55,7 @@ describe('native callback forwarding', () => {
 	});
 
 	it('forwards transitionend callbacks and keeps dialog presence completion guarded by target', async () => {
-		render(NativeCallbackForwardingFixture);
+		await render(NativeCallbackForwardingFixture);
 		await showMode('dialog');
 		const content = document.querySelector<HTMLElement>('[data-testid="dialog-content"]')!;
 		const overlay = document.querySelector<HTMLElement>('[data-testid="dialog-overlay"]')!;
@@ -73,7 +73,7 @@ describe('native callback forwarding', () => {
 	});
 
 	it('forwards Presence transitionend callbacks for popover, tooltip, accordion and tour', async () => {
-		render(NativeCallbackForwardingFixture);
+		await render(NativeCallbackForwardingFixture);
 		for (const mode of ['popover', 'tooltip', 'accordion', 'tour']) {
 			await showMode(mode);
 			const content = document.querySelector<HTMLElement>(`[data-testid="${mode}-content"]`);

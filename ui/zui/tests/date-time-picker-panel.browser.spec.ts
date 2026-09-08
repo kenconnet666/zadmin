@@ -10,7 +10,7 @@ function panel(testId: string): HTMLElement {
 
 describe('DateTimePickerPanel production contracts', () => {
 	it('reveals each selected time in its own column without moving focus away from the calendar', async () => {
-		render(DateTimePickerPanelFixture);
+		await render(DateTimePickerPanelFixture);
 		const target = panel('date-time-panel-local');
 		const columns = [...target.querySelectorAll<HTMLElement>('[role="listbox"]')];
 		const calendarFocus = target.querySelector<HTMLElement>('[role="grid"] [tabindex="0"]')!;
@@ -29,7 +29,7 @@ describe('DateTimePickerPanel production contracts', () => {
 		expect(document.activeElement).toBe(calendarFocus);
 	});
 	it('keeps an invalid current time navigable and commits only through the shared footer', async () => {
-		render(DateTimePickerPanelFixture);
+		await render(DateTimePickerPanelFixture);
 		const target = panel('date-time-panel-local');
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="date-time-panel-values"]'
@@ -50,7 +50,7 @@ describe('DateTimePickerPanel production contracts', () => {
 	});
 
 	it('evaluates a lazy preset per click as draft intent and lets Cancel restore the parent draft', async () => {
-		render(DateTimePickerPanelFixture);
+		await render(DateTimePickerPanelFixture);
 		const target = panel('date-time-panel-local');
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="date-time-panel-values"]'
@@ -71,7 +71,7 @@ describe('DateTimePickerPanel production contracts', () => {
 	});
 
 	it('keeps a DST-gap date in panel navigation so another valid time remains reachable', async () => {
-		render(DateTimePickerPanelFixture);
+		await render(DateTimePickerPanelFixture);
 		const target = panel('date-time-panel-dst');
 		const marchEight = [...target.querySelectorAll<HTMLButtonElement>('[role="grid"] button')].find(
 			(button) => button.getAttribute('aria-label')?.includes('March 8, 2026')

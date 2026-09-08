@@ -7,8 +7,8 @@ import ButtonToggleProductionFixture from './ButtonToggleProductionFixture.svelt
 
 describe('ZButton and ZToggleButton production browser contract', () => {
 	// @zui-visual ZButton size geometry and typography
-	it('renders distinct default-shape size geometry and typography', () => {
-		render(ButtonToggleProductionFixture);
+	it('renders distinct default-shape size geometry and typography', async () => {
+		await render(ButtonToggleProductionFixture);
 		for (const [size, expectedHeight, expectedFontSize] of [
 			['small', 28, 12],
 			['medium', 32, 14],
@@ -27,7 +27,7 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 	});
 
 	it('keeps variant, tone, shape and native form semantics orthogonal', async () => {
-		render(ButtonToggleProductionFixture);
+		await render(ButtonToggleProductionFixture);
 		const primary = document.querySelector<HTMLButtonElement>('[data-testid="button-default"]')!;
 		const danger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="button-danger-secondary"]'
@@ -45,7 +45,7 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 	});
 
 	it('uses an aria-hidden ZSpinner overlay while preserving loading width and busy ownership', async () => {
-		render(ButtonToggleProductionFixture);
+		await render(ButtonToggleProductionFixture);
 		const button = document.querySelector<HTMLButtonElement>('[data-testid="button-loading"]')!;
 		const initialWidth = button.getBoundingClientRect().width;
 		await userEvent.click(document.querySelector('[data-testid="button-loading-on"]')!);
@@ -62,7 +62,7 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 	});
 
 	it('keeps ToggleButton user callbacks distinct from owner writes and prevented clicks', async () => {
-		render(ButtonToggleProductionFixture);
+		await render(ButtonToggleProductionFixture);
 		const toggle = document.querySelector<HTMLButtonElement>('[data-testid="toggle-controlled"]')!;
 		expect(toggle.getAttribute('aria-pressed')).toBe('false');
 		await userEvent.click(toggle);
@@ -87,7 +87,7 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 	});
 
 	it('supports icon-only, danger tone, disabled and native keyboard ToggleButton behavior', async () => {
-		render(ButtonToggleProductionFixture);
+		await render(ButtonToggleProductionFixture);
 		const icon = document.querySelector<HTMLButtonElement>('[data-testid="toggle-icon"]')!;
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="toggle-disabled"]')!;
 		expect(icon.getAttribute('aria-label')).toBe('Favorite toggle');

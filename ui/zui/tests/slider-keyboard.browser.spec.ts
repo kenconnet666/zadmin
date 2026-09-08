@@ -6,7 +6,7 @@ import SliderKeyboardFixture from './SliderKeyboardFixture.svelte';
 
 describe('ZSlider logical keyboard direction', () => {
 	it('maps arrows to logical direction and calls each owner once', async () => {
-		render(SliderKeyboardFixture);
+		await render(SliderKeyboardFixture);
 		const slider = document.querySelector<HTMLInputElement>('[data-testid="slider-keyboard"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
 			'[data-testid="slider-keyboard-output"]'

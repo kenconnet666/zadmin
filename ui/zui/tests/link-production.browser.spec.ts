@@ -5,8 +5,8 @@ import { render } from 'vitest-browser-svelte';
 import LinkProductionFixture from './LinkProductionFixture.svelte';
 
 describe('ZLink production contract', () => {
-	it('separates external visuals from explicit new-window navigation and secures custom rel', () => {
-		render(LinkProductionFixture);
+	it('separates external visuals from explicit new-window navigation and secures custom rel', async () => {
+		await render(LinkProductionFixture);
 		const blank = document.querySelector<HTMLAnchorElement>('[data-testid="link-external-blank"]')!;
 		const sameWindow = document.querySelector<HTMLAnchorElement>(
 			'[data-testid="link-external-same"]'
@@ -27,7 +27,7 @@ describe('ZLink production contract', () => {
 	});
 
 	it('removes disabled navigation and prevents consumer and delegated click handlers', async () => {
-		render(LinkProductionFixture);
+		await render(LinkProductionFixture);
 		const disabled = document.querySelector<HTMLAnchorElement>('[data-testid="link-disabled"]')!;
 		disabled.click();
 		await tick();
@@ -47,8 +47,8 @@ describe('ZLink production contract', () => {
 		);
 	});
 
-	it('forwards download and aria-current while long targets remain bounded', () => {
-		render(LinkProductionFixture);
+	it('forwards download and aria-current while long targets remain bounded', async () => {
+		await render(LinkProductionFixture);
 		const native = document.querySelector<HTMLAnchorElement>('[data-testid="link-native"]')!;
 		const owner = document.querySelector<HTMLElement>('[data-testid="link-long-owner"]')!;
 		const long = document.querySelector<HTMLAnchorElement>('[data-testid="link-long"]')!;
@@ -60,8 +60,8 @@ describe('ZLink production contract', () => {
 		);
 	});
 
-	it('uses the nearest typed locale for the hidden new-window hint', () => {
-		render(LinkProductionFixture);
+	it('uses the nearest typed locale for the hidden new-window hint', async () => {
+		await render(LinkProductionFixture);
 		const link = document.querySelector<HTMLAnchorElement>('[data-testid="link-localized"]')!;
 		const hint = link.querySelector<HTMLElement>('[data-slot="new-window-hint"]')!;
 		expect(hint.textContent).toContain('opens in another workspace');

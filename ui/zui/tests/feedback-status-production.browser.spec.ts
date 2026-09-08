@@ -42,7 +42,7 @@ function mediaQuery(matches: boolean): {
 
 describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 	it('ZAlert keeps live priority, semantic icons, actions and dismiss ownership explicit', async () => {
-		render(FeedbackStatusProductionFixture);
+		await render(FeedbackStatusProductionFixture);
 		const off = document.querySelector<HTMLElement>('[data-testid="alert-off"]')!;
 		const polite = document.querySelector<HTMLElement>('[data-testid="alert-polite"]')!;
 		const assertive = document.querySelector<HTMLElement>('[data-testid="alert-assertive"]')!;
@@ -62,8 +62,8 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		expect(document.querySelector('[data-testid="alert-output"]')?.textContent).toBe('dismissed');
 	});
 
-	it('ZSpinner uses finite tones, suppresses nested status semantics and cleans reduced motion', () => {
-		render(FeedbackStatusProductionFixture);
+	it('ZSpinner uses finite tones, suppresses nested status semantics and cleans reduced motion', async () => {
+		await render(FeedbackStatusProductionFixture);
 		const primary = document.querySelector<HTMLElement>('[data-testid="spinner-primary"]')!;
 		const hidden = document.querySelector<HTMLElement>('[data-testid="spinner-hidden"]')!;
 		const reduced = document.querySelector<HTMLElement>('[data-testid="spinner-reduced"]')!;
@@ -79,9 +79,9 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		expect(reduced.querySelector<SVGSVGElement>('svg')?.getAnimations()).toHaveLength(0);
 	});
 
-	it('ZLoadingBar keeps determinate, indeterminate, page, error and reduced states distinct', () => {
+	it('ZLoadingBar keeps determinate, indeterminate, page, error and reduced states distinct', async () => {
 		// @zui-visual ZLoadingBar mode, state and indicator geometry
-		render(FeedbackStatusProductionFixture);
+		await render(FeedbackStatusProductionFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]')!;
 		const indeterminate = document.querySelector<HTMLElement>(
 			'[data-testid="loading-indeterminate"]'
@@ -111,7 +111,7 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 	});
 
 	it('ZLoadingBar runs a scoped controller lifecycle and clears the owner Window finish timer', async () => {
-		render(FeedbackStatusProductionFixture);
+		await render(FeedbackStatusProductionFixture);
 		const bar = document.querySelector<HTMLElement>('[data-testid="loading-controller"]')!;
 		document.querySelector<HTMLButtonElement>('[data-testid="loading-start"]')?.click();
 		await tick();

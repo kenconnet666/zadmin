@@ -16,7 +16,7 @@ const confirm = () =>
 
 describe('inline date-time composition', () => {
 	it('uses a persistent panel with cancel, confirm and callback-free reset', async () => {
-		render(Fixture);
+		await render(Fixture);
 		await tick();
 		form().style.width = '320px';
 		await tick();
@@ -45,7 +45,7 @@ describe('inline date-time composition', () => {
 		expect(events()).toBe('1|1');
 	});
 	it('commits immediate actions while keeping the same inline surface', async () => {
-		render(Fixture, { variant: 'immediate' });
+		await render(Fixture, { variant: 'immediate' });
 		await tick();
 		const panel = root().querySelector('[data-slot="inline-panel"]');
 		action('Afternoon').click();
@@ -55,7 +55,7 @@ describe('inline date-time composition', () => {
 		expect(root().querySelector('[data-slot="inline-panel"]')).toBe(panel);
 	});
 	it('keeps range presets draft-only and preserves both native entries', async () => {
-		render(Fixture, { variant: 'range' });
+		await render(Fixture, { variant: 'range' });
 		await tick();
 		action('Tomorrow').click();
 		await tick();
@@ -68,7 +68,7 @@ describe('inline date-time composition', () => {
 		expect(events()).toBe('1|1');
 	});
 	it('rolls a rejected owner back without committing or removing the panel', async () => {
-		render(Fixture, { variant: 'rejected' });
+		await render(Fixture, { variant: 'rejected' });
 		await tick();
 		action('Afternoon').click();
 		await tick();
@@ -79,7 +79,7 @@ describe('inline date-time composition', () => {
 		expect(root().dataset.state).toBe('inline');
 	});
 	it('lets readonly controls keep focus while disabling mutation actions', async () => {
-		render(Fixture, { variant: 'readonly' });
+		await render(Fixture, { variant: 'readonly' });
 		await tick();
 		const day = root().querySelector<HTMLButtonElement>('[data-slot="grid"] button[tabindex="0"]')!;
 		expect(day.disabled).toBe(false);

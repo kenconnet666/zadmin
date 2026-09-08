@@ -14,7 +14,7 @@ function fixture(selector: string): HTMLElement {
 describe('date and time production contracts', () => {
 	it('keeps ZDateField typed segments, ARIA, keyboard, Field ownership and FormData real', async () => {
 		// @zui-visual ZDateField segment and group geometry
-		render(DateFixture);
+		await render(DateFixture);
 		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
 		const dateField = document.querySelector<HTMLElement>('[aria-label="Date segments"]')!;
 		const segments = [...dateField.querySelectorAll<HTMLInputElement>('input')];
@@ -41,7 +41,7 @@ describe('date and time production contracts', () => {
 
 	it('keeps ZTimeField typed segments, granular keyboard and FormData/reset real', async () => {
 		// @zui-visual ZTimeField segment and group geometry
-		render(DateFixture);
+		await render(DateFixture);
 		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
 		const timeField = document.querySelector<HTMLElement>('[aria-label="Time segments"]')!;
 		const segments = [...timeField.querySelectorAll<HTMLInputElement>('input')];
@@ -69,7 +69,7 @@ describe('date and time production contracts', () => {
 	});
 
 	it('keeps ZCalendar grid ARIA, focused-value keyboard navigation, selection and FormData real', async () => {
-		render(DateFixture);
+		await render(DateFixture);
 		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
 		const calendar = document.querySelector<HTMLElement>('[role="grid"]')!;
 		expect(calendar.getAttribute('aria-label')).toContain('Test calendar');

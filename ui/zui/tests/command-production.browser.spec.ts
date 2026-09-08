@@ -8,7 +8,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZCommand and ZCommandPalette production contracts', () => {
 	it('ZCommand preserves typed identities, disabled filtering, roving Enter and empty reset', async () => {
-		render(CommandFixture);
+		await render(CommandFixture);
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="command-form"]')!;
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="command-output"]')!;
@@ -48,7 +48,7 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 
 	// @zui-visual ZCommand active option and list geometry
 	it('keeps command list usable and active option visibly addressable', async () => {
-		render(CommandFixture);
+		await render(CommandFixture);
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]')!;
 		const list = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Commands"]')!;
 		const inputRect = input.getBoundingClientRect();
@@ -68,7 +68,7 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 
 	it('ZCommandPalette owns dialog portal focus, action close, shortcut reopen and Escape', async () => {
 		// @zui-visual ZCommandPalette modal command surface geometry
-		render(CommandPaletteFixture);
+		await render(CommandPaletteFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open palette"]')!;
 		trigger.focus();
 		trigger.click();

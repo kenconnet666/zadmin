@@ -20,7 +20,7 @@ function cell(testId: string, label: string): HTMLButtonElement {
 describe('ZPeriodCalendar production contracts', () => {
 	it('keeps one owner, independent roving focus, discriminated FormData and reset', async () => {
 		// @zui-visual ZPeriodCalendar header, finite grid, selection, range and week geometry
-		render(PeriodCalendarProductionFixture);
+		await render(PeriodCalendarProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="period-form"]')!;
 		const month = root('period-month');
 		const may = cell('period-month', 'May');
@@ -57,7 +57,7 @@ describe('ZPeriodCalendar production contracts', () => {
 	});
 
 	it('aligns visual grids with keyboard columns, wraps weekly cells and keeps month text compact', async () => {
-		render(PeriodCalendarProductionFixture);
+		await render(PeriodCalendarProductionFixture);
 		await tick();
 		for (const [testId, columns, rows] of [
 			['period-month', 4, 3],
@@ -94,7 +94,7 @@ describe('ZPeriodCalendar production contracts', () => {
 	});
 
 	it('keeps the year-one page stable and derives navigation icons from rendered direction', async () => {
-		render(PeriodCalendarProductionFixture);
+		await render(PeriodCalendarProductionFixture);
 		await tick();
 		const boundary = root('period-year-boundary');
 		const labels = [...boundary.querySelectorAll<HTMLButtonElement>('[data-slot="cell"]')].map(
@@ -114,7 +114,7 @@ describe('ZPeriodCalendar production contracts', () => {
 	});
 
 	it('toggles multiple values, previews a contiguous range and keeps week cells semantically weekly', async () => {
-		render(PeriodCalendarProductionFixture);
+		await render(PeriodCalendarProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="period-form"]')!;
 		cell('period-quarter', 'Q2').click();
 		await tick();
@@ -145,7 +145,7 @@ describe('ZPeriodCalendar production contracts', () => {
 	});
 
 	it('keeps readonly and controlled rejection authoritative while required still permits clearing', async () => {
-		render(PeriodCalendarProductionFixture);
+		await render(PeriodCalendarProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="period-form"]')!;
 		cell('period-readonly', 'June').click();
 		cell('period-rejected', 'June').click();

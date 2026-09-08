@@ -8,7 +8,7 @@ describe('ZProvider, ZField, ZInput and ZTextarea production size contract', () 
 	it('resolves explicit control, Field and Provider density in priority order', async () => {
 		// @zui-visual ZProvider density propagation geometry
 		// @zui-visual ZField size spacing geometry
-		render(FieldSizeFixture);
+		await render(FieldSizeFixture);
 		await tick();
 		expect(
 			document.querySelector('[data-testid="field-size-provider"]')?.getAttribute('data-size')

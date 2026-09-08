@@ -24,9 +24,9 @@ function outputState(): {
 	};
 }
 
-it('uses one named native viewport with real overflow geometry and an autosize maximum', () => {
+it('uses one named native viewport with real overflow geometry and an autosize maximum', async () => {
 	// @zui-visual ZScrollArea native viewport and overflow geometry
-	render(ScrollAreaFixture);
+	await render(ScrollAreaFixture);
 	const viewport = element('scroll-vertical');
 	expect(viewport.tagName).toBe('DIV');
 	expect(viewport.getAttribute('role')).toBe('region');
@@ -46,7 +46,7 @@ it('uses one named native viewport with real overflow geometry and an autosize m
 });
 
 it('reports original native scroll events and makes reduced-motion commands immediate, releasing its controller', async () => {
-	render(ScrollAreaFixture);
+	await render(ScrollAreaFixture);
 	await tick();
 	await userEvent.click(element('scroll-position'));
 	await expect.poll(() => withinHalfCssPixel(element('scroll-vertical').scrollTop, 80)).toBe(true);
@@ -82,7 +82,7 @@ it('reports original native scroll events and makes reduced-motion commands imme
 });
 
 it('keeps browser RTL scrollLeft semantics rather than changing offsets to positive numbers', async () => {
-	render(ScrollAreaFixture);
+	await render(ScrollAreaFixture);
 	const viewport = element('scroll-rtl');
 	const providerViewport = element('scroll-provider-rtl');
 	expect(getComputedStyle(viewport).direction).toBe('rtl');

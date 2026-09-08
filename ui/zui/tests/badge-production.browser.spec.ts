@@ -8,7 +8,7 @@ describe('ZBadge production contract', () => {
 	it.each([1500, '1500ms', '1.5s'] as const)(
 		'normalizes the Theme duration %s for count animations',
 		async (duration) => {
-			render(BadgeProductionFixture, { duration, easing: 'linear' });
+			await render(BadgeProductionFixture, { duration, easing: 'linear' });
 			const indicator = document.querySelector<HTMLElement>(
 				'[data-testid="badge-production-anchor"] [data-slot="indicator"]'
 			)!;
@@ -24,7 +24,7 @@ describe('ZBadge production contract', () => {
 	);
 
 	it('cancels an active count animation when motion becomes reduced without a count change', async () => {
-		render(BadgeProductionFixture, { duration: '10s' });
+		await render(BadgeProductionFixture, { duration: '10s' });
 		const indicator = document.querySelector<HTMLElement>(
 			'[data-testid="badge-production-anchor"] [data-slot="indicator"]'
 		)!;
@@ -58,7 +58,7 @@ describe('ZBadge production contract', () => {
 	});
 
 	it('preserves exact counts, logical placement, dot semantics and motion ownership', async () => {
-		render(BadgeProductionFixture);
+		await render(BadgeProductionFixture);
 		const anchor = document.querySelector<HTMLElement>('[data-testid="badge-production-anchor"]')!;
 		const indicator = anchor.querySelector<HTMLElement>('[data-slot="indicator"]')!;
 		const reduced = document.querySelector<HTMLElement>(

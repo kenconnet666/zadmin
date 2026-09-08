@@ -8,7 +8,7 @@ describe('data-display and layout visual contracts', () => {
 		// @zui-visual ZBox root geometry
 		// @zui-visual ZStack direction and gap geometry
 		// @zui-visual ZAspectRatio native ratio geometry
-		render(DataDisplayLayoutVisualFixture);
+		await render(DataDisplayLayoutVisualFixture);
 		const box = document.querySelector<HTMLElement>('[data-testid="box"]')!;
 		expect(box.getBoundingClientRect().width).toBe(240);
 		expect(box.getBoundingClientRect().height).toBe(20);
@@ -31,7 +31,7 @@ describe('data-display and layout visual contracts', () => {
 	it('keeps list and table native structure and horizontal overflow ownership', async () => {
 		// @zui-visual ZList ordered layout geometry
 		// @zui-visual ZTable overflow owner geometry
-		render(DataDisplayLayoutVisualFixture);
+		await render(DataDisplayLayoutVisualFixture);
 		const list = document.querySelector<HTMLElement>('[data-testid="list"]')!;
 		expect(list.tagName).toBe('OL');
 		expect(getComputedStyle(list).display).toBe('grid');
@@ -50,7 +50,7 @@ describe('data-display and layout visual contracts', () => {
 	it('keeps data table columns and virtual list viewport geometry bounded', async () => {
 		// @zui-visual ZDataTable column geometry
 		// @zui-visual ZVirtualList bounded viewport geometry
-		render(DataDisplayLayoutVisualFixture);
+		await render(DataDisplayLayoutVisualFixture);
 		const dataTable = document.querySelector<HTMLElement>('[data-testid="data-table"]')!;
 		expect(dataTable.querySelectorAll('tbody tr')).toHaveLength(2);
 		expect(dataTable.querySelector('th')?.textContent).toContain('Name');
