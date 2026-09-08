@@ -15,7 +15,11 @@
 			async validate(input) {
 				const values = input as Record<string, FormDataEntryValue>;
 				const account = String(values.account ?? '');
-				await new Promise((resolve) => setTimeout(resolve, account === 'x' ? 40 : 0));
+				if (account === 'x') {
+					slowValidationStarted += 1;
+					await new Promise<void>((resolve) => (resolveSlowValidation = resolve));
+					slowValidationCompleted += 1;
+				}
 				const issues: { message: string; path: string[] }[] = [];
 				if (account.length < 3) issues.push({ message: 'Account too short', path: ['account'] });
 				if (!String(values.email ?? '').includes('@'))
@@ -31,6 +35,9 @@
 	let validating = $state(false);
 	let submitted = $state(false);
 	let result = $state('none');
+	let slowValidationStarted = $state(0);
+	let slowValidationCompleted = $state(0);
+	let resolveSlowValidation: (() => void) | undefined;
 
 	function readErrors(): FormErrors {
 		return errors;
@@ -43,6 +50,11 @@
 				Object.entries(next).map(([path, messages]) => [path, Object.freeze([...messages])])
 			)
 		);
+	}
+
+	function releaseSlowValidation(): void {
+		resolveSlowValidation?.();
+		resolveSlowValidation = undefined;
 	}
 </script>
 
@@ -70,8 +82,13 @@
 		<ZInput autocomplete="email" bind:value={email} data-testid="form-email" />
 	</ZFormField>
 	<button type="submit">Submit</button>
+	<button type="button" data-testid="form-resolve-slow-validation" onclick={releaseSlowValidation}
+		>Resolve slow validation</button
+	>
 	<button type="reset">Reset</button>
 </ZForm>
 <output data-testid="form-output"
 	>{submitted}:{validating}:{Object.keys(errors).length}:{result}</output
+>
+<output data-testid="form-slow-validation">{slowValidationStarted}:{slowValidationCompleted}</output
 >

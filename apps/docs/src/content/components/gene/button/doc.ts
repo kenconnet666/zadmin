@@ -60,7 +60,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 		{
 			covers: ['basic-render', 'variants-and-states'],
 			component: VariantsDemo,
-			description: '每一种视觉变体都生成稳定、可复用的 recipe class。',
+			description: '只比较solid、outline、ghost三种视觉变体；五档尺寸集中在“尺寸与状态”示例。',
 			id: 'button-variants',
 			source: variantsSource,
 			title: '视觉变体'
@@ -76,7 +76,8 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 		{
 			covers: ['density', 'disabled', 'loading'],
 			component: StatesDemo,
-			description: '尺寸、加载和禁用状态都保留原生 button 语义，点击事件通过 onclick 传递。',
+			description:
+				'集中展示xsmall至xlarge五档尺寸，并叠加loading、disabled与可观察点击计数；所有状态保留原生button语义。',
 			id: 'button-states',
 			source: statesSource,
 			title: '尺寸与状态'
@@ -92,7 +93,8 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 		{
 			covers: ['loading', 'resource-cleanup', 'reduced-motion'],
 			component: AsyncDemo,
-			description: '异步任务由调用方持有；loading提供busy语义、阻止重复操作并允许自定义内容。',
+			description:
+				'demo自有的本地模拟任务可选择成功或失败；失败后可重试，loading阻止重复操作，卸载会清理timer/abort且不回写状态。',
 			id: 'button-async',
 			source: asyncSource,
 			title: '异步操作与加载'

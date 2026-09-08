@@ -186,6 +186,30 @@ function mergeRequiredness(values, kind) {
 	return REQUIREDNESS.optional;
 }
 
+function joinFactTypes(types, kind) {
+	if (types.length === 1) return types[0];
+	const parts = types.map((type) => {
+		const source = ts.createSourceFile(
+			'property-type.ts',
+			`type Property = ${type};`,
+			ts.ScriptTarget.Latest,
+			true
+		);
+		const node = source.statements[0]?.type;
+		if (!node || source.parseDiagnostics.length > 0)
+			throw new Error(`Invalid property type while merging facts: ${type}`);
+		// Function/constructor returns and conditionals bind more weakly than a union;
+		// a nested union also needs a group when this merge creates an intersection.
+		const grouped =
+			ts.isFunctionTypeNode(node) ||
+			ts.isConstructorTypeNode(node) ||
+			ts.isConditionalTypeNode(node) ||
+			(kind === 'intersection' && ts.isUnionTypeNode(node));
+		return grouped ? `(${type})` : type;
+	});
+	return parts.join(kind === 'union' ? ' | ' : ' & ');
+}
+
 function mergeFacts(facts, kind) {
 	const grouped = new Map();
 	for (const item of facts)
@@ -206,8 +230,7 @@ function mergeFacts(facts, kind) {
 				path,
 				{
 					...first,
-					declaredType:
-						types.length === 1 ? types[0] : types.join(kind === 'union' ? ' | ' : ' & '),
+					declaredType: joinFactTypes(types, kind),
 					typeCandidates,
 					requiredness: mergeRequiredness(
 						items.map((item) => item.requiredness),
@@ -583,6 +606,31 @@ export async function collectWorkspacePropertyFactsFromType(graph, typeNode, con
 }
 
 if (isMain && process.argv.includes('--self-test')) {
+	for (const [types, kind, expected] of [
+		[
+			['(value: string) => void', '(value: number) => void'],
+			'union',
+			'((value: string) => void) | ((value: number) => void)'
+		],
+		[['new () => Date', 'undefined'], 'union', '(new () => Date) | undefined'],
+		[
+			['T extends string ? "yes" : "no"', 'null'],
+			'union',
+			'(T extends string ? "yes" : "no") | null'
+		],
+		[['"a" | "b"', '"b" | "c"'], 'intersection', '("a" | "b") & ("b" | "c")'],
+		[['string', 'number'], 'union', 'string | number']
+	]) {
+		const joined = joinFactTypes(types, kind);
+		const parsed = ts.createSourceFile(
+			'joined-type.ts',
+			`type Joined = ${joined};`,
+			ts.ScriptTarget.Latest,
+			true
+		);
+		if (joined !== expected || parsed.parseDiagnostics.length > 0)
+			throw new Error(`Property type precedence was lost: ${joined}`);
+	}
 	const { mkdtemp, mkdir, rm, writeFile } = await import('node:fs/promises');
 	const { tmpdir } = await import('node:os');
 	const root = await mkdtemp(resolve(tmpdir(), 'zadmin-property-facts-'));

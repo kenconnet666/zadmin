@@ -62,6 +62,7 @@ jobs:
         run: git config core.fileMode false
 
       - name: Setup workspace
+        id: setup
         uses: ./.github/actions/setup-workspace
         with:
           node-version: ${{ env.NODE_VERSION }}
@@ -71,12 +72,15 @@ jobs:
         run: pnpm check
 
       - name: Lint and format check
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm lint
 
       - name: Audit ZUI and Docs source contracts
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm --filter @zadmin/docs audit:system
 
       - name: Verify release coherence dry-run contract
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: |
           pnpm release:coherence
           pnpm release:version:self-test
@@ -92,9 +96,11 @@ jobs:
           pnpm --filter @zadmin/webview desktop:evidence:self-test
 
       - name: Audit ZUI browser lifecycle ownership
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
 
       - name: Verify component execution evidence contracts
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: |
           node ui/zui/scripts/bundle-boundaries.mjs --self-test
           node --experimental-strip-types ui/zui/scripts/component-execution-reporter.ts --self-test
@@ -103,12 +109,15 @@ jobs:
           node apps/docs/scripts/verify-component-execution.mjs --self-test
 
       - name: Validate Changesets release metadata
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm release:status
 
       - name: Verify ZUI public API contract
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: pnpm --filter @zadmin/zui api:contract:check
 
       - name: Verify generated tracked files are unchanged
+        if: ${{ !cancelled() && steps.setup.outcome == 'success' }}
         run: git diff --exit-code
 
   workspace-tests:

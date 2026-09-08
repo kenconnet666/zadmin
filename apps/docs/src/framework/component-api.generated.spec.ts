@@ -13,9 +13,12 @@ describe('generated component API facts', () => {
 					fileName: `${fact.id}-${prop.name}.ts`,
 					reportDiagnostics: true
 				});
-				const errors = (result.diagnostics ?? []).filter(
-					(diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error
-				);
+				const errors = (result.diagnostics ?? [])
+					.filter((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error)
+					.map((diagnostic) => ({
+						code: diagnostic.code,
+						message: ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
+					}));
 				expect(errors, `${fact.name}.${prop.name}: ${prop.type}`).toEqual([]);
 			}
 		}

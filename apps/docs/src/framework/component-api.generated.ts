@@ -8578,7 +8578,7 @@ export const calendarApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDateValue | null) => void | (value: readonly CalendarDateValue[]) => void | (value: CalendarRangeValue | null) => void',
+			type: '((value: CalendarDateValue | null) => void) | ((value: readonly CalendarDateValue[]) => void) | ((value: CalendarRangeValue | null) => void)',
 			inheritedFrom: 'ZCalendarSingleBranch'
 		},
 		{
@@ -9629,7 +9629,7 @@ export const dateTimeFieldApiFacts = {
 		{
 			name: 'isDateTimeUnavailable',
 			required: false,
-			type: '(value: CalendarDateTime) => boolean | (value: ZonedDateTime) => boolean',
+			type: '((value: CalendarDateTime) => boolean) | ((value: ZonedDateTime) => boolean)',
 			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
@@ -9647,7 +9647,7 @@ export const dateTimeFieldApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			type: '((value: CalendarDateTime | null) => void) | ((value: ZonedDateTime | null) => void)',
 			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
@@ -9917,7 +9917,7 @@ export const dateTimePickerApiFacts = {
 		{
 			name: 'isDateTimeUnavailable',
 			required: false,
-			type: '(value: CalendarDateTime) => boolean | (value: ZonedDateTime) => boolean',
+			type: '((value: CalendarDateTime) => boolean) | ((value: ZonedDateTime) => boolean)',
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
 		},
 		{
@@ -9935,13 +9935,13 @@ export const dateTimePickerApiFacts = {
 		{
 			name: 'onCommit',
 			required: false,
-			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			type: '((value: CalendarDateTime | null) => void) | ((value: ZonedDateTime | null) => void)',
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
 		},
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			type: '((value: CalendarDateTime | null) => void) | ((value: ZonedDateTime | null) => void)',
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
 		},
 		{
@@ -10277,7 +10277,7 @@ export const dateTimeRangePickerApiFacts = {
 		{
 			name: 'isDateTimeUnavailable',
 			required: false,
-			type: '( value: CalendarDateTime, part: DateTimeRangePart, range: LocalDateTimeRangeValue ) => boolean | ( value: ZonedDateTime, part: DateTimeRangePart, range: ZonedDateTimeRangeValue ) => boolean',
+			type: '(( value: CalendarDateTime, part: DateTimeRangePart, range: LocalDateTimeRangeValue ) => boolean) | (( value: ZonedDateTime, part: DateTimeRangePart, range: ZonedDateTimeRangeValue ) => boolean)',
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
 		},
 		{
@@ -10295,13 +10295,13 @@ export const dateTimeRangePickerApiFacts = {
 		{
 			name: 'onCommit',
 			required: false,
-			type: '(value: LocalDateTimeRangeValue | null) => void | (value: ZonedDateTimeRangeValue | null) => void',
+			type: '((value: LocalDateTimeRangeValue | null) => void) | ((value: ZonedDateTimeRangeValue | null) => void)',
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
 		},
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: LocalDateTimeRangeValue | null) => void | (value: ZonedDateTimeRangeValue | null) => void',
+			type: '((value: LocalDateTimeRangeValue | null) => void) | ((value: ZonedDateTimeRangeValue | null) => void)',
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
 		},
 		{
@@ -11539,7 +11539,7 @@ export const nativeSelectApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: string) => void | (value: readonly string[]) => void',
+			type: '((value: string) => void) | ((value: readonly string[]) => void)',
 			inheritedFrom: 'ZNativeSelectSingleProps'
 		},
 		{

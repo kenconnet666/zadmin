@@ -161,9 +161,15 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 		},
 		{
 			component: AsyncStatesDemo,
-			covers: ['accessible-name', 'composition', 'loading', 'variants-and-states'],
+			covers: [
+				'accessible-name',
+				'composition',
+				'loading',
+				'resource-cleanup',
+				'variants-and-states'
+			],
 			description:
-				'组件负责aria-busy、Spinner、Alert和Empty表面，同时保留旧rows；请求、重试和缓存仍由外部owner持有。',
+				'外部AsyncCollectionQuery和本地模拟服务负责取消、latest-wins、失败重试、空结果与释放；DataTable只消费显式rows/loading/error并保留旧快照。',
 			id: 'data-table-async-states',
 			source: asyncStatesSource,
 			title: '加载、空数据与错误'

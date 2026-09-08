@@ -2,13 +2,13 @@
 
 日期：2026-09-08。本文是当前执行入口，承接最近的代码与用户规划。09-05 的逐项审计仅代表历史批次；09-06 的完整能力矩阵继续保留目标范围，本文确定最新基线、优先级、验收和模型分工。
 
-## 1. 当前核查基线
+## 1. 建档基线（后续状态见执行记录）
 
 - Git：`13c9a6327ac424584c088f64b5441375c5cc6ea8`，master 与 origin/master 一致，开始时工作区干净。
 - 生成事实：187 个公开组件、2674 个 Props、117 个组件文档页、598 个演示、9 个 guide。这是规模，不是完成率。
 - 静态合同登记：browser 175/187、visual 161/187、production 179/187、SSR 184/187。缺口需区分真缺测试与 inventory 未识别。
 - 141 个 metadata stable、46 个 experimental；当前执行证据 pending/partial，stableCompliant=0。标签或资产存在不等于通过。
-- 最新 [CI 34112603400](https://github.com/kenconnet666/zadmin/actions/runs/34112603400) 失败：构建、外部包、Docs 三浏览器通过；Static、组件行为、Coverage、Windows 前端检查失败。执行证据 job 成功但报告仍 partial。
+- 建档时最新 [CI 34112603400](https://github.com/kenconnet666/zadmin/actions/runs/34112603400) 失败：构建、外部包、Docs 三浏览器通过；Static、组件行为、Coverage、Windows 前端检查失败。执行证据 job 成功但报告仍 partial。
 - 最近完整绿 CI [33956955357](https://github.com/kenconnet666/zadmin/actions/runs/33956955357) 对应旧提交 3b4536f，不能外推至当前 HEAD。
 - 发布工作流已配置，真实 publish/provenance/tag/registry smoke/版本化 Docs 五项仍无完成证据。
 
@@ -124,12 +124,12 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 ## 9. 执行记录
 
-| 批次 | 状态               | 内容/证据                                                                                                                         |
-| ---- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| P00  | 已提交             | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                           |
-| P01  | 本地通过，CI待验收 | G0类型/shim/catalog；Sortable共享几何、日期adapter拒绝回滚、Toolbar焦点与FormList WebKit恢复；以本节对应修复提交的精确SHA进入CI   |
-| P02  | 试点清单已建立     | 当前SHA执行验收待CI；[7族41项演示静态清单](./docs-demo-pilot-inventory-2026-09-08.md)已区分保留/重写/补证据，尚未把建议当作已实现 |
-| P03+ | 待执行             | 依赖闭合后按G2–G4与D主线继续，不重复历史数量                                                                                      |
+| 批次 | 状态                   | 内容/证据                                                                                                                                                              |
+| ---- | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P00  | 已提交                 | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                                                |
+| P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断                       |
+| P02  | 本地通过，CI待验收     | HMR消费边界、AsyncCollectionQuery重入、生成类型优先级、确定性综合回归及Button/DataTable演示落地；见下节与[试点清单执行记录](./docs-demo-pilot-inventory-2026-09-08.md) |
+| P03+ | 待执行                 | 依赖闭合后按G2–G4与D主线继续，不重复历史数量                                                                                                                           |
 
 ### P01 集成记录
 
@@ -142,5 +142,21 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 - 已执行的定向证据：日期adapter/Toolbar/floating/geometry Chromium 4文件12用例；Docs catalog 2文件17用例；Sortable三浏览器24用例；geometry/RangeSlider三浏览器18用例；reorder与Sortable SSR 7用例；FormList及nested Chromium12用例、unit8用例，WebKit12用例后补充外部焦点回归的FormList5用例。最终修改仍以收口后的检查结果为准，以上不替代精确SHA CI。
 - 最后geometry与Sortable三浏览器合计48/48通过；ZUI和Docs类型检查均为0 errors/0 warnings。最终执行`pnpm zui:artifacts:update`、`pnpm --filter @zadmin/docs tokens:update`、全部修改文件Prettier/ESLint、`api:catalog:check`与Docs catalog 17用例均通过。生成器自测通过，类型提取数量完整保留2674；Stack漏挂演示恢复后catalog实际计数为599，不是凭空新增一项教学内容。
 - 记录位置：本地可追溯日志`.codex/production-p01-final.json`及逐项log；执行计划与修复分阶段提交。M0仍等待修复提交精确SHA的完整CI，不以本地定向结果替代。没有执行发布、tag或生产部署。
+
+### P02 集成记录
+
+**精确CI取证。** [34187254423](https://github.com/kenconnet666/zadmin/actions/runs/34187254423)对应`95d1113d1d311ae86b1e31109572b678c67d6afe`，最终failure。构建、外部包、Windows C# WebView2和Docs三浏览器通过；ZUI包634个测试文件通过、2984用例通过/2跳过，workspace job在后续Docs生成类型语法测试失败。Coverage有1428通过/2失败；Static在WebView消费ZUI源码时出现30个ImportMeta.hot类型错误。已下载并检查component-execution产物：报告仍partial、三个Verified汇总均0；job成功不能代替报告验收。
+
+- HMR：24个context owner以局部ImportMetaLike结构消费hot，保留编译后的调用方直接`import.meta.hot`，不向WebView添加vite/client或全局类型。WebView check已0 errors/0 warnings；真实源码擦除类型的回归与symbol identity测试通过。包含helper的25个模块与95d1113逐一比较，擦除类型/注释后的运行时代码完全一致。
+- AsyncCollectionQuery：替代load/cancel先登记controller/generation，再abort旧请求并复核owner，修复同步abort listener发起的新请求被外层覆盖。9项unit通过，涵盖旧结果、重入、dispose不得复活；DataQuery与DataTable相邻4项验证通过。
+- API显示类型：联合/交叉合并按TypeScript优先级为function/constructor/conditional等添加必要括号。没有改变原始组件API；生成2674个Props的语法测试已通过。错误日志只输出诊断code/message，避免循环AST对象淹没CI日志。
+- Coverage综合用例：显式控制旧慢验证的完成顺序、等待真正的invalid/focus/值状态，按trigger的aria-controls定位弹层。保留25→22反向范围归一化以及新验证成功后旧验证才返回的覆盖。2个目标用例三浏览器6项通过；单用例coverage行为通过但全库阈值不满足，不记录为完整Coverage通过。
+- Docs：完成Button尺寸展示去重、五档尺寸集中、模拟失败重试与语义tone；DataTable复用公开AsyncCollectionQuery，提供保留旧数据、空结果、失败/重试、取消和替代请求。未新增重复demo；5项新交互测试在现有WebStorm/Vite站点的Chromium通过，production build及其他浏览器交新SHA CI。
+- CI诊断：workspace setup成功后，Static中的独立检查即使前一检查失败也继续运行；取消或setup失败时不运行。未使用continue-on-error，任何失败仍保留job失败结果。
+- 最终本地验证：ZUI、Docs类型均0 errors/0 warnings；WebView消费检查通过；Docs unit 6文件32用例通过；新增Docs交互5用例通过；全部修改文件Prettier/ESLint、生成器自测与产物刷新通过。日志见`.codex/production-p02-types.json`、`.codex/production-p02-final.json`及对应逐项log。
+
+P02运行时修复单独提交为`76c1f82`；Docs/类型显示/CI诊断与同步记录在随后提交，最终CI验证两者组成的完整候选。
+
+下一批先核对P02修复提交CI；随后推进日期族RTL/reduced/reset演示验收、API默认值/动画公共实现收敛及Transfer E19。G2–G4接受范围不缩减，不把本批修复当作M0/M1或生产完成。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

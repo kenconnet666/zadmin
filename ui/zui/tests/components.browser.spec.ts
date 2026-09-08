@@ -1752,15 +1752,20 @@ describe('compiled ICSS browser updates', () => {
 		const account = document.querySelector<HTMLInputElement>('[data-testid="form-account"]');
 		const email = document.querySelector<HTMLInputElement>('[data-testid="form-email"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-output"]');
+		const slowValidation = document.querySelector<HTMLOutputElement>(
+			'[data-testid="form-slow-validation"]'
+		);
+		const resolveSlowValidation = document.querySelector<HTMLButtonElement>(
+			'[data-testid="form-resolve-slow-validation"]'
+		);
 		form?.requestSubmit();
-		await new Promise((resolve) => setTimeout(resolve, 10));
-		await tick();
-		expect(document.activeElement).toBe(account);
-		expect(account?.getAttribute('aria-invalid')).toBe('true');
-		expect(email?.getAttribute('aria-invalid')).toBe('true');
+		await expect.poll(() => account?.getAttribute('aria-invalid')).toBe('true');
+		await expect.poll(() => email?.getAttribute('aria-invalid')).toBe('true');
+		await expect.poll(() => document.activeElement).toBe(account);
 		if (account) {
 			account.value = 'x';
 			account.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			await expect.poll(() => slowValidation?.textContent).toBe('1:0');
 			account.value = 'alice';
 			account.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
@@ -1768,13 +1773,14 @@ describe('compiled ICSS browser updates', () => {
 			email.value = 'alice@example.com';
 			email.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
-		await new Promise((resolve) => setTimeout(resolve, 60));
-		await tick();
-		expect(account?.getAttribute('aria-invalid')).not.toBe('true');
+		await expect.poll(() => account?.getAttribute('aria-invalid')).not.toBe('true');
+		await expect.poll(() => email?.getAttribute('aria-invalid')).not.toBe('true');
+		resolveSlowValidation?.click();
+		await expect.poll(() => slowValidation?.textContent).toBe('1:1');
+		await expect.poll(() => account?.getAttribute('aria-invalid')).not.toBe('true');
+		expect(email?.getAttribute('aria-invalid')).not.toBe('true');
 		expect(form?.querySelector('[data-dirty="true"]')).not.toBeNull();
 		form?.requestSubmit();
-		await new Promise((resolve) => setTimeout(resolve, 10));
-		await tick();
 		await expect.poll(() => output?.textContent).toBe('true:false:0:alice');
 		await resetForm(form);
 		expect(output?.textContent).toBe('false:false:0:alice');
@@ -2177,6 +2183,8 @@ describe('compiled ICSS browser updates', () => {
 		const dateControl = document.getElementById(
 			dateLabel?.htmlFor ?? ''
 		) as HTMLInputElement | null;
+		const dialogFor = (trigger: HTMLButtonElement | undefined) =>
+			document.getElementById(trigger?.getAttribute('aria-controls') ?? '');
 		expect(dateControl?.tagName).toBe('INPUT');
 		expect(dateTrigger?.getAttribute('role')).toBeNull();
 		expect(dateControl?.required).toBe(true);
@@ -2184,15 +2192,18 @@ describe('compiled ICSS browser updates', () => {
 		dateLabel?.click();
 		expect(document.activeElement).toBe(dateControl);
 		dateTrigger?.click();
-		await tick();
+		await expect.poll(() => dateTrigger?.getAttribute('aria-expanded')).toBe('true');
+		const dateDialog = dialogFor(dateTrigger);
+		await expect.poll(() => dateDialog?.getAttribute('data-state')).toBe('open');
 		expect(new FormData(form!).getAll('picked')).toEqual(['2026-08-18']);
-		const date20 = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
+		const date20 = [...(dateDialog?.querySelectorAll<HTMLButtonElement>('button') ?? [])].find(
 			(button) => button.getAttribute('aria-label')?.includes('August 20, 2026')
 		);
-		date20?.click();
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		expect(new FormData(form!).get('picked')).toBe('2026-08-20');
-		expect(document.activeElement).toBe(dateTrigger);
+		if (!date20) throw new Error('DatePicker dialog did not render August 20, 2026.');
+		date20.click();
+		await expect.poll(() => new FormData(form!).get('picked')).toBe('2026-08-20');
+		await expect.poll(() => dateTrigger?.getAttribute('aria-expanded')).toBe('false');
+		await expect.poll(() => document.activeElement).toBe(dateTrigger);
 		const rangeTrigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
 		].find((button) => button.getAttribute('aria-label') === 'Range calendar');
@@ -2208,14 +2219,25 @@ describe('compiled ICSS browser updates', () => {
 		rangeLabel?.click();
 		expect(document.activeElement).toBe(rangeControl);
 		rangeTrigger?.click();
-		await tick();
-		for (const day of [25, 22]) {
-			const button = [
-				...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')
-			].find((candidate) => candidate.getAttribute('aria-label')?.includes(`August ${day}, 2026`));
-			button?.click();
-			await tick();
-		}
+		await expect.poll(() => rangeTrigger?.getAttribute('aria-expanded')).toBe('true');
+		const rangeDialog = dialogFor(rangeTrigger);
+		await expect.poll(() => rangeDialog?.getAttribute('data-state')).toBe('open');
+		const date25 = [...(rangeDialog?.querySelectorAll<HTMLButtonElement>('button') ?? [])].find(
+			(candidate) => candidate.getAttribute('aria-label')?.includes('August 25, 2026')
+		);
+		if (!date25) throw new Error('DateRangePicker dialog did not render August 25, 2026.');
+		date25.click();
+		await expect.poll(() => new FormData(form!).get('range.start')).toBe('2026-08-25');
+		await expect.poll(() => new FormData(form!).get('range.end')).toBeNull();
+		const date22 = [...(rangeDialog?.querySelectorAll<HTMLButtonElement>('button') ?? [])].find(
+			(candidate) => candidate.getAttribute('aria-label')?.includes('August 22, 2026')
+		);
+		if (!date22) throw new Error('DateRangePicker dialog did not retain August 22, 2026.');
+		date22.click();
+		await expect.poll(() => new FormData(form!).get('range.start')).toBe('2026-08-22');
+		await expect.poll(() => new FormData(form!).get('range.end')).toBe('2026-08-25');
+		await expect.poll(() => rangeTrigger?.getAttribute('aria-expanded')).toBe('false');
+		await expect.poll(() => document.activeElement).toBe(rangeTrigger);
 		const readonlyDateRoot = form?.querySelector<HTMLElement>(
 			'[data-testid="readonly-date-picker"]'
 		);
@@ -2238,10 +2260,6 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('readonly-date')).toBe('2026-08-18');
 		expect(new FormData(form!).getAll('readonly-range.start')).toEqual(['2026-08-18']);
 		expect(new FormData(form!).getAll('readonly-range.end')).toEqual(['2026-08-21']);
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		expect(new FormData(form!).get('range.start')).toBe('2026-08-22');
-		expect(new FormData(form!).get('range.end')).toBe('2026-08-25');
-		expect(document.activeElement).toBe(rangeTrigger);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

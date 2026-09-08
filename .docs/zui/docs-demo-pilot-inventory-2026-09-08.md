@@ -1,8 +1,8 @@
-# ZUI Docs Demo Pilot Inventory（2026-09-08）
+# ZUI Docs Demo Pilot Inventory（2026-09-08；基线95d1113）
 
 ## 范围与判定方式
 
-本清单只审阅当前工作树中的 `doc.ts` 与其 `demos` 引用的 `.svelte` 源码，范围为 Button、Form、DateTimeField、DateTimePicker、DateTimeRangePicker、Sortable、DataTable。判定以源码实际渲染和事件处理为准；`covers` 只作为索引，不作为“内容重复”或“能力已覆盖”的证据。
+下列表格保存提交 `95d1113` 的静态审阅基线，范围为 Button、Form、DateTimeField、DateTimePicker、DateTimeRangePicker、Sortable、DataTable 的 `doc.ts` 与演示源码。后续落地见末尾执行记录，不把历史缺口当作当前源码状态。判定以源码实际渲染和事件处理为准；`covers` 只作为索引，不作为“内容重复”或“能力已覆盖”的证据。
 
 表中“复制性”关注把 demo 单独复制到一个最小 Svelte 页面时，是否能从源码看出辅助类型、数据、schema、raw source、依赖和 owner。测试引用是已有组件运行时/浏览器/SSR 测试的相关证据入口，不等同于该 demo 已被自动化点击验收。
 
@@ -108,3 +108,12 @@ DataTable 当前最明确的差异是：`data-table-async-states` 只有本地�
 3. **为日期 picker 家族补一个最小外部清空/RTL/reduced 验收 demo 或扩展现有 `date-time-picker-value`**：不要复制 `Family`/`Constraints`；在已有 controlled owner 上增加 `value=null`、reset 后 draft、逻辑方向键和 reduced motion 的可观察输出。若一次增加 3 个轴会让 demo 失去单一教学目的，则拆成浏览器验收 fixture，不计入公开 demo 数量。
 
 这三项完成前，不建议合并现有日期家族 demo，也不建议删除 `data-table-boundaries`；后者应先决定是保留为边界说明还是迁移到 guide prose。
+
+## P02 落地记录
+
+- `button-variants` 只保留三种variant，五档尺寸矩阵集中到 `button-states`，维持原有7个Button demo ID。
+- `button-async` 已提供本地模拟成功/失败、失败后重试、重复激活拦截及卸载清理。正在运行的结果不受后续选择改变，成功/失败通过ZText语义tone显示，文字同时表达状态，不仅依赖颜色。
+- `data-table-async-states` 复用公开 `AsyncCollectionQuery`，演示保留旧数据刷新、失败重试、空结果、取消与后发请求覆盖。慢响应采用不同内容以便识别错误覆盖；服务是可取消的本地timer模拟，没有宣称真实HTTP/cache覆盖。
+- 演示复用时同步发现并修复query的abort监听器重入问题：最新请求不会再被外层load/cancel覆盖。该基础设施行为由独立unit验证，而不是只看demo文案。
+- 新增 [`docs-demo-pilot.e2e.ts`](../../apps/docs/tests/docs-demo-pilot.e2e.ts)：五档真实几何/字号、失败重试、旧快照保留、取消/覆盖、路由卸载与重新挂载。5项本地Chromium测试已通过；其他浏览器及production build结果仍以提交SHA对应CI为准。
+- 日期族RTL/reduced-motion、DataTable边界说明迁移与其余组件族整理仍待执行；本批没有将这些剩余项记成完成。
