@@ -438,6 +438,9 @@
 	let hoverValue = $state(0);
 	let activeStep = $state(1);
 	let clearedActivationStep: number | undefined;
+	let selectionReconcileFrame: { view: Window; id: number } | undefined;
+	let selectionReconcileVersion = 0;
+	let selectionReconcileActive = true;
 	let notifiedHoverValue = 0;
 	let firstInput = $state<HTMLInputElement | null>(null);
 
@@ -497,15 +500,30 @@
 		if (!Number.isFinite(optionValue)) return;
 		setHover(optionValue, option.querySelector<HTMLInputElement>('input'));
 	}
+	function cancelSelectionReconcile(): void {
+		selectionReconcileVersion += 1;
+		if (selectionReconcileFrame) {
+			selectionReconcileFrame.view.cancelAnimationFrame(selectionReconcileFrame.id);
+			selectionReconcileFrame = undefined;
+		}
+	}
 	function reconcileNativeSelection(input: HTMLInputElement, step: number): void {
+		cancelSelectionReconcile();
+		const version = selectionReconcileVersion;
 		const reconcile = () => {
-			if (!input.isConnected) return;
+			if (!selectionReconcileActive || version !== selectionReconcileVersion) return;
+			selectionReconcileFrame = undefined;
+			if (!input.isConnected || !ref?.contains(input)) return;
 			for (const candidate of ref?.querySelectorAll<HTMLInputElement>('input[type="radio"]') ?? [])
 				candidate.checked = Number(candidate.value) === valueState.current;
 			if (clearedActivationStep === step) clearedActivationStep = undefined;
 		};
 		const ownerWindow = input.ownerDocument.defaultView;
-		if (ownerWindow) ownerWindow.requestAnimationFrame(reconcile);
+		if (ownerWindow)
+			selectionReconcileFrame = {
+				view: ownerWindow,
+				id: ownerWindow.requestAnimationFrame(reconcile)
+			};
 		else queueMicrotask(reconcile);
 	}
 	function inputFor(step: number): HTMLInputElement | null {
@@ -631,6 +649,10 @@
 		firstInput = ref?.querySelector<HTMLInputElement>('input') ?? null;
 	});
 	onDestroy(fieldOwner.registerFocusOwner(focus));
+	onDestroy(() => {
+		selectionReconcileActive = false;
+		cancelSelectionReconcile();
+	});
 </script>
 
 <div

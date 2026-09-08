@@ -54,9 +54,14 @@ describe('ZSplitter production contract', () => {
 		);
 		const nested = root.querySelector<HTMLElement>('[data-testid="splitter-nested"]')!;
 		expect(nested.dataset.orientation).toBe('vertical');
-		expect(nested.querySelector('[data-slot="handle"]')?.getAttribute('aria-orientation')).toBe(
-			'horizontal'
-		);
+		const nestedHandle = nested.querySelector<HTMLElement>('[data-slot="handle"]')!;
+		expect(nestedHandle.getAttribute('aria-orientation')).toBe('horizontal');
+		const nestedPanels = [...nested.querySelectorAll<HTMLElement>(':scope > [data-slot="panel"]')];
+		const initialNestedHeight = nestedPanels[0]!.getBoundingClientRect().height;
+		await userEvent.click(nestedHandle);
+		await userEvent.keyboard('{ArrowDown}');
+		await tick();
+		expect(nestedPanels[0]!.getBoundingClientRect().height).toBeGreaterThan(initialNestedHeight);
 		await unmount(component);
 		target.remove();
 	});
@@ -77,7 +82,9 @@ describe('ZSplitter production contract', () => {
 		const initial = panels[0].getBoundingClientRect().width;
 		await userEvent.keyboard('{ArrowRight}');
 		await tick();
-		expect(panels[0].getBoundingClientRect().width).toBeGreaterThan(initial);
+		const afterArrow = panels[0].getBoundingClientRect().width;
+		expect(afterArrow).toBeGreaterThan(initial);
+		const arrowDelta = afterArrow - initial;
 		expect(output.textContent?.split('|')[0]).toMatch(/px$/u);
 		expect(output.textContent?.split('|')[1]).not.toMatch(/px|rem|%/u);
 		expect(output.textContent?.split('|')[2]).toMatch(/rem$/u);
@@ -86,13 +93,21 @@ describe('ZSplitter production contract', () => {
 		expect(Number(output.dataset.starts)).toBe(startCount + 1);
 		expect(Number(output.dataset.ends)).toBe(endCount + 1);
 
+		await userEvent.keyboard('{End}');
+		await tick();
+		const boundary = panels[0].getBoundingClientRect().width;
+		expect(boundary).toBeGreaterThan(afterArrow);
+		await userEvent.keyboard('{Shift>}{ArrowLeft}{/Shift}');
+		await tick();
+		const remembered = panels[0].getBoundingClientRect().width;
+		expect(boundary - remembered).toBeGreaterThan(arrowDelta);
 		await userEvent.keyboard('{Home}');
 		await tick();
 		expect(panels[0].dataset.collapsed).toBe('true');
 		await userEvent.keyboard('{Enter}');
 		await tick();
 		expect(panels[0].dataset.collapsed).toBeUndefined();
-		expect(panels[0].getBoundingClientRect().width).toBeGreaterThanOrEqual(120);
+		expect(panels[0].getBoundingClientRect().width).toBeCloseTo(remembered, 0);
 		await unmount(component);
 		target.remove();
 	});
@@ -110,6 +125,12 @@ describe('ZSplitter production contract', () => {
 		expect(rtlPanels[0].getBoundingClientRect().left).toBeGreaterThan(
 			rtlPanels[1].getBoundingClientRect().left
 		);
+		const rtlHandle = rtl.querySelector<HTMLElement>(':scope > [data-slot="handle"]')!;
+		const rtlInitial = rtlPanels[0].getBoundingClientRect().width;
+		await userEvent.click(rtlHandle);
+		await userEvent.keyboard('{ArrowRight}');
+		await tick();
+		expect(rtlPanels[0].getBoundingClientRect().width).toBeLessThan(rtlInitial);
 
 		component.setControlled([40, 40, '10rem']);
 		await tick();

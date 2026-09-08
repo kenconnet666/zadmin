@@ -423,6 +423,7 @@
 	});
 	const entries = $derived.by(() => {
 		if (panels.length < 2) throw new TypeError('ZSplitter requires at least two panels.');
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Per-projection key validation, not a reactive collection.
 		const keys = new Set<TKey>();
 		for (const [index, entry] of panels.entries()) {
 			assertSelectionKey(entry.key, `ZSplitter panels[${index}]`);
@@ -524,7 +525,8 @@
 	let actualDirection = $state<'ltr' | 'rtl'>('ltr');
 	let dragPixels = $state.raw<readonly number[] | null>(null);
 	let resizingHandle = $state<number | null>(null);
-	let restorePixels = new Map<TKey, number>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Action-only restore history; accepted allocations publish the rendered sizes.
+	const restorePixels = new Map<TKey, number>();
 	function seedIsCollapsed(index: number): boolean {
 		if (!entries[index].collapsible) return false;
 		const available = measured ? availablePixels : 1000;
@@ -880,6 +882,28 @@
 		const pixels = resizeAdjacentPair(start, bounds, handleIndex, target - start[handleIndex]);
 		discrete(handleIndex, 'collapse', pixels);
 	}
+	function resizeToBoundary(handleIndex: number, towardStart: boolean): void {
+		const collapseIndex = towardStart ? handleIndex : handleIndex + 1;
+		const collapseEntry = entries[collapseIndex];
+		const canCollapse = collapseEntry.collapsible === true;
+		if (canCollapse && !isCollapsed(collapseIndex, allocation.pixels))
+			restorePixels.set(collapseEntry.key, allocation.pixels[collapseIndex]);
+		const bounds = canCollapse
+			? boundsAllowingCollapse(normalAllocation.bounds, collapseIndex, true)
+			: normalAllocation.bounds;
+		const range = adjacentResizableRange(allocation.pixels, bounds, handleIndex);
+		const target = towardStart ? range.min : range.max;
+		discrete(
+			handleIndex,
+			'keyboard',
+			resizeAdjacentPair(
+				allocation.pixels,
+				bounds,
+				handleIndex,
+				target - allocation.pixels[handleIndex]
+			)
+		);
+	}
 	function handleKeydown(event: KeyboardEvent, handleIndex: number): void {
 		if (
 			event.defaultPrevented ||
@@ -891,72 +915,54 @@
 		)
 			return;
 		const horizontal = resolvedOrientation === 'horizontal';
-		const arrow = horizontal
-			? event.key === 'ArrowLeft'
-				? -1
-				: event.key === 'ArrowRight'
-					? 1
-					: 0
-			: event.key === 'ArrowUp'
-				? -1
-				: event.key === 'ArrowDown'
-					? 1
-					: 0;
-		if (arrow !== 0) {
-			event.preventDefault();
-			const direction = horizontal && actualDirection === 'rtl' ? -arrow : arrow;
-			const amount = event.shiftKey ? shiftStep : step;
-			if (!Number.isFinite(amount) || amount <= 0)
-				throw new TypeError('ZSplitter step and shiftStep must be positive and finite.');
-			discrete(
+		let arrow: -1 | 1;
+		switch (event.key) {
+			case 'ArrowLeft':
+				if (!horizontal) return;
+				arrow = -1;
+				break;
+			case 'ArrowRight':
+				if (!horizontal) return;
+				arrow = 1;
+				break;
+			case 'ArrowUp':
+				if (horizontal) return;
+				arrow = -1;
+				break;
+			case 'ArrowDown':
+				if (horizontal) return;
+				arrow = 1;
+				break;
+			case 'Home':
+				event.preventDefault();
+				resizeToBoundary(handleIndex, true);
+				return;
+			case 'End':
+				event.preventDefault();
+				resizeToBoundary(handleIndex, false);
+				return;
+			case 'Enter':
+				event.preventDefault();
+				toggleCollapse(handleIndex);
+				return;
+			default:
+				return;
+		}
+		event.preventDefault();
+		const direction = horizontal && actualDirection === 'rtl' ? -arrow : arrow;
+		const amount = event.shiftKey ? shiftStep : step;
+		if (!Number.isFinite(amount) || amount <= 0)
+			throw new TypeError('ZSplitter step and shiftStep must be positive and finite.');
+		discrete(
+			handleIndex,
+			'keyboard',
+			resizedFrom(
+				allocation.pixels,
 				handleIndex,
-				'keyboard',
-				resizedFrom(
-					allocation.pixels,
-					handleIndex,
-					direction * availablePixels * (amount / 100),
-					false
-				)
-			);
-			return;
-		}
-		if (event.key === 'Home' || event.key === 'End') {
-			event.preventDefault();
-			let bounds: readonly ResizableBounds[] = normalAllocation.bounds;
-			if (
-				event.key === 'Home' &&
-				entries[handleIndex].collapsible &&
-				!isCollapsed(handleIndex, allocation.pixels)
+				direction * availablePixels * (amount / 100),
+				false
 			)
-				restorePixels.set(entries[handleIndex].key, allocation.pixels[handleIndex]);
-			if (
-				event.key === 'End' &&
-				entries[handleIndex + 1].collapsible &&
-				!isCollapsed(handleIndex + 1, allocation.pixels)
-			)
-				restorePixels.set(entries[handleIndex + 1].key, allocation.pixels[handleIndex + 1]);
-			if (event.key === 'Home' && entries[handleIndex].collapsible)
-				bounds = boundsAllowingCollapse(bounds, handleIndex, true);
-			if (event.key === 'End' && entries[handleIndex + 1].collapsible)
-				bounds = boundsAllowingCollapse(bounds, handleIndex + 1, true);
-			const range = adjacentResizableRange(allocation.pixels, bounds, handleIndex);
-			const target = event.key === 'Home' ? range.min : range.max;
-			discrete(
-				handleIndex,
-				'keyboard',
-				resizeAdjacentPair(
-					allocation.pixels,
-					bounds,
-					handleIndex,
-					target - allocation.pixels[handleIndex]
-				)
-			);
-			return;
-		}
-		if (event.key === 'Enter') {
-			event.preventDefault();
-			toggleCollapse(handleIndex);
-		}
+		);
 	}
 	function measure(): void {
 		const root = ref;

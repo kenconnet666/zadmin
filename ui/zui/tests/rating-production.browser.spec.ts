@@ -1,8 +1,9 @@
 import { tick } from 'svelte';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import RatingFixture from './RatingFixture.svelte';
+import ZRating from '../src/components/input/ZRating.svelte';
 import { settleFormReset } from './form-reset.js';
 
 let originalViewport: { height: number; width: number };
@@ -21,8 +22,56 @@ function radio(root: HTMLElement, value: number): HTMLInputElement {
 }
 
 describe('ZRating production contract', () => {
+	it('coalesces native selection repair and cancels its owner frame on unmount', async () => {
+		const screen = await render(ZRating, {
+			label: 'Rating frame ownership',
+			defaultValue: 1,
+			clearable: true,
+			'data-testid': 'rating-frame-owner'
+		});
+		await tick();
+		const root = element('rating-frame-owner');
+		const callbacks: FrameRequestCallback[] = [];
+		const request = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+			callbacks.push(callback);
+			return callbacks.length;
+		});
+		const cancel = vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => undefined);
+		let unmounted = false;
+		try {
+			radio(root, 1).click();
+			await tick();
+			expect(callbacks).toHaveLength(1);
+			radio(root, 2).click();
+			await tick();
+			radio(root, 2).click();
+			await tick();
+			expect(callbacks).toHaveLength(2);
+			expect(cancel).toHaveBeenCalledWith(1);
+			// Even a delivery already taken out of the owner's queue must become inert.
+			radio(root, 2).checked = true;
+			callbacks[0]!(0);
+			expect(radio(root, 2).checked).toBe(true);
+			callbacks[1]!(0);
+			expect(radio(root, 2).checked).toBe(false);
+			radio(root, 1).click();
+			await tick();
+			radio(root, 1).click();
+			await tick();
+			expect(callbacks).toHaveLength(3);
+			unmounted = true;
+			await screen.unmount();
+			expect(cancel).toHaveBeenCalledWith(3);
+			callbacks[2]!(0);
+			expect(root.isConnected).toBe(false);
+		} finally {
+			request.mockRestore();
+			cancel.mockRestore();
+			if (!unmounted) await screen.unmount();
+		}
+	});
 	it('uses native fraction radios for Field labels, hover preview, clear, FormData and reset', async () => {
-		render(RatingFixture);
+		await render(RatingFixture);
 		await tick();
 		const root = element('rating-main');
 		const form = element<HTMLFormElement>('rating-form');
@@ -64,7 +113,7 @@ describe('ZRating production contract', () => {
 	});
 
 	it('does not repeat notifications while pointer events stay in the same fraction hit zone', async () => {
-		render(RatingFixture);
+		await render(RatingFixture);
 		await tick();
 		const root = element('rating-main');
 		const fraction = radio(root, 3.5).closest('label')!;
@@ -79,7 +128,7 @@ describe('ZRating production contract', () => {
 	});
 
 	it('selects by real keyboard in LTR and RTL while keeping one Tab stop', async () => {
-		render(RatingFixture);
+		await render(RatingFixture);
 		await tick();
 		const root = element('rating-main');
 		radio(root, 2.5).focus();
@@ -102,7 +151,7 @@ describe('ZRating production contract', () => {
 	});
 
 	it('keeps readonly submitted and honors Field plus native fieldset disabledness', async () => {
-		render(RatingFixture);
+		await render(RatingFixture);
 		await tick();
 		const readonly = element('rating-readonly');
 		await userEvent.click(radio(readonly, 4));
@@ -128,7 +177,7 @@ describe('ZRating production contract', () => {
 
 	it('uses five Theme sizes and exposes frozen custom item contexts', async () => {
 		// @zui-visual ZRating five-size geometry, tone and custom symbols
-		render(RatingFixture);
+		await render(RatingFixture);
 		await tick();
 		for (const [size, pixels] of [
 			['xsmall', 24],
