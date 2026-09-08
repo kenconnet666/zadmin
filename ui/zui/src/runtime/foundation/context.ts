@@ -19,7 +19,7 @@ import {
 	type ResolvedZuiComponentDefaults,
 	type ZuiComponentDefaults
 } from './component-defaults.js';
-import { createContextKey } from './context-key.js';
+import { createContextKey, type ImportMetaLike } from './context-key.js';
 import {
 	enUSLocalePack,
 	resolveZuiLocalePack,
@@ -81,7 +81,7 @@ export interface ZuiContextSource {
 	readonly componentDefaults?: ZuiComponentDefaults | null;
 }
 
-const ZUI_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-context');
+const ZUI_CONTEXT = createContextKey({ hot: (import.meta as ImportMetaLike).hot }, 'zui-context');
 interface ResolvedZuiContextSource extends Required<
 	Omit<ZuiContextSource, 'localePack' | 'componentDefaults'>
 > {

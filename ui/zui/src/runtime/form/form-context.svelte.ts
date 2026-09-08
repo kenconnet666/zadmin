@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { createContextKey } from '../foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../foundation/context-key.js';
 
 import type { ZControlSize } from '../foundation/control-size.js';
 import type { FormRegistry } from './form-registry.svelte.js';
@@ -57,7 +57,10 @@ export interface ZFormContext extends FormValueHost {
 	fieldEvent(instanceId: string, trigger: Exclude<FormValidationTrigger, 'submit'>): void;
 }
 
-const FORM_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-form-context');
+const FORM_CONTEXT = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-form-context'
+);
 
 export function provideZForm(context: ZFormContext): ZFormContext {
 	setContext(FORM_CONTEXT, context);

@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 export type DropdownMenuFocusStrategy = 'first' | 'last';
 
@@ -10,7 +10,7 @@ export interface ZDropdownMenuContext {
 }
 
 const DROPDOWN_MENU_CONTEXT = createContextKey(
-	{ hot: import.meta.hot },
+	{ hot: (import.meta as ImportMetaLike).hot },
 	'zui-dropdown-menu-context'
 );
 

@@ -1,9 +1,13 @@
-interface ContextModule {
-	readonly hot?: { readonly data: Record<string, unknown> };
+export interface HotModuleLike {
+	readonly data: Record<string, unknown>;
 }
 
-/** Pass `{ hot: import.meta.hot }` so Vite sees the hot access in the calling module. */
-export function createContextKey(module: ContextModule, description: string): symbol {
+export interface ImportMetaLike {
+	readonly hot?: HotModuleLike;
+}
+
+/** Pass `{ hot: (import.meta as ImportMetaLike).hot }` so Vite sees the caller's hot access. */
+export function createContextKey(module: ImportMetaLike, description: string): symbol {
 	if (!module.hot) return Symbol(description);
 	const key = `zui:context:${description}`;
 	const previous = module.hot.data[key];

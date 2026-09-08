@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -44,7 +44,7 @@ export interface ZCheckboxGroupContext<TKey extends SelectionKey = SelectionKey>
 
 // The literal hot access enables Vite injection; provider and consumers retain their shared key.
 const CHECKBOX_GROUP_CONTEXT = createContextKey(
-	{ hot: import.meta.hot },
+	{ hot: (import.meta as ImportMetaLike).hot },
 	'zui-checkbox-group-context'
 );
 

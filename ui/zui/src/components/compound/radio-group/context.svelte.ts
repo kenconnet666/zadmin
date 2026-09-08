@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -33,7 +33,10 @@ export interface ZRadioGroupContext {
 	tabIndex(value: SelectionKey): 0 | -1;
 }
 
-const RADIO_GROUP_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-radio-group-context');
+const RADIO_GROUP_CONTEXT = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-radio-group-context'
+);
 
 export function provideZRadioGroup(context: ZRadioGroupContext): ZRadioGroupContext {
 	setContext(RADIO_GROUP_CONTEXT, context);

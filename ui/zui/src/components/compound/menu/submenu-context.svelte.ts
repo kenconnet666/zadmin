@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
@@ -15,7 +15,10 @@ export interface ZMenuSubContext {
 	setTrigger(value: SelectionKey, trigger: HTMLElement | null): void;
 }
 
-const MENU_SUB_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-menu-sub-context');
+const MENU_SUB_CONTEXT = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-menu-sub-context'
+);
 
 export function provideZMenuSub(context: ZMenuSubContext): ZMenuSubContext {
 	setContext(MENU_SUB_CONTEXT, context);

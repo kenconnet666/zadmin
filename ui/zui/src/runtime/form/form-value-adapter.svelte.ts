@@ -3,7 +3,7 @@ import {
 	ControllableState,
 	type ControllableStateOptions
 } from '../foundation/controllable-state.svelte.js';
-import { createContextKey } from '../foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../foundation/context-key.js';
 import type { FieldPath } from './field-path.js';
 import { sameFormValue } from './form-value-equality.js';
 
@@ -35,7 +35,10 @@ export interface FormValueScope {
 	readonly instanceId: string;
 	readonly path: FieldPath;
 }
-const VALUE_SCOPE = createContextKey({ hot: import.meta.hot }, 'zui-form-value-scope');
+const VALUE_SCOPE = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-form-value-scope'
+);
 
 export function provideFormValueScope(scope: FormValueScope): void {
 	setContext(VALUE_SCOPE, scope);

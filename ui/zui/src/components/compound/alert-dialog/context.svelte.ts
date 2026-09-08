@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 export interface ZAlertDialogContext {
 	readonly action: HTMLButtonElement | null;
@@ -12,7 +12,10 @@ export interface ZAlertDialogContext {
 	setCancel(cancel: HTMLButtonElement | null): void;
 }
 
-const ALERT_DIALOG_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-alert-dialog-context');
+const ALERT_DIALOG_CONTEXT = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-alert-dialog-context'
+);
 
 export function provideZAlertDialog(context: ZAlertDialogContext): ZAlertDialogContext {
 	setContext(ALERT_DIALOG_CONTEXT, context);

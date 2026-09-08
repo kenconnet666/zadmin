@@ -73,10 +73,12 @@ export class AsyncCollectionQuery<TQuery, TData> {
 
 	async load(query: TQuery): Promise<TData | undefined> {
 		if (this.#disposed) throw new Error('Async collection query has been disposed.');
-		this.#controller?.abort();
+		const previous = this.#controller;
 		const controller = new AbortController();
 		const generation = ++this.#generation;
 		this.#controller = controller;
+		previous?.abort();
+		if (!this.#isCurrent(generation, controller)) return undefined;
 		this.#publish({
 			...this.#state,
 			error: undefined,
@@ -101,13 +103,15 @@ export class AsyncCollectionQuery<TQuery, TData> {
 
 	cancel(): void {
 		if (this.#disposed || this.#controller === undefined) return;
-		this.#controller?.abort();
+		const controller = this.#controller;
 		this.#controller = undefined;
-		this.#generation += 1;
+		const generation = ++this.#generation;
+		controller.abort();
+		if (this.#disposed || this.#generation !== generation || this.#controller !== undefined) return;
 		this.#publish({
 			...this.#state,
 			error: undefined,
-			generation: this.#generation,
+			generation,
 			loading: false,
 			status: 'idle'
 		});

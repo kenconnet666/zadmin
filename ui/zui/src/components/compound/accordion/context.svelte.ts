@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import { createContextKey } from '../../../runtime/foundation/context-key.js';
+import { createContextKey, type ImportMetaLike } from '../../../runtime/foundation/context-key.js';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -47,9 +47,12 @@ interface ZAccordionItemBoundary {
 	readonly owner: symbol;
 }
 
-const ACCORDION_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-accordion-context');
+const ACCORDION_CONTEXT = createContextKey(
+	{ hot: (import.meta as ImportMetaLike).hot },
+	'zui-accordion-context'
+);
 const ACCORDION_ITEM_CONTEXT = createContextKey(
-	{ hot: import.meta.hot },
+	{ hot: (import.meta as ImportMetaLike).hot },
 	'zui-accordion-item-context'
 );
 
