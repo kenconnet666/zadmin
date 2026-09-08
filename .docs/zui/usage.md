@@ -17,10 +17,12 @@
 发布后外部仓库：
 
 ```powershell
-pnpm add @zadmin/zui @lucide/svelte
+pnpm add @zadmin/zui '@lucide/svelte@>=1.37.0 <1.42.0'
 ```
 
 `@lucide/svelte`是ZUI的必需peer dependency，由使用项目显式安装；ZUI不会复制或转出第三方图标包。
+
+2026-09-08核实：Lucide 1.42.0的发布声明引用未发布的`@lucide/shared/types`，会破坏严格外部类型检查，因此当前支持范围为`>=1.37.0 <1.42.0`，workspace锁定版本仍为1.37.0。1.41.0的发布声明未引入该缺失依赖；上游修复声明依赖后再重新验收并扩大范围，不用stub或skipLibCheck掩盖。参见[上游1.42.0类型源码](https://github.com/lucide-icons/lucide/blob/1.42.0/packages/svelte/src/types.ts)。
 
 支持范围：
 

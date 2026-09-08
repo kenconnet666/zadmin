@@ -1304,7 +1304,7 @@ describe('compiled ICSS browser updates', () => {
 	});
 
 	it('coordinates Transfer filtering, keyboard selection, moves, form values and reset', async () => {
-		render(TransferFixture);
+		await render(TransferFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="transfer-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="transfer-output"]');
 		const source = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Available"]');
@@ -1357,9 +1357,17 @@ describe('compiled ICSS browser updates', () => {
 			new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, key: 'a' })
 		);
 		await tick();
-		document.querySelector<HTMLButtonElement>('[aria-label="Move to available"]')?.click();
+		const moveToAvailable = document.querySelector<HTMLButtonElement>(
+			'[aria-label="Move to available"]'
+		);
+		expect(targetProduction?.getAttribute('aria-selected')).toBe('true');
+		expect(moveToAvailable?.disabled).toBe(false);
+		moveToAvailable?.click();
 		await tick();
 		expect(document.querySelector('[data-testid="transfer-output"]')?.textContent).toBe('');
+		expect(document.querySelector('[data-testid="transfer-value-change-count"]')?.textContent).toBe(
+			'3'
+		);
 	});
 
 	it('coordinates Mention caret parsing, active descendant insertion, form value and reset', async () => {

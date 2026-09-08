@@ -65,6 +65,8 @@ export default defineConfig({
 			provider: 'v8',
 			// Retain exact uncovered statement/branch locations for the remote coverage gate.
 			reporter: ['text', 'json-summary', 'json'],
+			// A failing test must not hide diagnostic coverage; its failure still fails the job.
+			reportOnFailure: true,
 			thresholds: {
 				// Mature target: 95% lines/statements/functions and 90% branches.
 				// The current suite is below those targets, so negative thresholds

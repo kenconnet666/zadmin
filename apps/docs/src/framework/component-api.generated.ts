@@ -14073,162 +14073,189 @@ export const transferApiFacts = {
 	id: 'transfer',
 	inheritedFrom: [
 		'HTMLAttributes<HTMLDivElement>',
-		'TransferImmediateMove | TransferRequestedMove'
+		'ZTransferImmediateSemanticProps | ZTransferRequestedSemanticProps'
 	],
 	name: 'ZTransfer',
 	props: [
 		{
 			name: 'controlId',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly SelectionKey[]',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'emptyText',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'filter',
 			required: false,
-			type: '(item: TransferItem, query: string) => boolean'
+			type: '(item: TransferItem, query: string) => boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'filterable',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'items',
 			required: true,
-			type: 'readonly TransferItem[]'
+			type: 'readonly TransferItem[]',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'loading',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'loadingText',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'moveToSourceLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'moveToTargetLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'onMoveEnd',
 			required: false,
-			type: '(detail: TransferMoveEnd) => void'
+			type: '(detail: TransferMoveEnd) => void',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'searchPlaceholder',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'ZControlSize'
+			type: 'ZControlSize',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'sourceTitle',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'targetTitle',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'value',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly SelectionKey[]',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'virtual',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'virtualHeight',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'virtualItemSize',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'virtualOverscan',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZTransferSharedProps'
 		},
 		{
 			name: 'moveMode',
 			required: false,
 			type: "'immediate' | 'request'",
-			inheritedFrom: 'TransferImmediateMove'
+			inheritedFrom: 'ZTransferImmediateSemanticProps'
 		},
 		{
 			name: 'onMoveRequest',
 			required: false,
 			type: '(request: TransferMoveRequest) => boolean | Promise<boolean>',
-			inheritedFrom: 'TransferRequestedMove'
+			inheritedFrom: 'ZTransferRequestedSemanticProps'
 		},
 		{
 			name: 'onValueChange',
 			required: false,
 			type: '(value: readonly SelectionKey[]) => void',
-			inheritedFrom: 'TransferImmediateMove'
+			inheritedFrom: 'ZTransferImmediateSemanticProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTransfer.svelte',

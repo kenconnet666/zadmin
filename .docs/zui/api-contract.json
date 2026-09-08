@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 187,
-	"overallSha256": "20310796c79100f553e8728184fb93124ddeb56d99c765fe47c92e7daf7667e2",
+	"overallSha256": "f38509bef89fdf3400e23de44ebada0cdf31f8c87c4afc67a2730102c7843f6a",
 	"components": [
 		{
 			"id": "accordion",
@@ -810,7 +810,7 @@
 		},
 		{
 			"id": "transfer",
-			"sha256": "49e12ac89655ce2878173016b088264fc72bdc1e4d91b24d963fe7f55acd952a",
+			"sha256": "0ed13191dbcfafebb622423cbda284053b16ec5816c6ce4afe8119cd590c4e4d",
 			"source": "src/components/input/ZTransfer.svelte"
 		},
 		{

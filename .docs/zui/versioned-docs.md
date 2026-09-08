@@ -8,7 +8,7 @@
 - Total routes including home: 127
 - Build files: BUILD_FILE_COUNT
 - Build SHA-256: BUILD_SHA256
-- Support matrix SHA-256: b73e6cb6e24b1d48f8c42f18220b730124cdc7c84e7f248c94899a540fb6ab2e
+- Support matrix SHA-256: 5e6e9e0ed217f1b007720bbaa8c015993900741b6d7e87de7f6dec9b17a19d96
 - Tested browsers: chromium, firefox, webkit
 - Deployment: **not deployed**
 

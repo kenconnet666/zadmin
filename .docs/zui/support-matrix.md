@@ -7,7 +7,7 @@
 - @zadmin/zui
 - Node engine：>=22.0.0
 - Svelte peer：>=5.56.0 <6
-- Lucide peer：^1.37.0
+- Lucide peer：>=1.37.0 <1.42.0
 - Shiki peer：^4.4.3（optional，仅 ZCode 高亮路径需要）
 
 ## CI tested

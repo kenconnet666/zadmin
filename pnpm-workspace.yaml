@@ -16,7 +16,8 @@ catalog:
   '@floating-ui/dom': ^1.8.0
   '@fontsource/fira-mono': ^5.2.7
   '@internationalized/date': ^3.12.3
-  '@lucide/svelte': ^1.37.0
+  # 1.42.0 publishes unresolved @lucide/shared/types references; see .docs/zui/usage.md.
+  '@lucide/svelte': '>=1.37.0 <1.42.0'
   '@neoconfetti/svelte': ^2.2.2
   '@playwright/test': ^1.62.1
   '@standard-schema/spec': ^1.1.0

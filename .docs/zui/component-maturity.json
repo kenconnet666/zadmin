@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 390
+		"testFiles": 391
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -19421,6 +19421,14 @@
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
 						"detail": "ZTimeField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/time-field-production.browser.spec.ts",
+						"detail": "ZTimeField browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeFieldProductionFixture.svelte",
+						"detail": "ZTimeField explicit rendered fixture usage"
 					}
 				],
 				"VisualContractsDeclared": [
@@ -19452,6 +19460,14 @@
 					},
 					{
 						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZTimeField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/time-field-production.browser.spec.ts",
+						"detail": "ZTimeField production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeFieldProductionFixture.svelte",
 						"detail": "ZTimeField explicit rendered fixture usage"
 					}
 				],
@@ -19984,7 +20000,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "49e12ac89655ce2878173016b088264fc72bdc1e4d91b24d963fe7f55acd952a API snapshot entry"
+						"detail": "0ed13191dbcfafebb622423cbda284053b16ec5816c6ce4afe8119cd590c4e4d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

@@ -8,6 +8,7 @@
 		{ disabled: true, key: 'legacy', label: 'Legacy' }
 	];
 	let value = $state<readonly (string | number)[]>(['staging']);
+	let valueChangeCount = $state(0);
 </script>
 
 <form data-testid="transfer-form">
@@ -18,7 +19,9 @@
 		{items}
 		moveToSourceLabel="Move to available"
 		moveToTargetLabel="Move to selected"
+		onValueChange={() => (valueChangeCount += 1)}
 	/>
 	<button type="reset">Reset</button>
 </form>
 <output data-testid="transfer-output">{value.join(',')}</output>
+<output data-testid="transfer-value-change-count">{valueChangeCount}</output>

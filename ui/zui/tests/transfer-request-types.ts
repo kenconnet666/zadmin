@@ -1,10 +1,11 @@
-import type {
-	TransferItem,
-	TransferMoveEnd,
-	TransferMoveRequest,
-	TransferMoveResult,
-	TransferMoveSource,
-	ZTransferProps
+import type { ComponentProps } from 'svelte';
+import ZTransfer, {
+	type TransferItem,
+	type TransferMoveEnd,
+	type TransferMoveRequest,
+	type TransferMoveResult,
+	type TransferMoveSource,
+	type ZTransferProps
 } from '../src/components/input/ZTransfer.svelte';
 
 const items = [
@@ -27,6 +28,9 @@ const requested = {
 	onMoveRequest: async (request: TransferMoveRequest) => request.destination === 'target',
 	value: [0]
 } satisfies ZTransferProps;
+
+const immediateComponentProps: ComponentProps<typeof ZTransfer> = immediate;
+const requestedComponentProps: ComponentProps<typeof ZTransfer> = requested;
 
 const request: TransferMoveRequest = {
 	destination: 'target',
@@ -62,6 +66,14 @@ const immediateWithRequestHandler = {
 } as const;
 // @ts-expect-error Immediate mode cannot declare onMoveRequest.
 const invalidImmediateWithRequestHandler: ZTransferProps = immediateWithRequestHandler;
+// @ts-expect-error ComponentProps preserves the request handler requirement.
+const invalidComponentMissingHandler: ComponentProps<typeof ZTransfer> = missingRequestHandler;
+// @ts-expect-error ComponentProps preserves request/onValueChange mutual exclusion.
+const invalidComponentRequestWithValueCallback: ComponentProps<typeof ZTransfer> =
+	requestWithValueCallback;
+// @ts-expect-error ComponentProps preserves immediate/onMoveRequest mutual exclusion.
+const invalidComponentImmediateWithRequestHandler: ComponentProps<typeof ZTransfer> =
+	immediateWithRequestHandler;
 const invalidRequestResult = {
 	items,
 	moveMode: 'request',
@@ -72,12 +84,17 @@ const invalidRequestResult = {
 
 void [
 	immediate,
+	immediateComponentProps,
 	requested,
+	requestedComponentProps,
 	request,
 	source,
 	result,
 	invalidMissingRequestHandler,
 	invalidRequestWithValueCallback,
 	invalidImmediateWithRequestHandler,
+	invalidComponentMissingHandler,
+	invalidComponentRequestWithValueCallback,
+	invalidComponentImmediateWithRequestHandler,
 	invalidRequestResult
 ];

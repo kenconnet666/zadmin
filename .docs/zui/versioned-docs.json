@@ -7,7 +7,7 @@
 	"supportMatrix": {
 		"sourcePath": ".docs/zui/support-matrix.json",
 		"artifactPath": "zui-artifact/support-matrix.json",
-		"sha256": "b73e6cb6e24b1d48f8c42f18220b730124cdc7c84e7f248c94899a540fb6ab2e",
+		"sha256": "5e6e9e0ed217f1b007720bbaa8c015993900741b6d7e87de7f6dec9b17a19d96",
 		"browsers": ["chromium", "firefox", "webkit"]
 	},
 	"deployment": {

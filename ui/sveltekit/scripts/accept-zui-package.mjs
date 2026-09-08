@@ -1,5 +1,15 @@
 import { spawn } from 'node:child_process';
-import { mkdtemp, mkdir, readFile, readdir, realpath, rm, writeFile } from 'node:fs/promises';
+import { EventEmitter } from 'node:events';
+import {
+	access,
+	mkdtemp,
+	mkdir,
+	readFile,
+	readdir,
+	realpath,
+	rm,
+	writeFile
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,7 +22,6 @@ const fixtureRoot = await realpath(
 );
 const tarballRoot = resolve(fixtureRoot, 'tarballs');
 const pnpmCli = process.env.npm_execpath;
-if (!pnpmCli) throw new Error('accept-zui-package must be launched through pnpm.');
 
 function runPnpm(args, cwd) {
 	return new Promise((resolveRun, rejectRun) => {
@@ -61,8 +70,118 @@ async function waitForServer(url, processHandle) {
 	throw new Error('External SSR host did not become ready.');
 }
 
+async function stopOwnedChild(processHandle, timeoutMs = 5000) {
+	if (!processHandle || processHandle.exitCode !== null || processHandle.signalCode !== null)
+		return;
+	await new Promise((resolveStop, rejectStop) => {
+		let settled = false;
+		const onExit = () => finish();
+		const onError = (error) => finish(error);
+		const timeout = setTimeout(
+			() => finish(new Error(`External SSR host did not exit within ${timeoutMs}ms.`)),
+			timeoutMs
+		);
+		const finish = (error) => {
+			if (settled) return;
+			settled = true;
+			clearTimeout(timeout);
+			processHandle.removeListener('exit', onExit);
+			processHandle.removeListener('error', onError);
+			if (error) rejectStop(error);
+			else resolveStop();
+		};
+		processHandle.once('exit', onExit);
+		processHandle.once('error', onError);
+		try {
+			if (
+				!processHandle.kill() &&
+				processHandle.exitCode === null &&
+				processHandle.signalCode === null
+			)
+				finish(new Error('External SSR host could not be stopped.'));
+		} catch (error) {
+			finish(error);
+		}
+	});
+}
+
+async function cleanupFixture(processHandle, path, validationSucceeded, timeoutMs = 5000) {
+	let failure;
+	try {
+		await stopOwnedChild(processHandle, timeoutMs);
+	} catch (error) {
+		console.error('External package SSR child cleanup failed.', error);
+		failure = error;
+	}
+	if (validationSucceeded && !failure) {
+		try {
+			await rm(path, { force: true, maxRetries: 5, recursive: true, retryDelay: 100 });
+		} catch (error) {
+			console.error('External package fixture cleanup failed.', error);
+			failure = error;
+		}
+	}
+	if (!validationSucceeded || failure) console.error(`Failed package fixture retained at ${path}`);
+	return failure;
+}
+
+async function pathExists(path) {
+	try {
+		await access(path);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+if (process.argv.includes('--cleanup-self-test')) {
+	const noChildRoot = await mkdtemp(resolve(tmpdir(), 'zadmin-package-cleanup-no-child-'));
+	if (await cleanupFixture(undefined, noChildRoot, true))
+		throw new Error('External package cleanup self-test rejected an absent child.');
+	if (await pathExists(noChildRoot))
+		throw new Error('External package cleanup self-test retained its no-child fixture.');
+
+	const exitedChild = spawn(process.execPath, ['-e', ''], { stdio: 'ignore', windowsHide: true });
+	await new Promise((resolveExit, rejectExit) => {
+		exitedChild.once('exit', resolveExit);
+		exitedChild.once('error', rejectExit);
+	});
+	const exitedRoot = await mkdtemp(resolve(tmpdir(), 'zadmin-package-cleanup-exited-'));
+	if (await cleanupFixture(exitedChild, exitedRoot, true))
+		throw new Error('External package cleanup self-test rejected an exited child.');
+	if (await pathExists(exitedRoot))
+		throw new Error('External package cleanup self-test retained its exited-child fixture.');
+
+	const stuckChild = new EventEmitter();
+	stuckChild.exitCode = null;
+	stuckChild.signalCode = null;
+	stuckChild.kill = () => true;
+	const timeoutRoot = await mkdtemp(resolve(tmpdir(), 'zadmin-package-cleanup-timeout-'));
+	const timeoutFailure = await cleanupFixture(stuckChild, timeoutRoot, true, 10);
+	if (!timeoutFailure || !(await pathExists(timeoutRoot)))
+		throw new Error('External package cleanup self-test did not retain its timed-out fixture.');
+	await rm(timeoutRoot, { force: true, maxRetries: 5, recursive: true, retryDelay: 100 });
+
+	const child = spawn(process.execPath, ['-e', 'setInterval(() => undefined, 1000)'], {
+		stdio: 'ignore',
+		windowsHide: true
+	});
+	await new Promise((resolveSpawn, rejectSpawn) => {
+		child.once('spawn', resolveSpawn);
+		child.once('error', rejectSpawn);
+	});
+	await stopOwnedChild(child);
+	if (child.exitCode === null && child.signalCode === null)
+		throw new Error('External package cleanup self-test left its child running.');
+	await rm(fixtureRoot, { force: true, maxRetries: 5, recursive: true, retryDelay: 100 });
+	console.log('External package cleanup self-test passed.');
+	process.exit(0);
+}
+if (!pnpmCli) throw new Error('accept-zui-package must be launched through pnpm.');
+
 let succeeded = false;
 let server;
+let cleanupFailure;
 try {
 	await mkdir(tarballRoot, { recursive: true });
 	const artifactDirectory = process.env.ZADMIN_RELEASE_ARTIFACTS_DIR;
@@ -226,6 +345,49 @@ void [fieldLocal, fieldZoned, pickerInline, pickerZonedInline, rangeInline, rang
 `
 	);
 	await write(
+		resolve(fixtureRoot, 'src/transfer-component-types.ts'),
+		// language=TypeScript
+		`import type { ComponentProps } from 'svelte';
+import {
+  ZTransfer,
+  type TransferItem,
+  type TransferMoveRequest,
+  type ZTransferProps
+} from '@zadmin/zui';
+
+const items = [
+  { key: 0, label: 'Numeric zero' },
+  { key: '0', label: 'String zero' }
+] as const satisfies readonly TransferItem[];
+
+const immediate = {
+  'aria-label': 'Immediate transfer',
+  class: 'external-transfer',
+  items,
+  onValueChange: (value: readonly (number | string)[]) => value.length,
+  ref: null,
+  value: [0]
+} satisfies ComponentProps<typeof ZTransfer>;
+const requested = {
+  items,
+  moveMode: 'request',
+  onMoveRequest: async (request: TransferMoveRequest) => request.destination === 'target',
+  value: [0]
+} satisfies ComponentProps<typeof ZTransfer>;
+const immediatePublic: ZTransferProps = immediate;
+const requestedPublic: ZTransferProps = requested;
+
+// @ts-expect-error Request mode requires onMoveRequest.
+const missingRequestHandler: ComponentProps<typeof ZTransfer> = { items, moveMode: 'request', value: [0] };
+// @ts-expect-error Request mode cannot compete with onValueChange.
+const requestWithValueCallback: ComponentProps<typeof ZTransfer> = { items, moveMode: 'request', onMoveRequest: () => true, onValueChange: () => undefined, value: [0] };
+// @ts-expect-error Immediate mode cannot declare onMoveRequest.
+const immediateWithRequestHandler: ComponentProps<typeof ZTransfer> = { items, onMoveRequest: () => true, value: [0] };
+
+void [immediate, requested, immediatePublic, requestedPublic, missingRequestHandler, requestWithValueCallback, immediateWithRequestHandler];
+`
+	);
+	await write(
 		resolve(fixtureRoot, 'testing.mjs'),
 		`import { defaultTheme } from '@zadmin/zui/theme';
 import { createPluginRouteHandle } from '@zadmin/sveltekit/server';
@@ -333,7 +495,6 @@ const source = 'const ready: boolean = true;';
 	succeeded = true;
 	console.log('External ZUI + SvelteKit tarball SSR acceptance passed.');
 } finally {
-	server?.kill();
-	if (succeeded) await rm(fixtureRoot, { force: true, recursive: true });
-	else console.error(`Failed package fixture retained at ${fixtureRoot}`);
+	cleanupFailure = await cleanupFixture(server, fixtureRoot, succeeded);
 }
+if (cleanupFailure) throw cleanupFailure;

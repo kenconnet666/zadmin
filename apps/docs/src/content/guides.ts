@@ -36,7 +36,7 @@ export const guideDocs = [
 				id: 'install',
 				title: '安装',
 				paragraphs: ['Svelte与Lucide是必需peer；Shiki只在使用ZCode高亮入口时安装。'],
-				code: 'pnpm add @zadmin/zui @lucide/svelte svelte',
+				code: "pnpm add @zadmin/zui '@lucide/svelte@>=1.37.0 <1.42.0' svelte",
 				language: 'bash'
 			},
 			{

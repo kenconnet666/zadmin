@@ -40,7 +40,7 @@ catalogs:
       specifier: ^3.12.3
       version: 3.12.3
     '@lucide/svelte':
-      specifier: ^1.37.0
+      specifier: '>=1.37.0 <1.42.0'
       version: 1.37.0
     '@playwright/test':
       specifier: ^1.62.1

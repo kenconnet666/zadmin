@@ -446,7 +446,9 @@ jobs:
 
       - name: Run external ZUI and SvelteKit SSR acceptance
         if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
-        run: pnpm --filter @zadmin/sveltekit test:zui-package
+        run: |
+          pnpm --filter @zadmin/sveltekit exec node scripts/accept-zui-package.mjs --cleanup-self-test
+          pnpm --filter @zadmin/sveltekit test:zui-package
 
       - name: Build and dry-run ZUI package publish
         if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'

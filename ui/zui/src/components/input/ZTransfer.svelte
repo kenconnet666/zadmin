@@ -34,10 +34,10 @@
 		readonly error?: unknown;
 	}
 
-	interface ZTransferSharedProps extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'children' | 'onchange'
-	> {
+	type TransferMoveMode = 'immediate' | 'request';
+	type ZTransferDomProps = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'>;
+
+	interface ZTransferSharedProps {
 		readonly controlId?: string;
 		readonly defaultValue?: readonly SelectionKey[];
 		readonly disabled?: boolean;
@@ -67,20 +67,28 @@
 		readonly virtualOverscan?: number;
 	}
 
-	interface TransferImmediateMove {
+	interface ZTransferImmediateSemanticProps extends ZTransferSharedProps {
 		readonly moveMode?: 'immediate';
 		readonly onMoveRequest?: never;
 		readonly onValueChange?: (value: readonly SelectionKey[]) => void;
 	}
 
-	interface TransferRequestedMove {
+	interface ZTransferRequestedSemanticProps extends ZTransferSharedProps {
 		readonly moveMode: 'request';
 		readonly onMoveRequest: (request: TransferMoveRequest) => boolean | Promise<boolean>;
 		readonly onValueChange?: never;
 	}
 
-	export type ZTransferProps = ZTransferSharedProps &
-		(TransferImmediateMove | TransferRequestedMove);
+	export type ZTransferProps = ZTransferDomProps &
+		(ZTransferImmediateSemanticProps | ZTransferRequestedSemanticProps);
+	type ZTransferSemanticProps<TMode extends TransferMoveMode = TransferMoveMode> = {
+		readonly moveMode?: TMode;
+	} & (
+		| ('immediate' extends TMode ? ZTransferImmediateSemanticProps : never)
+		| ('request' extends TMode ? ZTransferRequestedSemanticProps : never)
+	);
+	type ZTransferComponentProps<TMode extends TransferMoveMode = TransferMoveMode> =
+		ZTransferDomProps & ZTransferSemanticProps<TMode>;
 
 	export const zuiMetadata = {
 		category: 'input',
@@ -424,7 +432,7 @@
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="TMode extends TransferMoveMode = TransferMoveMode">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets use immutable replacement or are local normalization scratch. */
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
@@ -565,7 +573,7 @@
 		loadingText,
 		moveToSourceLabel,
 		moveToTargetLabel,
-		moveMode = 'immediate',
+		moveMode = 'immediate' as TMode,
 		name: nameProp,
 		onMoveEnd,
 		onMoveRequest,
@@ -584,7 +592,7 @@
 		virtualItemSize = 52,
 		virtualOverscan = 4,
 		...rest
-	}: ZTransferProps = $props();
+	}: ZTransferComponentProps<TMode> = $props();
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
@@ -1002,7 +1010,7 @@
 		if (resolveMoveMode() !== entry.mode) return 'cancelled';
 		if (ref !== entry.root) return 'stale';
 		if (!matchesTransferItemsSnapshot(items, entry.candidate)) return 'stale';
-		const currentValue = entry.mode === 'request' && value !== undefined ? value : resolvedValue;
+		const currentValue = value !== undefined ? value : resolvedValue;
 		const original = matchesTransferValueEcho(currentValue, entry.candidate.value);
 		const expected = matchesTransferValueEcho(currentValue, entry.candidate.nextValue);
 		return original || expected ? undefined : 'stale';
@@ -1022,9 +1030,7 @@
 			.map((item) => item.key);
 		if (movingKeys.length === 0) return false;
 		const currentValue =
-			mode === 'request' && value !== undefined
-				? normalizeKeys(value, 'ZTransfer value')
-				: resolvedValue;
+			value !== undefined ? normalizeKeys(value, 'ZTransfer value') : resolvedValue;
 		const candidate = createTransferMoveCandidate({
 			destination,
 			items,
@@ -1060,19 +1066,29 @@
 		};
 		pending = entry;
 		announcePending(entry);
+		if (entry.mode === 'immediate') {
+			try {
+				valueState.setFromUser(candidate.nextValue);
+			} catch (error) {
+				return finish(entry, 'error', error);
+			}
+			const invalid = snapshotFailure(entry);
+			if (invalid) return finish(entry, invalid, undefined, invalid !== 'cancelled');
+			return finish(
+				entry,
+				matchesTransferValueEcho(value !== undefined ? value : resolvedValue, candidate.nextValue)
+					? 'accepted'
+					: 'rejected'
+			);
+		}
 		let callbackAccepted = false;
 		let failed = false;
 		let failure: unknown;
 		try {
-			if (entry.mode === 'immediate') {
-				valueState.setFromUser(candidate.nextValue);
-				callbackAccepted = true;
-			} else {
-				const result = await onMoveRequest!(request);
-				if (typeof result !== 'boolean')
-					throw new TypeError('ZTransfer onMoveRequest must return a boolean.');
-				callbackAccepted = result;
-			}
+			const result = await onMoveRequest!(request);
+			if (typeof result !== 'boolean')
+				throw new TypeError('ZTransfer onMoveRequest must return a boolean.');
+			callbackAccepted = result;
 		} catch (error) {
 			failed = true;
 			failure = error;
@@ -1085,10 +1101,7 @@
 		if (!callbackAccepted) return finish(entry, 'rejected');
 		return finish(
 			entry,
-			matchesTransferValueEcho(
-				entry.mode === 'request' && value !== undefined ? value : resolvedValue,
-				candidate.nextValue
-			)
+			matchesTransferValueEcho(value !== undefined ? value : resolvedValue, candidate.nextValue)
 				? 'accepted'
 				: 'rejected'
 		);
