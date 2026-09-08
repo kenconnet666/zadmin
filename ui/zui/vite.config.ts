@@ -1,7 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { playwright } from '@vitest/browser-playwright';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type TestProjectConfiguration } from 'vitest/config';
+import { diagnosticPlaywright } from './scripts/browser-runner-diagnostics.js';
 import { createComponentExecutionReporter } from './scripts/component-execution-reporter.js';
 import { dragElements, dragSliderTrack } from './tests/browser-commands.js';
 
@@ -61,11 +61,11 @@ export const browserProject = {
 				instance.browser === 'chromium'
 					? {
 							...instance,
-							provider: playwright({ launchOptions: { channel: 'chromium' } })
+							provider: diagnosticPlaywright({ launchOptions: { channel: 'chromium' } })
 						}
 					: instance
 			),
-			provider: playwright()
+			provider: diagnosticPlaywright()
 		},
 		include: ['tests/**/*.browser.spec.ts'],
 		name: 'browser',

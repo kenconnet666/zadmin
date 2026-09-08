@@ -1,7 +1,7 @@
-import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
+import { diagnosticPlaywright } from './scripts/browser-runner-diagnostics.js';
 import baseConfig, { browserProject } from './vite.config.js';
-import { touchSequence } from './tests/transfer-touch-commands.js';
+import { isolateTouchBrowserHistory, touchSequence } from './tests/transfer-touch-commands.js';
 
 // Protocol touch simulation is Chromium-only, not physical-device or cross-engine evidence.
 // Keep it out of the common three-browser spec set and its component-execution report.
@@ -22,11 +22,15 @@ export default defineConfig({
 					...browserProject.test,
 					browser: {
 						...browserProject.test.browser,
-						commands: { ...browserProject.test.browser.commands, touchSequence },
+						commands: {
+							...browserProject.test.browser.commands,
+							isolateTouchBrowserHistory,
+							touchSequence
+						},
 						instances: [
 							{
 								browser: 'chromium',
-								provider: playwright({ launchOptions: { channel: 'chromium' } })
+								provider: diagnosticPlaywright({ launchOptions: { channel: 'chromium' } })
 							}
 						]
 					},

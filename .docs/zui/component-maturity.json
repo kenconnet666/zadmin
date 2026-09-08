@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 396
+		"testFiles": 398
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -20000,7 +20000,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "d389226d74de35129ab45c2b2d5f93cbab22c015e2f1f7496b69aa42b7ad1e56 API snapshot entry"
+						"detail": "dde92f03d1a5d8bf3770605a3eae9955fd36a590a9cae909045ffff3c25b2843 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -20032,6 +20032,14 @@
 					},
 					{
 						"path": "ui/zui/tests/TransferDragDropFixture.svelte",
+						"detail": "ZTransfer explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/transfer-layout-resize.browser.spec.ts",
+						"detail": "ZTransfer browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TransferLayoutResizeFixture.svelte",
 						"detail": "ZTransfer explicit rendered fixture usage"
 					},
 					{

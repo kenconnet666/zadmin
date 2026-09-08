@@ -162,7 +162,7 @@
 			<ZButton type="reset" variant="outline">Reset</ZButton>
 		</ZStack>
 		<ZText data-testid="transfer-request-status" tone="muted">
-			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · 启用dragDrop后支持pointer跨栏，listbox也支持Alt+方向键快捷跨栏；接受前不预写canonical。本演示验证pointer/keyboard与motion策略，CDP拖放和真实touch仍待后续验收。
+			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · 启用dragDrop后支持桌面pointer跨栏，listbox也支持Alt+方向键快捷跨栏；触屏短滑用于滚动，长按后拖动才跨栏，tap不移动canonical。接受前不预写canonical。已有Chromium触屏模拟回归；真机及其他引擎的触屏验收仍需独立完成。
 		</ZText>
 	</ZStack>
 </form>

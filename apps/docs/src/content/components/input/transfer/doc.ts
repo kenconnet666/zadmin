@@ -154,8 +154,8 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 		'onMoveEnd区分accepted/rejected/cancelled/stale/error。readonly、disabled和原生reset终止待决事务；卸载abort并释放但不再通知、公告或聚焦。业务必须响应request.signal释放自己持有的等待资源。',
 		'accepted只清理来源侧本次movingKeys，保留其他checked；pointer保留拖起锚点，焦点仍由listbox容器与语义active key表达。用户等待期间主动移焦时不抢回；唯一live region只公告真实终态。',
 		'virtual为两个pane各建一个固定行ZVirtualList、MountedElements和ActiveDescendant握手；虚拟器只拥有窗口/scroll，SelectionModel和最终value不会迁入虚拟器。',
-		'dragDrop=true时可选pointer跨栏membership；pointer不预写canonical，仍进入同一immediate/request事务。',
-		'listbox上的Alt+逻辑方向箭头是键盘跨栏快捷键；拖checked项移动该pane全部enabled checked，未checked项只移动自身。同栏reorder、分组数据结构、sticky和动态行高不属于该API；布局动画只随auto/full/reduced反馈，不接管canonical，CDP拖放与真实touch仍待验收。',
+		'dragDrop=true时可选桌面pointer跨栏membership；触屏短滑用于滚动，长按后拖动才跨栏，tap不移动canonical；所有移动仍进入同一immediate/request事务。',
+		'listbox上的Alt+逻辑方向箭头是键盘跨栏快捷键；拖checked项移动该pane全部enabled checked，未checked项只移动自身。同栏reorder、分组数据结构、sticky和动态行高不属于该API；布局动画只随auto/full/reduced反馈，不接管canonical。普通与虚拟模式已有Chromium触屏模拟回归，真机及其他引擎的触屏验收仍需独立完成。',
 		'readonly保持listbox可聚焦、可滚动、可typeahead且value继续提交，但筛选input只读、SelectionModel为none、移动按钮禁用；disabled另行退出焦点和FormData。',
 		'form reset恢复defaultValue，清空两侧查询、临时勾选和导航瞬态，不触发onValueChange。',
 		'API取舍：保留value/defaultValue和immediate模式的onValueChange，不创建values复数别名；请求模式显式区分membership事务与数据加载，保持单一value owner。吸收双栏、筛选、typed key/view/selection和locale分层，不增加大型transfer DSL。'

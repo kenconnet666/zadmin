@@ -152,7 +152,8 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P10  | 基础本地通过，E19B实现中 | Chromium新headless、周期范围/焦点合同先独立提交；Transfer跨栏adapter、request-owner演示和回归独立收口                                            |
 | P11  | 局部通过，完整CI未闭合   | Vitest5迁移已提交；三浏览器Docs及WebKit组件通过，Chromium仍断连、Firefox两处断言失败、coverage超预算                                             |
 | P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
-| P13+ | 待执行                   | 继续CI与覆盖缺口、其余依赖组、Transfer剩余验收、一致性及G2–G4；不缩减接受能力                                                                    |
+| P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
+| P14+ | 待执行                   | 继续CI与覆盖缺口、Playwright成对升级、Sortable触屏/异步几何一致性及G2–G4；不缩减接受能力                                                         |
 
 ### P01 集成记录
 
@@ -337,5 +338,17 @@ P10后续收口：
 - Docs复用原RequestOwner，增加公开ZuiMotion与ZProvider控制，默认auto尊重系统偏好；同一个Transfer/value owner覆盖full与reduced，保留接受前/后FormData。真实原生animate探针记录调用和关键帧，不只断言文案；Chromium2项通过，无新增重复业务演示。
 - 本地收口：ZUI/Docs类型均0 errors/0 warnings，事务/SSR14项、共享动画/Sortable前轮14项与最后Transfer motion3项、上述Range/Popover两引擎各13项、Docs2项通过；API/Token生成、lifecycle、格式/lint和audit:system通过。首次夹具SelectionKey类型、动画spy的this类型、Docs choices泛化错误均已修正；失败日志分别保留在`.codex/production-p12-types.json`、`production-p12-final.json`和`production-p12-reviewed.json`，最终ZUI成功见reviewed，Docs与其余成功见`production-p12-reviewed-final.json`。
 - 触屏独立冻结运行见`.codex/p12-transfer-touch-isolated-final.log`：横向跨栏通过，canonical按items顺序为`item-3,item-24`；tap/cancel未改value，但纵向内部scrollTop仍0。readonly/disabled两项在runner断连后未完成，不能记为通过。微任务事件记录未观察到dragging并不能排除sensor异步激活/转移pointer capture；下一批应在CDP事件后的帧边界独立读取dragging和滚动状态，先定位再决定是否采用上游touch长按激活策略。参考[Pointer Events触控行为边界](https://www.w3.org/TR/pointerevents3/#determining-supported-direct-manipulation-behavior)，触摸行为与最近滚动容器及touch-action有关；本批没有未经证实修改生产touch-action或阈值。
+
+### P13 触屏滚动、长按与动画几何收口
+
+- 前置`c3f0ee74cc2b1459af148ae6b151320d9b79cf17`的[CI 34252958841](https://github.com/kenconnet666/zadmin/actions/runs/34252958841)已结束：三浏览器Docs、Static、build、WebKit组件、Windows与Drizzle通过。Chromium在avatar待执行期间orchestrator断连，282/319文件2036项通过；Firefox为166文件821项通过、1失败1跳过，失败转为Dialog进入时的中间opacity轮询。Coverage319文件2105项全过，未覆盖global1563/432/2910/3734、components1324/378/2472/3114仍超预算。外部包任务是artifact Finalize阶段HTTP403失败，不误记成包编译/断言错误。
+- 触屏帧级checkpoint给出独立红证据：纵滑18px后真实item已`data-dragging=true`，原Distance6抢走滚动。adapter针对touch复用上游长按/容差，鼠标保留Distance6；不新增公开阈值API。随后直开Docs发现hold后仍idle，追到TransferPane无条件preventDefault原pointerdown，导致延迟激活误判为已取消；改成只取消非touch的默认焦点行为，tap完成后恢复listbox焦点。两类缺陷都由生产实现修复，不在测试里跳过输入。
+- 新的opt-in Playwright诊断在touch套件首次定位到主Page从`/__vitest_test__/`导航到`about:blank`，然后才发生provider teardown；无crash。活动拖拽修复后，前三类case在保留浏览器历史时通过。readonly/disabled本就不应接管原生手势，其右滑仍可触发宿主后退；仅这两类测试用受Vitest专属路径限制的[CDP history isolation](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-resetNavigationHistory)去除一次性runner历史，未在组件中禁止浏览器导航，未对活动拖拽清空history。
+- 普通/虚拟模式按case成对执行：tap保留listbox焦点与canonical、短纵滑真实scrollTop增长且不drag、长按跨栏、激活后cancel、readonly/disabled无drag无membership变化，共10项Chromium触屏模拟通过。报告仍独立于三浏览器主证据，现加入Chromium专属CI步骤；见`.codex/p13-touch-normal-virtual.log`。hold duration是被模拟的真实按住输入，不是等待测试结果的补丁；检查点在每次事件后的帧边界读取。
+- 直接打开5174 Docs、保留真实历史且不经过Vitest iframe的对照也完成：修前hold后dragging0/state idle，修后dragging1/state pending，owner接受后FormData为`["stable","candidate"]`；见`.codex/p13-docs-touch-native.out.log`与`p13-docs-touch-fixed.out.log`。现有演示与metadata同步短滑/长按规则，未增加重复owner或演示；真机、其他引擎触屏和更完整pen/跨realm验收仍未完成。
+- Transfer root容器resize新增owner-window ResizeObserver，初始同尺寸delivery不失效，stop时disconnect；不改变accepted结果或canonical。独立真实observer确认CSS容器宽度变化，正常pending仍动画、resize后接受不使用旧FLIP。审阅纠正了把pending按钮Spinner旋转误计为列表动画的探针，现只统计role=option；没有因此给生产动画追加帧延迟。Sortable无同类本地pointerdown取消，但仍需补真实touch/grip规则和异步几何一致性，不能从Transfer的证据推导完成。
+- 诊断wrapper默认关闭、factory保持同步，保留provider descriptor/prewarm/serverFactory及原launch/端口/并发；启用时区分unexpected、session-replaced、provider-teardown。URL仅pathname，消息去host/userinfo/query/hash、折行并截断，3项unit通过。主CI不运行旧touch原型，因此主Chromium断连原因仍待新SHA的诊断，不能用touch导航结论代替。
+- 依赖候选重新核实于[依赖审计](./dependency-upgrade-audit-2026-09-08.md)：Playwright/test1.63.0已过等待期，但本轮未安装，以保持本批输入/runner诊断版本固定。typescript-eslint8.70.0在核查时仍未满1440分钟，保留8.69.0，没有增加安全例外。
+- 最终本地：ZUI/Docs类型0 errors/0 warnings，unit/SSR/诊断17项、鼠标/键盘与既有motion9项、修正探针后的容器resize2项、触屏普通/虚拟10项通过。resize fixture显式full，不依赖宿主系统动画偏好；最后再核对2项通过。API/Token生成、lifecycle、格式/lint和audit:system通过；见`.codex/production-p13-final.json`（保留Spinner误计导致的首次失败）、`production-p13-reviewed.json`及`p13-resize-final.json`。诊断URL大小写scheme脱敏补充负例后单独3项unit通过。无本地整库三浏览器或coverage重跑，仍等待提交SHA的完整CI。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

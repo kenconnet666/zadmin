@@ -344,7 +344,7 @@
 			{
 				default: 'false',
 				description:
-					'启用跨栏pointer拖放与listbox上的RTL感知Alt+水平方向键快捷移动；仍复用同一移动事务。',
+					'启用跨栏pointer拖放与RTL感知Alt+方向键移动；触屏短滑保留滚动、长按后拖动，仍复用同一移动事务。',
 				name: 'dragDrop',
 				type: 'boolean'
 			},
@@ -1030,11 +1030,24 @@
 	function captureTransferLayout(root: HTMLDivElement): TransferLayoutMotion {
 		const before = captureKeyedLayout(mountedLayoutElements());
 		const ownerWindow = root.ownerDocument.defaultView;
+		const borderBox = root.getBoundingClientRect();
 		let invalid = false;
 		let listening = true;
 		const invalidate = (): void => {
 			invalid = true;
 		};
+		const resize = ownerWindow?.ResizeObserver
+			? new ownerWindow.ResizeObserver((entries) => {
+					if (!entries.some((entry) => entry.target === root)) return;
+					const current = root.getBoundingClientRect();
+					if (
+						Math.abs(current.width - borderBox.width) > 0.01 ||
+						Math.abs(current.height - borderBox.height) > 0.01
+					)
+						invalidate();
+				})
+			: undefined;
+		resize?.observe(root);
 		root.addEventListener('scroll', invalidate, { capture: true, passive: true });
 		ownerWindow?.addEventListener('scroll', invalidate, { capture: true, passive: true });
 		ownerWindow?.addEventListener('resize', invalidate, { passive: true });
@@ -1045,6 +1058,7 @@
 			stop: () => {
 				if (!listening) return;
 				listening = false;
+				resize?.disconnect();
 				root.removeEventListener('scroll', invalidate, true);
 				ownerWindow?.removeEventListener('scroll', invalidate, true);
 				ownerWindow?.removeEventListener('resize', invalidate);

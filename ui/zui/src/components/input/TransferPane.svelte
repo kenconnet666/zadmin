@@ -285,7 +285,9 @@
 			})(node);
 			const handlePointerDown = (event: PointerEvent): void => {
 				if (disabled) return;
-				event.preventDefault();
+				// A touch hold activates from this original event later. Cancelling it here
+				// also cancels the sensor, whereas mouse focus can be suppressed immediately.
+				if (event.pointerType !== 'touch') event.preventDefault();
 				focusCollectionForPointer(listRef);
 				active.set(item.key, 'pointer');
 			};
@@ -294,6 +296,7 @@
 			};
 			const handleClick = (): void => {
 				if (drag?.consumeClick(item.key)) return;
+				if (!disabled) focusCollectionForPointer(listRef);
 				if (!disabled && !readonly && !pending && !item.disabled) onToggle(item);
 			};
 			node.addEventListener('click', handleClick);

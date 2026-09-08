@@ -253,3 +253,17 @@ Core类型、35项unit与release version self-test通过；该self-test没有执
 2. Svelte运行时与测试渲染器：先检查Miniapp精确peer及特殊compiler来源，保留平台边界，不只改普通catalog。
 3. Vitest 5与Playwright：按[官方迁移说明](https://vitest.dev/guide/migration/)核实配置API、sequential、测试产物路径及自定义reporter/command；按实际import owner处理async render，不机械修改所有同名函数。不得把升级当作已证明的浏览器断连修复。
 4. pnpm 12独立迁移；TypeScript 7等待Kit、svelte-check和typescript-eslint等真实支持。`@types/node`先对齐承诺的运行时能力与CI基线，不能仅因registry latest属于26就无条件使用Node 26 API。
+
+### P13 依赖当前状态复核（2026-09-09 00:49 Asia/Shanghai）
+
+本次只读对账使用 npm 官方 registry（`registry.npmjs.org`）及当前 `pnpm-lock.yaml`；没有安装、更新 lock 或修改 package/config。以下是本批要求的窄范围复核，不改写上方历史快照：
+
+| 组                                                              | 当前 lock                                          | registry 最新非 prerelease及发布时间（UTC）                                               | 1440 分钟窗口 / 判定                                                                         |
+| --------------------------------------------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `playwright` + `@playwright/test`                               | 两者均 `1.62.1`，workspace catalog 均为 `^1.62.1`  | 两者均 `1.63.0`；`playwright` 2026-09-04 22:45:21，`@playwright/test` 2026-09-04 22:44:00 | 已满足等待期；仍只是成对升级候选，尚未运行升级后的三浏览器矩阵                               |
+| `vitest` + `@vitest/browser-playwright` + `@vitest/coverage-v8` | 三者均 `5.0.0`；`vitest-browser-svelte` 为 `3.1.0` | `vitest`/browser/coverage 均 `5.0.0`；renderer `3.1.0`（2026-09-04 07:55:38）             | 已安装且 peer 对齐；本条不把版本状态等同整库迁移验收，CI/coverage 仍是证据边界               |
+| `typescript-eslint` 组                                          | lock/catalog 为 `8.69.0`                           | `8.70.0`，2026-09-07 18:18:09                                                             | 截至核查时约 1351 分钟，严格 `minimumReleaseAge: 1440` 尚未满足；保留 8.69.0，不增加等待例外 |
+
+官方 registry 页面：[playwright](https://registry.npmjs.org/playwright)、[@playwright/test](https://registry.npmjs.org/@playwright%2Ftest)、[vitest](https://registry.npmjs.org/vitest)、[@vitest/browser-playwright](https://registry.npmjs.org/@vitest%2Fbrowser-playwright)、[@vitest/coverage-v8](https://registry.npmjs.org/@vitest%2Fcoverage-v8)、[vitest-browser-svelte](https://registry.npmjs.org/vitest-browser-svelte)、[typescript-eslint](https://registry.npmjs.org/typescript-eslint)。
+
+当前动作边界：Playwright 1.63.0 是已过等待期的成对候选，但本次没有更新或验证；Vitest 5 组已在 lock 中，仍需按既有 P11 记录的 unit/browser/coverage/CI 证据收口；typescript-eslint 8.70.0 等待窗口结束前不应进入 lock。查到 registry latest 不代表升级成功或验收完成。

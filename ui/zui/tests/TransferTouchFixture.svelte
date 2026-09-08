@@ -11,9 +11,11 @@
 	let immediateChanges = $state(0);
 	let touchStream = $state<readonly string[]>([]);
 	let {
-		scenario = 'immediate'
+		scenario = 'immediate',
+		virtual = false
 	}: {
 		scenario?: 'disabled' | 'immediate' | 'readonly';
+		virtual?: boolean;
 	} = $props();
 
 	function recordTouchPointer(event: PointerEvent): void {
@@ -52,6 +54,7 @@
 			dragDrop
 			filterable={false}
 			{items}
+			{virtual}
 			onValueChange={(next) => {
 				immediateValue = next;
 				immediateChanges += 1;
@@ -71,6 +74,7 @@
 		dragDrop
 		filterable={false}
 		{items}
+		{virtual}
 		readonly
 		sourceTitle="Readonly touch source"
 		targetTitle="Readonly touch target"
@@ -85,6 +89,7 @@
 		dragDrop
 		filterable={false}
 		{items}
+		{virtual}
 		sourceTitle="Disabled touch source"
 		targetTitle="Disabled touch target"
 		value={disabledValue}

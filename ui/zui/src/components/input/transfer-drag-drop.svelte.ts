@@ -250,7 +250,16 @@ export class TransferDragDropAdapter<TSnapshot> {
 					register: false,
 					sensors: [
 						PointerSensor.configure({
-							activationConstraints: [new PointerActivationConstraints.Distance({ value: 6 })]
+							activationConstraints: (event, source) => {
+								// Preserve the upstream touch hold/tolerance policy so ordinary swipes scroll.
+								if (event.pointerType === 'touch') {
+									const constraints = PointerSensor.defaults.activationConstraints;
+									return typeof constraints === 'function'
+										? constraints(event, source)
+										: constraints;
+								}
+								return [new PointerActivationConstraints.Distance({ value: 6 })];
+							}
 						})
 					],
 					type: 'zui-transfer-item'

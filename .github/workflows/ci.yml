@@ -137,12 +137,14 @@ jobs:
         run: git config core.fileMode false
 
       - name: Setup workspace
+        id: workspace
         uses: ./.github/actions/setup-workspace
         with:
           node-version: ${{ env.NODE_VERSION }}
           pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Install Playwright browsers
+        id: browser
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps ${{ matrix.browser }}
 
       - name: Record browser runner resources before tests
@@ -155,6 +157,7 @@ jobs:
           # Correlate the first API/session disconnect with pool progress and Chromium GC.
           # Avoid the Playwright-provider debug namespace, which includes authenticated URLs.
           DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
+          ZUI_BROWSER_DIAGNOSTICS: '1'
           ZUI_BROWSER: ${{ matrix.browser }}
           ZUI_EXECUTION_REPORT: test-results/component-execution-vitest-${{ matrix.browser }}.json
         run: |
@@ -163,6 +166,12 @@ jobs:
           else
             pnpm --filter @zadmin/zui exec vitest --run --project=browser
           fi
+
+      - name: Verify Transfer Chromium touch simulation
+        if: ${{ !cancelled() && matrix.browser == 'chromium' && steps.workspace.outcome == 'success' && steps.browser.outcome == 'success' }}
+        env:
+          ZUI_BROWSER_DIAGNOSTICS: '1'
+        run: pnpm --filter @zadmin/zui exec vitest --run --config vite.touch.config.ts
 
       - name: Record browser runner resources after tests
         if: always()
@@ -379,6 +388,7 @@ jobs:
         env:
           # The successful coverage runner is the control for the non-coverage disconnect.
           DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
+          ZUI_BROWSER_DIAGNOSTICS: '1'
         run: pnpm --filter @zadmin/zui test:coverage
 
       - name: Run SvelteKit integration coverage

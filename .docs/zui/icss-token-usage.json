@@ -40331,13 +40331,13 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1083,
+			"line": 1097,
 			"token": "duration.normal",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1084,
+			"line": 1098,
 			"token": "easing.standard",
 			"via": "direct-theme-read"
 		},
@@ -44401,7 +44401,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 399
+			"line": 402
 		},
 		{
 			"path": "ui/zui/src/components/input/ZCalendar.svelte",
@@ -44565,7 +44565,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1465
+			"line": 1479
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAffix.svelte",
