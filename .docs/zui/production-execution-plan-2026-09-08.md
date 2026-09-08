@@ -395,3 +395,9 @@ P10后续收口：
 #### P16 现有controller合同补齐
 
 在剩余32%的当前家族收尾范围中，仅补resetColumnWidths已有合同，不开启新组件族/API。3项新增回归直接使用真实controller，验证配置默认值/空映射重置、外部同步静默、重复重置不重复通知、冻结payload与controller/row身份；现有sameStateValue实现正确，没有修改生产源码。DataTable本地17项通过，ZUI/Docs类型0 errors/0 warnings、生成、lifecycle、lint/format和audit:system通过。首轮测试数据的record推断错误已用公开DataTableColumnWidths显式类型修正，日志见`.codex/p16-controller-recheck-final.json`；远端验证留给新SHA，不下调覆盖率门槛。
+
+#### P16 列状态自身键隔离
+
+- 继续当前家族可见性controller收尾时，SSR复现合法constructor列误读原型属性为宽度并抛错。局部columnStateValue统一四个读取点，只使用record自身键，保留合法ID，不修改全局sameStateValue或引入新API。继承值不参与可见性/宽度，显式自身键照常生效；controller未知/无变化/隐藏最后一列不通知，同步连续调用也保护至少一列。
+- 新SSR与浏览器回归加既有DataTable17项合计20项通过；ZUI/Docs类型0 errors/0 warnings、生成/token同步、lifecycle、lint/format和audit:system通过。红证据与最终结果见`.codex/p16-column-state-before.log`、`p16-column-state-after.log`、`p16-column-state-final.json`；当前主周额度剩31%，只提交和交接，不再扩展检查项。
+- 前置257f3f6的[CI 34278196491](https://github.com/kenconnet666/zadmin/actions/runs/34278196491)再次出现Chromium断连：113个browser文件完成后，下一choice-virtualization tester期间Vite/control WS错误，Playwright和CDP文本均为空；266/323文件2010项通过仅是局部结果，DataTable17项与独立触屏17项通过。Coverage323文件2136项全过但global1558/454/2920/3734、components1288/372/2431/3094超预算。历史连续通过不能替代根因证明；不调整并发/超时/GC或下调门槛。

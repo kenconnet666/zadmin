@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 401
+		"testFiles": 403
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -10589,6 +10589,14 @@
 						"detail": "ZDataTable explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/data-table-column-state.browser.spec.ts",
+						"detail": "ZDataTable browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/DataTableColumnStateFixture.svelte",
+						"detail": "ZDataTable explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/data-table.browser.spec.ts",
 						"detail": "ZDataTable browser behavior assertions"
 					},
@@ -10627,6 +10635,10 @@
 						"detail": "ZDataTable SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/data-table-column-state-ssr.spec.ts",
+						"detail": "ZDataTable SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/data-table-production.spec.ts",
 						"detail": "ZDataTable SSR assertions"
 					}
@@ -10651,6 +10663,10 @@
 			"ssrContracts": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZDataTable SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/data-table-column-state-ssr.spec.ts",
 					"detail": "ZDataTable SSR assertions"
 				},
 				{

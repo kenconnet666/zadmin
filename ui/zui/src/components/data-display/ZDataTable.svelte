@@ -653,6 +653,12 @@
 	const freezeRecord = <TValue,>(
 		record: Readonly<Record<string, TValue>>
 	): Readonly<Record<string, TValue>> => Object.freeze({ ...record });
+	function columnStateValue<TValue>(
+		record: Readonly<Record<string, TValue>>,
+		columnId: string
+	): TValue | undefined {
+		return Object.prototype.hasOwnProperty.call(record, columnId) ? record[columnId] : undefined;
+	}
 	const CONTROL_COLUMN_WIDTH = 44;
 	const DEFAULT_RESIZABLE_WIDTH = 160;
 
@@ -800,7 +806,7 @@
 	const visibleColumns = $derived.by(() => {
 		const visibility = visibilityState.current;
 		const visible = normalizedColumns.filter(
-			(column) => visibility[column.id] ?? !column.defaultHidden
+			(column) => columnStateValue(visibility, column.id) ?? !column.defaultHidden
 		);
 		if (visible.length === 0)
 			throw new Error('ZDataTable requires at least one visible data column.');
@@ -963,7 +969,7 @@
 			if (!column) return false;
 			if (!visible && visibleColumns.length === 1 && visibleColumns[0]?.id === columnId)
 				return false;
-			const current = visibilityState.current[columnId] ?? !column.defaultHidden;
+			const current = columnStateValue(visibilityState.current, columnId) ?? !column.defaultHidden;
 			if (current === visible) return false;
 			visibilityState.setFromUser(
 				freezeRecord({ ...visibilityState.current, [columnId]: visible })
@@ -1148,7 +1154,7 @@
 	}
 
 	function effectiveWidth(column: DataTableColumn<TRow>): DataTableWidth | undefined {
-		const controlled = widthsState.current[column.id];
+		const controlled = columnStateValue(widthsState.current, column.id);
 		if (controlled !== undefined) {
 			positiveFinite(controlled, `ZDataTable columnWidths["${column.id}"]`);
 			if (controlled < minimumWidth(column) || controlled > maximumWidth(column)) {
@@ -1408,7 +1414,7 @@
 
 	function setColumnWidth(column: DataTableColumn<TRow>, width: number): void {
 		const next = clampWidth(column, width);
-		if (widthsState.current[column.id] === next) return;
+		if (columnStateValue(widthsState.current, column.id) === next) return;
 		widthsState.setFromUser(freezeRecord({ ...widthsState.current, [column.id]: next }));
 	}
 

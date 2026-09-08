@@ -1311,7 +1311,7 @@
 				"ProductionVerified pending for current revision"
 			],
 			"docs": "apps/docs/src/content/components/data-display/data-table/doc.ts",
-			"ssrContractCount": 2
+			"ssrContractCount": 3
 		},
 		{
 			"id": "description-list",
