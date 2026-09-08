@@ -53,6 +53,15 @@
 	let controller = $state<ZDataTableController<SelectionKey> | null>(null);
 	let loading = $state(false);
 	let error = $state<string | null>(null);
+	let numericDisabled = $state(false);
+	let focusOuts = $state(0);
+	let focusOutTarget = $state('none');
+
+	function captureFocusOut(event: FocusEvent): void {
+		focusOuts += 1;
+		const target = event.target as Element | null;
+		focusOutTarget = target?.getAttribute?.('aria-label') ?? 'unnamed';
+	}
 
 	const serverRows: readonly Row[] = [
 		{ detail: 'Server order first', id: 'server-z', name: 'Zulu', owner: 'Platform' },
@@ -87,6 +96,12 @@
 	/>
 {/snippet}
 
+{#snippet consumerCell(row: Row)}
+	<button data-testid={`data-table-consumer-${typeof row.id}-${String(row.id)}`} type="button">
+		Open {row.name}
+	</button>
+{/snippet}
+
 <div>
 	<ZButton
 		data-testid="data-table-toggle-owner"
@@ -104,13 +119,16 @@
 	>
 		Remove focused
 	</ZButton>
+	<ZButton data-testid="data-table-disable-focused" onclick={() => (numericDisabled = true)}>
+		Disable focused
+	</ZButton>
 	<ZDataTable
 		caption="Production rows"
 		{columns}
 		{defaultSort}
 		{error}
 		{expandedRow}
-		isRowDisabled={(row) => row.id === 'locked'}
+		isRowDisabled={(row) => row.id === 'locked' || (numericDisabled && row.id === 1)}
 		{loading}
 		loadingLabel="Refreshing rows"
 		{rows}
@@ -123,6 +141,7 @@
 		bind:expandedKeys
 		bind:selectedKeys
 		onSortChange={(next) => (observedSort = next)}
+		onfocusout={captureFocusOut}
 		data-testid="data-table-production"
 	/>
 	<output data-testid="data-table-production-output">
@@ -132,6 +151,23 @@
 			? `${observedSort.columnId}:${observedSort.direction}`
 			: 'none'}|{controller?.visibleColumnIds.join(',')}|{columnWidths.name ?? 160}
 	</output>
+	<output data-testid="data-table-focusout-output">{focusOuts}:{focusOutTarget}</output>
+	<ZDataTable
+		caption="Consumer cell rows"
+		columns={[
+			{
+				accessor: (row: Row) => row.name,
+				cell: consumerCell,
+				header: 'Consumer action',
+				id: 'consumer-action'
+			}
+		]}
+		isRowDisabled={(row) => numericDisabled && row.id === 1}
+		rows={rows.filter(({ id }) => id !== 'locked')}
+		rowKey={(row) => row.id}
+		selectionMode="multiple"
+		data-testid="data-table-consumer-cells"
+	/>
 
 	<ZDataTable
 		caption="Server rows"

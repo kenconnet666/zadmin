@@ -15334,7 +15334,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
-						"detail": "ZDateField authored visual contract: keeps ZDateField typed segments, ARIA, keyboard, Field ownership and FormData real (line 15)"
+						"detail": "ZDateField authored visual contract: keeps ZDateField typed segments, ARIA, keyboard, Field ownership and FormData real (line 16)"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
@@ -19434,7 +19434,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
-						"detail": "ZTimeField authored visual contract: keeps ZTimeField typed segments, granular keyboard and FormData/reset real (line 42)"
+						"detail": "ZTimeField authored visual contract: keeps ZTimeField typed segments, granular keyboard and FormData/reset real (line 118)"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",

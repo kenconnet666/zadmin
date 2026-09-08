@@ -88,9 +88,9 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 		},
 		{
 			component: FormDemo,
-			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
+			covers: ['basic-render', 'focus', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
 			description:
-				'era/year/month/day按locale与display calendar顺序编辑，完整值才提交CalendarDate，reset恢复defaultValue。',
+				'按locale顺序编辑；初次点击选中数字segment以便替换，IME完成后才提交CalendarDate；reset恢复defaultValue。',
 			id: 'date-field-segments-form',
 			source: formSource,
 			title: '日期segments与表单'
@@ -133,6 +133,8 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 		'group获得Field或后备日期名称；第一segment使用controlId，其他segment使用typed locale名称并共享description/invalid关系；多纪元历法使用具名原生select。',
 		'左右、Home/End按真实locale DOM顺序移动，RTL使用逻辑方向；上下键在display calendar中通过CalendarDate.cycle处理era、闰月和月长。',
 		'输入中的partial/非法文本只存在于segment草稿；完整可用日期才更新value和ISO FormData。',
+		'IME组合输入期间不提交、不自动切段；组合结束后只在日期被接受且焦点仍由当前segment持有时推进，用户移焦外部后不会被抢回。',
+		'初次点击数字segment保持整段选择，再次点击已聚焦segment保留原生光标行为；与TimeField共用同一交互规则。',
 		'Gregorian与ISO年份保留四位自动完成；Japanese、ROC等纪元年使用1–4位自然草稿，只在完整提交边界写回，输入第一位不会被格式化打断。',
 		'数字segment复用共享parseLocalizedNumber与Intl.NumberFormat，因此Persian和Arabic数字既可显示也可输入；calendar构造仍负责正整数与日期范围校验。',
 		'locale calendar仅在@internationalized/date提供实际日期算法时启用；Chinese、Dangi、generic Islamic与Islamic RGSA会明确拒绝，ISO 8601是公开说明的Gregorian日期算法别名。',

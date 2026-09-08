@@ -85,6 +85,77 @@ describe('ZDataTable production contracts', () => {
 		expect(table?.querySelector('[role="alert"]')?.textContent).toContain('Rows failed');
 	});
 
+	it('does not reclaim focus after the user leaves, but repairs a disabled focused target', async () => {
+		const outsideHost = document.createElement('div');
+		document.body.append(outsideHost);
+		let component = mount(DataTableProductionFixture, { target: outsideHost });
+		try {
+			await tick();
+			outsideHost.querySelector<HTMLInputElement>('[aria-label="Select number:1"]')!.focus();
+			const remove = outsideHost.querySelector<HTMLButtonElement>(
+				'[data-testid="data-table-remove-focused"]'
+			)!;
+			remove.focus();
+			expect(document.activeElement).toBe(remove);
+			remove.click();
+			await tick();
+			await Promise.resolve();
+			expect(document.activeElement).toBe(remove);
+			expect(
+				outsideHost.querySelector('[data-testid="data-table-focusout-output"]')?.textContent
+			).toBe('1:Select number:1');
+		} finally {
+			await unmount(component);
+			outsideHost.remove();
+		}
+
+		const disabledHost = document.createElement('div');
+		document.body.append(disabledHost);
+		component = mount(DataTableProductionFixture, { target: disabledHost });
+		try {
+			await tick();
+			const numeric = disabledHost.querySelector<HTMLInputElement>(
+				'[aria-label="Select number:1"]'
+			)!;
+			numeric.focus();
+			disabledHost
+				.querySelector<HTMLButtonElement>('[data-testid="data-table-disable-focused"]')!
+				.click();
+			await tick();
+			await Promise.resolve();
+			expect(document.activeElement?.getAttribute('aria-label')).toBe('Select string:1');
+		} finally {
+			await unmount(component);
+			disabledHost.remove();
+		}
+	});
+
+	it('keeps a consumer cell action focused when only row selection becomes disabled', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(DataTableProductionFixture, { target: host });
+		try {
+			await tick();
+			const action = host.querySelector<HTMLButtonElement>(
+				'[data-testid="data-table-consumer-number-1"]'
+			)!;
+			action.focus();
+			host.querySelector<HTMLButtonElement>('[data-testid="data-table-disable-focused"]')!.click();
+			await tick();
+			await Promise.resolve();
+			expect(document.activeElement).toBe(action);
+			expect(action).not.toBeDisabled();
+			expect(
+				host.querySelector<HTMLInputElement>(
+					'[data-testid="data-table-consumer-cells"] [aria-label="Select row 1"]'
+				)
+			).toBeDisabled();
+		} finally {
+			await unmount(component);
+			host.remove();
+		}
+	});
+
 	it('does not re-sort a server-owned page', async () => {
 		await render(DataTableProductionFixture);
 		const table = document.querySelector<HTMLElement>('[data-testid="data-table-server"]');

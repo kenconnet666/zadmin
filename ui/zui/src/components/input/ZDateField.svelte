@@ -353,8 +353,9 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
+	import { getActiveElement, getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import { parseLocalizedNumber } from '../../runtime/number.js';
+	import { focusSegmentFromInitialPointer } from './segment-pointer-focus.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -466,6 +467,7 @@
 	);
 	let drafts = $state<Partial<Record<DateSegment, string>>>({});
 	let draftInvalid = $state(false);
+	let composingSegments = $state<ReadonlySet<DateSegment>>(new Set());
 	type DateSegmentControl = HTMLInputElement | HTMLSelectElement;
 	const inputs = $state<(DateSegmentControl | null)[]>([]);
 	const displayCalendar = $derived(resolveDisplayCalendar(resolvedLocale));
@@ -756,6 +758,7 @@
 	}
 
 	function handleKey(event: KeyboardEvent, segment: DateSegment, index: number): void {
+		if (event.isComposing || composingSegments.has(segment)) return;
 		const intent = navigationIntent(
 			event.key,
 			'horizontal',
@@ -790,19 +793,22 @@
 		valueState.reset();
 		drafts = {};
 		draftInvalid = false;
+		composingSegments = new Set();
 		onFormReset?.();
 	}
 
 	export function rollbackDraft(): void {
 		drafts = {};
 		draftInvalid = false;
+		composingSegments = new Set();
 		syncInputs(valueState.current);
 	}
 
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },
 		segment: DateSegment,
-		index: number
+		index: number,
+		advanceWhenComplete = true
 	): void {
 		const nextDraft = event.currentTarget.value;
 		drafts = { ...drafts, [segment]: nextDraft };
@@ -817,6 +823,9 @@
 							: (inputs[inputIndex]?.value ?? '')
 				])
 			) as Partial<Record<DateSegment, string>>;
+		const composing =
+			composingSegments.has(segment) || ('isComposing' in event && event.isComposing === true);
+		if (composing) return;
 		if (segmentOrder.every((key, inputIndex) => key === 'era' || !inputs[inputIndex]?.value)) {
 			if (!valueState.setFromUser(null)) {
 				rollbackDraft();
@@ -832,9 +841,31 @@
 			nextDraft.length === expectedLength &&
 			parseSegmentNumber(nextDraft) !== undefined
 		) {
-			commitDrafts(false);
-			if (index < segmentOrder.length - 1) move(index, 'next');
+			if (commitDrafts(false) && advanceWhenComplete && index < segmentOrder.length - 1)
+				move(index, 'next');
 		}
+	}
+
+	function handleCompositionStart(segment: DateSegment): void {
+		composingSegments = new Set([...composingSegments, segment]);
+	}
+
+	function handleCompositionEnd(
+		event: CompositionEvent & { currentTarget: HTMLInputElement },
+		segment: DateSegment,
+		index: number
+	): void {
+		// Copy-on-write composition membership is published only after this local mutation.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const next = new Set(composingSegments);
+		next.delete(segment);
+		composingSegments = next;
+		handleInput(
+			event,
+			segment,
+			index,
+			getActiveElement(event.currentTarget) === event.currentTarget
+		);
 	}
 
 	function handleEraChange(event: Event & { currentTarget: HTMLSelectElement }): void {
@@ -854,6 +885,7 @@
 			event.currentTarget.contains(event.relatedTarget)
 		)
 			return;
+		if (composingSegments.size > 0) return;
 		commitDrafts();
 	}
 
@@ -937,7 +969,10 @@
 					aria-readonly={resolvedReadonly || undefined}
 					aria-required={resolvedRequired || undefined}
 					onfocus={(event) => event.currentTarget.select()}
+					onpointerdown={focusSegmentFromInitialPointer}
 					oninput={(event) => handleInput(event, part.segment, index)}
+					oncompositionstart={() => handleCompositionStart(part.segment)}
+					oncompositionend={(event) => handleCompositionEnd(event, part.segment, index)}
 					onkeydown={(event) => handleKey(event, part.segment, index)}
 				/>
 			{/if}

@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import DateFixture from './DateFixture.svelte';
@@ -37,6 +38,81 @@ describe('date and time production contracts', () => {
 		expect(document.activeElement).toBe(month);
 		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('date')).toBe('2026-08-18');
+	});
+
+	it('replaces a pointer-focused DateField segment before committing its localized FormData', async () => {
+		await render(DateFixture);
+		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
+		const dateField = document.querySelector<HTMLElement>('[aria-label="Date segments"]')!;
+		const month = [...dateField.querySelectorAll<HTMLInputElement>('input')].find(
+			(segment) => segment.getAttribute('aria-label') === 'Month'
+		)!;
+
+		await userEvent.click(month);
+		await userEvent.keyboard('09');
+		await expect.poll(() => new FormData(form).get('date')).toBe('2026-09-18');
+		expect(month).toHaveValue('09');
+	});
+
+	it('defers a composed DateField segment until compositionend before changing FormData', async () => {
+		await render(DateFixture);
+		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
+		const dateField = document.querySelector<HTMLElement>('[aria-label="Date segments"]')!;
+		const segments = [...dateField.querySelectorAll<HTMLInputElement>('input')];
+		const month = segments.find((segment) => segment.getAttribute('aria-label') === 'Month')!;
+		const day = segments.find((segment) => segment.getAttribute('aria-label') === 'Day')!;
+
+		month.focus();
+		month.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+		month.value = '09';
+		month.dispatchEvent(
+			new InputEvent('input', {
+				bubbles: true,
+				data: '09',
+				inputType: 'insertCompositionText',
+				isComposing: true
+			})
+		);
+		await tick();
+		expect(month).toHaveValue('09');
+		expect(document.activeElement).toBe(month);
+		expect(new FormData(form).get('date')).toBe('2026-08-18');
+
+		month.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '09' }));
+		await expect.poll(() => new FormData(form).get('date')).toBe('2026-09-18');
+		expect(document.activeElement).toBe(day);
+	});
+
+	it('does not reclaim externally moved focus or auto-advance an invalid DateField segment', async () => {
+		await render(DateFixture);
+		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
+		const dateField = document.querySelector<HTMLElement>('[aria-label="Date segments"]')!;
+		const segments = [...dateField.querySelectorAll<HTMLInputElement>('input')];
+		const month = segments.find((segment) => segment.getAttribute('aria-label') === 'Month')!;
+		const reset = form.querySelector<HTMLButtonElement>('button[type="reset"]')!;
+
+		month.focus();
+		month.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+		month.value = '09';
+		month.dispatchEvent(
+			new InputEvent('input', {
+				bubbles: true,
+				data: '09',
+				inputType: 'insertCompositionText',
+				isComposing: true
+			})
+		);
+		reset.focus();
+		month.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '09' }));
+		await expect.poll(() => new FormData(form).get('date')).toBe('2026-09-18');
+		expect(document.activeElement).toBe(reset);
+
+		await userEvent.click(month);
+		await userEvent.keyboard('13');
+		await tick();
+		expect(dateField).toHaveAttribute('data-invalid', 'true');
+		expect(document.activeElement).toBe(month);
+		expect(new FormData(form).get('date')).toBe('2026-09-18');
 	});
 
 	it('keeps ZTimeField typed segments, granular keyboard and FormData/reset real', async () => {

@@ -398,6 +398,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { getActiveElement, getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import { parseLocalizedNumber } from '../../runtime/number.js';
+	import { focusSegmentFromInitialPointer } from './segment-pointer-focus.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -905,17 +906,6 @@
 		);
 	}
 
-	function handleSegmentPointerDown(
-		event: PointerEvent & { currentTarget: HTMLInputElement }
-	): void {
-		if (event.button !== 0 || getActiveElement(event.currentTarget) === event.currentTarget) return;
-		// WebKit can place a caret on pointerup after focus has selected the segment. Taking
-		// ownership of the initial focus preserves the segment-replace interaction, while a
-		// subsequent pointer interaction on an already-focused segment remains native.
-		event.preventDefault();
-		event.currentTarget.focus({ preventScroll: true });
-	}
-
 	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
 		const NodeConstructor = event.currentTarget.ownerDocument.defaultView?.Node;
 		if (
@@ -985,7 +975,7 @@
 				aria-readonly={resolvedReadonly || undefined}
 				aria-required={resolvedRequired || undefined}
 				onfocus={(event) => event.currentTarget.select()}
-				onpointerdown={handleSegmentPointerDown}
+				onpointerdown={focusSegmentFromInitialPointer}
 				oninput={(event) => handleInput(event, segment, focusIndex)}
 				oncompositionstart={() => handleCompositionStart(segment)}
 				oncompositionend={(event) => handleCompositionEnd(event, segment, focusIndex)}

@@ -147,7 +147,7 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P05  | 已提交，CI发现后续阻断 | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
 | P06  | 已提交，CI发现后续阻断 | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
 | P07  | 已提交，CI安装被拦截   | `7969859`组件修复、`c21f3cb`浏览器隔离、`7ae21cd`工具组；新CI因typescript-eslint发布等待期未进入组件验证                                         |
-| P08  | 执行中                 | 修正依赖等待策略与锁，审计DataTable焦点所有权、DateField/TimeField segment一致性，补齐既有DataTable演示验收                                      |
+| P08  | 本地通过，待组合SHA CI | 修正依赖等待策略与锁，DataTable焦点所有权、DateField/TimeField segment一致性及既有DataTable演示验收；完整远端证据尚未闭合                        |
 | P09+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
 
 ### P01 集成记录
@@ -270,5 +270,17 @@ Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和�
 - 工具依赖组已安装：ESLint10.10、typescript-eslint8.70、globals17.12、Changesets3.0.2、tsx4.23.13；@types/semver原已锁7.8，本次收归catalog，不冒充版本升级。Core类型与35项unit、release version self-test通过。未改变Svelte/TypeScript/Vitest/Playwright版本或发布包。最终ZUI/Docs类型0 errors/0 warnings，29项组件Chromium、Docs unit35项、reporter/composer/verifier、release coherence、全部修改格式/lint及audit:system均通过，日志见`.codex/production-p07-v2-final.json`。首次support parser失败保留在`.codex/production-p07-final.json`，不算已通过。
 
 P07阶段提交为`7969859`（组件/Docs）、`c21f3cb`（CI/证据链）及`7ae21cd`（工具依赖/记录）。[精确CI 34228715125](https://github.com/kenconnet666/zadmin/actions/runs/34228715125)安装被typescript-eslint8.70.0整组未满24小时拦截，尚无本批组件矩阵结果。P08保留安全窗口并收敛至合格版本；细节见[依赖审计](./dependency-upgrade-audit-2026-09-08.md)。当前主周额度仍高于30%停止线；预算约定保存在本计划第8节，不改变完整目标。
+
+### P08 安装策略、焦点所有权与既有演示验收
+
+- `c774ce9`已提交并推送依赖修正。隔离目录/空cache、store的527条锁供应链校验通过，SHA256不变；[CI 34231365948](https://github.com/kenconnet666/zadmin/actions/runs/34231365948)已跨过所有setup步骤，工作区构建与外部包检查通过，完整结果尚待收集。该SHA不包含以下组件修复，不能混用证据。
+- DateField真实WebKit pointer替换红测原本保持08而非新09。与TimeField抽取窄私有`segment-pointer-focus.ts`，初次左键聚焦保持整段选择，已聚焦后的点击仍走原生光标；不把locale/calendar算法放进该helper。补齐IME期间不提交/切段，结束后仅接受的有效日期且仍持有焦点才推进。根审阅补上组合结束前移焦外部及无效月13回归；两日期/时间spec的WebKit共12项通过。未据此宣称所有历法、输入法与移动浏览器已验收。
+- DataTable真实外部点击删行红测证实旧focusedKey恢复会抢焦点。改为实际DOM焦点所有权检查，恢复前与tick后都核对owner realm；仅在仍持有焦点或移除/禁用后退回body时恢复。自有selection/expand控件失效与consumer cell控件分开处理，不更改公开API。审阅补齐原生onfocusout透传与consumer cell保焦回归，避免内部handler覆盖消费者事件。WebKit原生button点击不保证取焦，最终测试先显式建立并断言外部焦点后删除，不修改Button迎合测试；完整DataTable WebKit8项通过。
+- DataTable `server-owner`现有演示已能说明分页、无结果和跨页选择，本次不增加重复demo。补真实Docs浏览器用例验证总行数9（含header）、第二页首行rowindex5、筛选空结果回到1/1页、清除恢复8条且保留`api, docs`选择；复用5174开发站，Chromium1项通过。DateField既有表单演示说明与可访问性同步IME/pointer规则。
+- `c774ce9`的CI追加证据：Firefox/WebKit组件任务通过；Coverage的317文件2086项测试全通过，但未覆盖global lines1557/functions446/statements2903/branches3728、components1318/392/2465/3109超既有预算，没有放宽门槛。Chromium workspace在`pin-input-focused`创建tester时断连，268/317文件、1979项已通过，余下未执行；本批浏览器拆分不能记为彻底解决断连。Windows WebView2、build、外部包与Drizzle已通过；Docs与其余任务完整结论仍待采集。下一批优先检查Chromium非coverage与成功coverage/另两浏览器的执行差异，不把断连误计为组件断言失败。
+- 最终本地：ZUI/Docs类型0 errors/0 warnings，日期/时间Chromium12项、DataTable最终Chromium8项与WebKit8项、日期/时间WebKit12项、Docs新增1项通过；artifact生成、browser lifecycle guard、改动格式/lint、audit:system通过。日志见`.codex/production-p08-final.json`与最终增量`.codex/production-p08-reviewed.json`；后者在native callback与typed testid审阅后重做ZUI类型及DataTable8项，不把前一轮结果冒充最终版本。
+- 当前仍需新组合SHA CI。整库覆盖率预算、剩余组件家族/新能力与依赖组均继续按原计划推进；没有发布、tag或生产部署。
+
+P09入口：先收集上述完整CI与coverage产物，按文件比较未覆盖绝对值，不降低既有预算。Chromium使用根`pnpm test`（包含workspace与ZUI unit/browser），另两浏览器仅执行ZUI browser project；coverage也能完成全部317文件。因此应在远端比较执行入口与provider连接生命周期，保留process stderr/exit和文件初始化证据；单文件绿灯不能排除跨文件问题，也不能直接归因于PinInput、OOM或声称升级Vitest必然修复。Luna完成只读预审，没有据此修改组件或测试框架。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

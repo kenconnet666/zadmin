@@ -1377,6 +1377,7 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'variants-and-states',
 			'basic-render',
+			'focus',
 			'form-data',
 			'form-reset',
 			'uncontrolled',
@@ -1384,7 +1385,6 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'readonly',
 			'rtl',
-			'focus',
 			'invalid',
 			'native-props'
 		],

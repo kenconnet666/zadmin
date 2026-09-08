@@ -628,6 +628,11 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import {
+		containsComposedNode,
+		getActiveElement,
+		isDomHtmlElement
+	} from '../../runtime/layer/dom-realm.js';
 	import ZAlert from '../feedback/ZAlert.svelte';
 	import ZSpinner from '../feedback/ZSpinner.svelte';
 	import ZButton from '../gene/ZButton.svelte';
@@ -682,6 +687,7 @@
 		onColumnVisibilityChange,
 		onColumnWidthsChange,
 		onExpandedChange,
+		onfocusout,
 		onSelectionChange,
 		onSortChange,
 		onscroll,
@@ -725,6 +731,7 @@
 	let resizeObserver: ResizeObserver | undefined;
 	let viewportWidth = -1;
 	let focusedKey: TRowKey | undefined;
+	let focusedElement: HTMLElement | null = null;
 	let focusedTarget: DataTableRowFocusTarget = 'auto';
 	let previousKeys: readonly TRowKey[] = [];
 	let previousSortColumnId: string | undefined;
@@ -1020,11 +1027,25 @@
 	});
 	$effect(() => {
 		const nextKeys = keyedRows.map(({ key }) => key);
-		if (focusedKey !== undefined && !nextKeys.some((key) => Object.is(key, focusedKey))) {
+		const keyMissing =
+			focusedKey !== undefined && !nextKeys.some((key) => Object.is(key, focusedKey));
+		const ownedTargetDisabled =
+			focusedKey !== undefined &&
+			focusedTarget !== 'auto' &&
+			!canFocusRow(focusedKey, focusedTarget);
+		if (focusedKey !== undefined && (keyMissing || ownedTargetDisabled)) {
+			const owner = focusedElement;
 			const previousIndex = previousKeys.findIndex((key) => Object.is(key, focusedKey));
-			const fallback = nearestFocusableKey(nextKeys, previousIndex, focusedTarget);
-			focusedKey = fallback;
-			if (fallback !== undefined) void tick().then(() => focusRow(fallback, focusedTarget));
+			if (!owner || !ownsRecoveryFocus(owner)) {
+				focusedKey = undefined;
+				focusedElement = null;
+				focusedTarget = 'auto';
+			} else {
+				const fallback = nearestFocusableKey(nextKeys, previousIndex, focusedTarget);
+				focusedKey = fallback;
+				if (fallback !== undefined) focusRow(fallback, focusedTarget, owner);
+				else focusedElement = null;
+			}
 		}
 		previousKeys = Object.freeze(nextKeys);
 	});
@@ -1284,10 +1305,27 @@
 		return true;
 	}
 
-	function focusRow(key: TRowKey, target: DataTableRowFocusTarget = 'auto'): boolean {
+	function ownsRecoveryFocus(owner: HTMLElement): boolean {
+		const active = getActiveElement(owner);
+		if (active === owner || containsComposedNode(owner, active)) return true;
+		return Boolean(
+			(!owner.isConnected || owner.matches(':disabled')) &&
+			(active === null ||
+				active === owner.ownerDocument.body ||
+				active === owner.ownerDocument.documentElement)
+		);
+	}
+
+	function focusRow(
+		key: TRowKey,
+		target: DataTableRowFocusTarget = 'auto',
+		recoveryOwner?: HTMLElement
+	): boolean {
 		if (!canFocusRow(key, target)) return false;
 		if (!scrollToRow(key)) return false;
 		void tick().then(() => {
+			if (recoveryOwner && (!Object.is(focusedKey, key) || !ownsRecoveryFocus(recoveryOwner)))
+				return;
 			const rowsForKey = rowElements.get(key);
 			if (!rowsForKey) return;
 			for (const row of rowsForKey) {
@@ -1343,7 +1381,20 @@
 		const view = event.currentTarget.ownerDocument.defaultView;
 		const target =
 			view && event.target instanceof view.HTMLElement ? event.target.dataset.rowFocus : undefined;
+		focusedElement = isDomHtmlElement(event.target) ? event.target : null;
 		focusedTarget = target === 'selection' || target === 'expand' ? target : 'auto';
+	}
+
+	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
+		if (
+			event.relatedTarget !== null &&
+			!containsComposedNode(event.currentTarget, event.relatedTarget)
+		) {
+			focusedKey = undefined;
+			focusedElement = null;
+			focusedTarget = 'auto';
+		}
+		onfocusout?.(event);
 	}
 
 	function handleScroll(event: UIEvent & { currentTarget: EventTarget & HTMLDivElement }): void {
@@ -1555,6 +1606,7 @@
 	data-range-start={range?.startIndex}
 	data-range-end={range?.endIndex}
 	onscroll={handleScroll}
+	onfocusout={handleFocusOut}
 >
 	{#if errorMessage}
 		<div class={statusClass} data-slot="status">

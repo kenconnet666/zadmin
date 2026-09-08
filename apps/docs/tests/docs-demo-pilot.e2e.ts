@@ -105,6 +105,40 @@ test('DataTable cancellation and later requests prevent an old snapshot from bec
 	await expect(demo.getByRole('button', { name: '取消当前请求', exact: true })).toBeDisabled();
 });
 
+test('DataTable server owner preserves global row semantics, empty filtering and cross-page selection', async ({
+	page
+}) => {
+	const demo = await openPausedDemo(page, 'data-table', 'data-table-server-owner');
+	const table = demo.getByRole('table', { name: '服务检索结果', exact: true });
+	const pagination = demo.getByRole('navigation', { name: '服务结果分页', exact: true });
+	const filter = demo.getByRole('textbox', { name: '筛选服务', exact: true });
+
+	await expect(table).toHaveAttribute('aria-rowcount', '9');
+	await expect(table.locator('tbody tr[data-slot="row"]').first()).toHaveAttribute(
+		'aria-rowindex',
+		'2'
+	);
+	await pagination.locator('[data-page-number="2"]').click();
+	await expect(demo).toContainText('第2/3页');
+	await expect(table.locator('tbody tr[data-slot="row"]').first()).toHaveAttribute(
+		'aria-rowindex',
+		'5'
+	);
+	await expect(table).toHaveAttribute('aria-rowcount', '9');
+	await table.getByRole('checkbox', { name: '选择 Docs', exact: true }).check();
+	await expect(demo).toContainText('跨页selected = api, docs');
+
+	await filter.fill('不存在的服务');
+	await expect(demo).toContainText('外部owner：0条结果 · 第1/1页');
+	await expect(table.getByText('没有匹配服务', { exact: true })).toBeVisible();
+	await expect(demo).toContainText('跨页selected = api, docs');
+
+	await filter.fill('');
+	await expect(demo).toContainText('外部owner：8条结果 · 第1/3页');
+	await expect(table.getByRole('row', { name: /API Gateway/u })).toBeVisible();
+	await expect(demo).toContainText('跨页selected = api, docs');
+});
+
 test('leaving async demos releases their tasks without late page errors or state on remount', async ({
 	page
 }) => {
