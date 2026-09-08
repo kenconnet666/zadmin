@@ -154,7 +154,7 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
 | P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
-| P15  | 局部通过，待新CI         | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
+| P15  | 已提交，CI部分通过       | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
 | P16+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
 
 ### P01 集成记录
@@ -373,5 +373,11 @@ P10后续收口：
 - 最终定向验证见`.codex/production-p15-recheck-final.json`：ZUI/Docs类型0 errors/0 warnings、15项unit/SSR、26项Chromium、17项触屏模拟、2项Docs、lifecycle、生成/格式/lint与audit:system均通过；border-box及border-only尺寸变化也有真实回归。首次类型失败日志保留，测试替身保持同一显式provider结构类型，不放宽生产factory合同。
 - 真实浏览器发现诊断在Page正常关闭后重复detach会误报。独立session仅在Page仍打开时detach，并对期间关闭做窄处理；活着的Page上的真正清理异常仍报告。最终14项unit+browser复验与ZUI类型/格式/lint通过，日志含network-ready且没有setup/cleanup误报，见`.codex/p15-diagnostics-final.json`。这只证明诊断可运行，不等于整库WS断连已修复。完整CI与coverage仍待新SHA。
 - 03:38与收尾实时查询主周额度均剩34%，未到停止线；不继续扩大本批或派新子代理。[阶段交接](./handoff-2026-09-09.md)保留现有预算规则、代码边界与下次CI取证入口。
+
+#### P15 远端核对（2026-09-09，北京时间）
+
+- `7180baa8c89c08a0d8617b3ef10fd547ed806363` 的 [CI 34270838463](https://github.com/kenconnet666/zadmin/actions/runs/34270838463) 已确认三浏览器组件任务通过，Chromium 主套件为323文件2127项，独立触屏17项通过。本轮没有中途断连，Network诊断实际启用且无错误；只记为本轮通过，不把新增观察器后的单轮成功当作历史WS断连根因已解决。
+- Coverage同样323文件2127项全过，但global未覆盖lines/functions/statements/branches为1595/459/2960/3755、components为1325/377/2471/3115，仍超原有预算。已读取本次完整coverage JSON，优先核对DataTable pointer调宽与resetColumnWidths、Tree公开controller、NavigationMenu overflow请求取消/关闭透传；这些是验证缺口，不直接推断实现错误，详见交接。
+- Static、build、外部包、Windows、Drizzle通过；Docs三浏览器与最终汇总尚未结束。文档更新先本地提交，等此轮完整结束后推送，避免同分支CI并发策略取消仍在运行的Docs任务。下一轮先核对同一run的终态，不重启本地整库检查。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
