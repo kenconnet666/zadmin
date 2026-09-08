@@ -1,3 +1,4 @@
+import type { CollectionMutationResult } from '../collection/mutation.js';
 import type { ReorderRequest } from '../collection/reorder.js';
 import type { SelectionKey } from '../collection/selection.js';
 
@@ -9,7 +10,7 @@ export interface SortableMoveRequest<
 	readonly signal: AbortSignal;
 }
 
-export type SortableMoveResult = 'accepted' | 'rejected' | 'cancelled' | 'stale' | 'error';
+export type SortableMoveResult = CollectionMutationResult;
 
 export interface SortableMoveEnd<T, TKey extends SelectionKey = SelectionKey> {
 	readonly request: SortableMoveRequest<T, TKey>;

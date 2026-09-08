@@ -1,6 +1,7 @@
+import { assertCollectionMutationSource, type CollectionMutationSource } from './mutation.js';
 import { assertSelectionKey, type SelectionKey } from './selection.js';
 
-export type ReorderSource = 'action' | 'keyboard' | 'pointer';
+export type ReorderSource = CollectionMutationSource;
 
 export interface ReorderRequest<TKey extends SelectionKey = SelectionKey> {
 	readonly fromIndex: number;
@@ -36,8 +37,7 @@ function reorderIndex(value: unknown, length: number, name: string): number {
 }
 
 function reorderSource(value: unknown): ReorderSource {
-	if (value !== 'pointer' && value !== 'keyboard' && value !== 'action')
-		throw new TypeError('Reorder source must be pointer, keyboard or action.');
+	assertCollectionMutationSource(value, 'Reorder source');
 	return value;
 }
 
