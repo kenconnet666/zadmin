@@ -22,6 +22,14 @@
 		end: null,
 		start: yearPeriod(2025)
 	});
+	let strictRange = $state<PeriodRangeValue<'year'> | null>({
+		end: null,
+		start: yearPeriod(2025)
+	});
+	let nonContiguousRange = $state<PeriodRangeValue<'year'> | null>({
+		end: null,
+		start: yearPeriod(2025)
+	});
 	let weeks = $state<readonly WeekPeriod[]>([
 		weekPeriod(2026, 10, { firstDayOfWeek: 'sun', minimalDaysInFirstWeek: 1 })
 	]);
@@ -79,6 +87,31 @@
 			granularity="year"
 			name="years"
 			required
+			selectionMode="range"
+		/>
+		<ZPeriodCalendar
+			bind:value={strictRange}
+			data-testid="period-year-range-strict"
+			defaultFocusedValue={yearPeriod(2025)}
+			defaultValue={{ end: null, start: yearPeriod(2025) }}
+			granularity="year"
+			isPeriodUnavailable={(period) => period.year === 2026}
+			maxValue={yearPeriod(2027)}
+			minValue={yearPeriod(2025)}
+			name="strict-years"
+			selectionMode="range"
+		/>
+		<ZPeriodCalendar
+			allowNonContiguousRange
+			bind:value={nonContiguousRange}
+			data-testid="period-year-range-noncontiguous"
+			defaultFocusedValue={yearPeriod(2025)}
+			defaultValue={{ end: null, start: yearPeriod(2025) }}
+			granularity="year"
+			isPeriodUnavailable={(period) => period.year === 2026}
+			maxValue={yearPeriod(2027)}
+			minValue={yearPeriod(2025)}
+			name="noncontiguous-years"
 			selectionMode="range"
 		/>
 		<ZPeriodCalendar

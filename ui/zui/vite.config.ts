@@ -123,7 +123,17 @@ export default defineConfig({
 						},
 						enabled: true,
 						headless: true,
-						instances: browserInstances,
+						// Use the full Chromium binary's modern headless mode, matching the
+						// browser users run instead of the separate headless-shell build.
+						// Keep Firefox/WebKit and the existing file-concurrency policy unchanged.
+						instances: browserInstances.map((instance) =>
+							instance.browser === 'chromium'
+								? {
+										...instance,
+										provider: playwright({ launchOptions: { channel: 'chromium' } })
+									}
+								: instance
+						),
 						provider: playwright()
 					},
 					include: ['tests/**/*.browser.spec.ts'],

@@ -137,19 +137,20 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 
 ## 9. 执行记录
 
-| 批次 | 状态                   | 内容/证据                                                                                                                                        |
-| ---- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| P00  | 已提交                 | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                          |
-| P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断 |
-| P02  | 已提交，CI发现后续阻断 | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
-| P03  | 已提交，CI发现后续阻断 | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
-| P04  | 已提交，CI发现后续阻断 | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
-| P05  | 已提交，CI发现后续阻断 | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
-| P06  | 已提交，CI发现后续阻断 | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
-| P07  | 已提交，CI安装被拦截   | `7969859`组件修复、`c21f3cb`浏览器隔离、`7ae21cd`工具组；新CI因typescript-eslint发布等待期未进入组件验证                                         |
-| P08  | 本地通过，待组合SHA CI | 修正依赖等待策略与锁，DataTable焦点所有权、DateField/TimeField segment一致性及既有DataTable演示验收；完整远端证据尚未闭合                        |
-| P09  | 本地通过，待推送       | 明确readonly范围面板查看/写值边界，补周期不可用规则的真实演示验收，增加Chromium首个断连/调度/GC诊断；等待上一提交Docs完整结果                    |
-| P10+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
+| 批次 | 状态                     | 内容/证据                                                                                                                                        |
+| ---- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| P00  | 已提交                   | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                          |
+| P01  | 已提交，CI发现后续阻断   | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断 |
+| P02  | 已提交，CI发现后续阻断   | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
+| P03  | 已提交，CI发现后续阻断   | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
+| P04  | 已提交，CI发现后续阻断   | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
+| P05  | 已提交，CI发现后续阻断   | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
+| P06  | 已提交，CI发现后续阻断   | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
+| P07  | 已提交，CI安装被拦截     | `7969859`组件修复、`c21f3cb`浏览器隔离、`7ae21cd`工具组；新CI因typescript-eslint发布等待期未进入组件验证                                         |
+| P08  | 已提交，CI发现阻断       | `9b9756a`三浏览器Docs与其余组件/构建门禁通过，仍有Chromium整库连接中断和coverage预算缺口                                                         |
+| P09  | 已提交，CI继续定位       | `8a914f1`只读范围/周期规则验收及API/pool/GC诊断已推送，整库断连仍复现；不算已修复                                                                |
+| P10  | 基础本地通过，E19B实现中 | Chromium新headless、周期范围/焦点合同先独立提交；Transfer跨栏adapter、request-owner演示和回归独立收口                                            |
+| P11+ | 待执行                   | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
 
 ### P01 集成记录
 
@@ -294,5 +295,14 @@ P09入口：先收集上述完整CI与coverage产物，按文件比较未覆盖�
 - 本地最终集成：ZUI/Docs类型0 errors/0 warnings；模拟CI串行策略的11项Chromium（日期时间范围7、PinInput3、ICSS token1）通过，API/pool精确debug namespace实际输出已确认。静态生成、格式、定向lint、audit:system通过，日志见`.codex/production-p09-final.json`。小范围没有复现跨文件断连，不作为整库修复证明。
 - `9b9756a`的Static、build、外部包、Windows WebView2、Drizzle、Firefox/WebKit组件与Docs Chromium已通过；Docs Firefox/WebKit仍运行。P09先本地提交，待这两项结束再推送，保留精确SHA完整诊断。当前主周额度剩余52%，未触及30%停止线。
 - Vitest5.0、browser/coverage5.0与vitest-browser-svelte3.1.0已核对registry基础engines/peer及主要迁移点，支持链具备迁移条件，但尚未安装；官方迁移包括clearMocks默认、inline project server共享、sequential移除、command locator对象和matcher类型等，不能只改版本或声称其必然解决断连。major迁移仍按独立分组验收，先保留本次4.1.11的诊断对照。
+
+### P10 基础验证与Transfer E19B接入
+
+- `9b9756a`的Docs三浏览器最终全部通过，只有Chromium workspace连接中断与coverage预算使Required aggregate失败；随后已推送P09 `8a914f18391dd0ceb0744a082f287386c9c24233`，对应[CI 34234984396](https://github.com/kenconnet666/zadmin/actions/runs/34234984396)。
+- 新诊断确认8a在`code-size`待执行期间先失去orchestrator，再失去tester；294/317文件2055项通过后中断。最后一次GC检查尚有约57GB可用空间，`triggered=false`，不能归因于低磁盘GC，也没有浏览器崩溃/被杀证据。Coverage仍完整317文件2092项全过，未覆盖global1552/439/2896/3719、components1313/385/2458/3100，仍超既有预算。不是所有连接断开都是异常：本地正常退出也会产生断连，必须结合发生在汇总前还是汇总后判断。
+- Chromium instance改用`launchOptions.channel='chromium'`，运行完整二进制的新headless模式；依据[官方Playwright provider配置](https://vitest.dev/config/browser/playwright)。Firefox/WebKit、依赖版本、并发与覆盖率门槛不变。日志`.codex/p10-new-headless-probe.log`确认启动`chromium-1234/chrome-win64/chrome.exe`而非headless shell，代码尺寸2项与周期日历7项通过；这只是候选运行方式，是否修复整库稳定性仍待新SHA CI。
+- PeriodCalendar增加strict范围拒绝跨不可用2026、allowNonContiguous允许内部空洞但不绕过2024/2028 min/max及不可用端点的回归；两端FormData明确单条/缺失。外部选择更新2027-02不改当前June焦点，也不伪造focusedValue回调。未发现需要修改运行时的缺陷，Docs同步公开合同。
+- 上述基础改动ZUI类型0 errors/0 warnings、9项Chromium、定向格式/lint及maturity生成通过，可独立提交；Transfer新API实现不混入这次验证声明。
+- E19B开始按[接入合同](./w4-composition-next-2026-09-07.md)实施`dragDrop`、pointer与Alt+逻辑跨栏移动。复用既有移动事务和request-owner Demo，明确gesture快照、typed key、checked清理与取消边界。当前实现/Docs尚未完成集成验证；真实touch、滚动竞争与动画仍保留为完整目标，不因本批先实现pointer/keyboard而删除。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

@@ -22,6 +22,8 @@ export const periodCalendarDoc = defineComponentDoc(periodCalendarMetadata, {
 	accessibility: [
 		'网格使用一个roving焦点；方向键、首尾和分页导航保持焦点与选择分离。',
 		'required只使空选择无效，不拦截用户清空；disabled停止交互，readonly保留浏览但不允许写值。',
+		'范围默认拒绝跨越不可用周期；allowNonContiguousRange仅允许范围内部存在不可用周期，端点仍必须满足min/max与isPeriodUnavailable。',
+		'外部更新value只同步选择与FormData，不自动覆盖focusedValue或抢走当前日历焦点；需要翻页定位时由调用方显式管理焦点值。',
 		'周单元明确显示周号与日期边界，财年和周规则随值保存。'
 	],
 	demos: [

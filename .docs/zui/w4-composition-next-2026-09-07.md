@@ -129,3 +129,16 @@ E19 只有同时满足以下条件才可结束：
 6. 专项 pure/SSR/types/browser/Docs 资产已写；当前 revision 的远程执行证据仍由 execution composer 判断，资产存在本身不写成 Verified。
 
 E19B 随后只做 Transfer 的跨栏 pointer/touch/keyboard drop adapter，并复用 E19 事务。该消费者通过后再冻结 Tree 的层级 drop request；DataTable row reorder 等 server sort 与虚拟 table 顺序合同确定后进入 W5 接缝阶段。
+
+## E19B 接入合同（2026-09-08启动，尚未验收完成）
+
+前置证据：E19移动事务已在后续批次实现，`9b9756a`的覆盖率测试、Firefox/WebKit组件及三浏览器Docs完整执行通过；整库Chromium连接与覆盖率预算仍未闭合。以下是新交互的实现合同，不是已完成声明。
+
+- 新增可选`dragDrop?: boolean`，默认false，避免与继承的原生HTML `draggable`属性混淆。关闭时维持既有按钮、勾选、筛选、active-descendant语义。
+- Pointer拖动enabled option到相反pane。拖动已勾选项时移动来源pane全部loaded/enabled checked keys；拖动未勾选项时只移动自身。目的地只表达逻辑source/target，不支持同栏排序或树层级放置。
+- Keyboard在listbox上使用`Alt+ArrowLeft/ArrowRight`向视觉另一栏移动active项目或其checked组，RTL只影响物理箭头。保持唯一容器tab stop，Enter/Space仍用于勾选，筛选输入不接管这条快捷键；它是跨栏快捷移动，不冒充已实现完整的keyboard lift/drop会话。
+- adapter只持有DOM注册、typed key/side、手势快照和视觉状态；底层复用现有DragDropManager/Provider、geometry、class-only plugins与nonce。禁止再建两份可写数组，也不把ReorderRequest当membership事务。
+- drop以显式movingKeys进入唯一`requestTransferMove`。不得先改checked来伪装目标项目；仅accepted清理实际movingKeys，未勾选单项拖动不清空其他临时勾选。旧按钮仍传来源全部checked，行为不退化。
+- 手势途中items/value改变、readonly/disabled/pending或卸载，使旧gesture失效；不能把旧手势套用到新的数据快照。未提交的取消不伪造onMoveEnd；已提交request继续使用既有AbortSignal、回声核对和终态。拖动结束不能额外触发一次option click勾选。
+- 视觉反馈消费既有Theme/ICSS tokens；六主题、五尺寸、RTL、reduced motion、nonce及虚拟pane继续分别验收。PointerEvent代码路径能接收touch/pen不等于真实设备已验证；真实touch/滚动竞争与跨栏动画仍在完整E19B目标中，未完成不得删除或标通过。
+- Docs扩充原`transfer-request-owner`，不复制第二个双栏演示。先验收pointer与keyboard来源、接受前canonical/FormData不变、接受后唯一回声，再覆盖拒绝、取消、snapshot stale、禁用项和未参与移动的checked保留。

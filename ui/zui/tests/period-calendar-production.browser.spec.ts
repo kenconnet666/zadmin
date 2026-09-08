@@ -2,6 +2,7 @@ import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { mount, unmount } from './browser-lifecycle.js';
 import PeriodCalendarProductionFixture from './PeriodCalendarProductionFixture.svelte';
 import { resetForm } from './form-reset.js';
 
@@ -142,6 +143,58 @@ describe('ZPeriodCalendar production contracts', () => {
 		expect(week.querySelectorAll('[role="gridcell"]')).toHaveLength(12);
 		expect(week.querySelectorAll('[data-slot="week-range"]')).toHaveLength(12);
 		expect(weekCells[0]?.getAttribute('aria-label')).toMatch(/^W\d{2} 2026/u);
+	});
+
+	it('rejects unavailable interior periods unless a range explicitly allows non-contiguity', async () => {
+		await render(PeriodCalendarProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="period-form"]')!;
+		const strict = root('period-year-range-strict');
+		const nonContiguous = root('period-year-range-noncontiguous');
+		const strict2027 = cell('period-year-range-strict', '2027');
+		const nonContiguous2027 = cell('period-year-range-noncontiguous', '2027');
+
+		expect(cell('period-year-range-strict', '2026').disabled).toBe(true);
+		expect(cell('period-year-range-noncontiguous', '2026').disabled).toBe(true);
+		for (const year of ['2024', '2028']) {
+			expect(cell('period-year-range-strict', year)).toBeDisabled();
+			expect(cell('period-year-range-noncontiguous', year)).toBeDisabled();
+		}
+		strict2027.click();
+		await tick();
+		expect(new FormData(form).getAll('strict-years.start')).toEqual(['2025']);
+		expect(new FormData(form).getAll('strict-years.end')).toEqual([]);
+		expect(strict.querySelector('[data-slot="feedback"]')).not.toBeNull();
+
+		nonContiguous2027.click();
+		await tick();
+		expect(new FormData(form).getAll('noncontiguous-years.start')).toEqual(['2025']);
+		expect(new FormData(form).getAll('noncontiguous-years.end')).toEqual(['2027']);
+		expect(nonContiguous.querySelector('[data-range-edge="end"]')?.textContent).toContain('2027');
+	});
+
+	it('keeps focusedValue independent when an external owner replaces the selected period', async () => {
+		const host = document.createElement('div');
+		document.body.append(host);
+		const component = mount(PeriodCalendarProductionFixture, { target: host });
+		try {
+			await tick();
+			const form = host.querySelector<HTMLFormElement>('[data-testid="period-form"]')!;
+			const may = cell('period-month', 'May');
+			may.focus();
+			may.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+			await tick();
+			const focusedJune = document.activeElement;
+			expect(focusedJune?.getAttribute('aria-label')).toContain('June');
+
+			component.setExternalMonth();
+			await tick();
+			expect(new FormData(form).get('month')).toBe('2027-02');
+			expect(document.activeElement).toBe(focusedJune);
+			expect(host.querySelector('[data-testid="period-values"]')?.textContent).toContain('|0:1|');
+		} finally {
+			await unmount(component);
+			host.remove();
+		}
 	});
 
 	it('keeps readonly and controlled rejection authoritative while required still permits clearing', async () => {
