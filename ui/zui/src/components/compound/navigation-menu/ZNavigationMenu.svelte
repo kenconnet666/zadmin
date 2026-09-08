@@ -865,7 +865,9 @@
 	$effect(() => {
 		config;
 		view;
+		const cancelledEdges = [...requestedEdge.keys()].filter((key) => !isOpen(key));
 		untrack(() => {
+			for (const key of cancelledEdges) requestedEdge.delete(key);
 			navigation.reconcile();
 			previousView = view;
 		});

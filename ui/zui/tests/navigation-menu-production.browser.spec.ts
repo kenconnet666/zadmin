@@ -32,7 +32,7 @@ function controlledPanel(control: HTMLElement): HTMLElement | null {
 
 describe('ZNavigationMenu production browser contract', () => {
 	it('keeps inline disclosure, native links, static groups, current state and disabled state separate', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const root = navigation('Inline navigation');
 		const list = root.querySelector<HTMLUListElement>(':scope > ul[data-slot="list"]')!;
@@ -91,7 +91,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('uses real horizontal and vertical Popover buttons and restores disclosure focus on Escape', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 
 		const horizontal = navigation('Horizontal navigation');
@@ -175,7 +175,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('leaves modified, new-window and external links on their native path', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const horizontal = navigation('Horizontal navigation');
 		const modified = horizontal.querySelector<HTMLAnchorElement>('a[href="/native-modified"]')!;
@@ -201,7 +201,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('keeps collapsed RTL navigation named, bounded and fully available through its flyout', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const owner = document.querySelector<HTMLElement>(
 			'[data-testid="collapsed-navigation-owner"]'
@@ -234,7 +234,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('keeps one hidden overflow source node and one separately identified popup node per item', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const root = navigation('Overflow navigation');
 		const source = root.querySelector<HTMLUListElement>(':scope > ul')!;
@@ -279,7 +279,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('removes an opened sibling and all of its descendant keys in single expansion mode', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const root = navigation('Single expansion navigation');
 		const first = root.querySelector<HTMLButtonElement>(
@@ -306,7 +306,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('handles href branch direction keys once and opens ArrowUp on the last panel item', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const horizontal = navigation('Horizontal navigation');
 		const disclosure = horizontal
@@ -331,8 +331,58 @@ describe('ZNavigationMenu production browser contract', () => {
 		expect(output('horizontal-open-output')).toBe('horizontal-products:1');
 	});
 
+	it('discards a superseded keyboard edge before a later pointer reopen', async () => {
+		await render(NavigationMenuFixture);
+		await tick();
+		const horizontal = navigation('Horizontal navigation');
+		const products = horizontal
+			.querySelector<HTMLAnchorElement>('a[href="/products"]')!
+			.closest<HTMLElement>('[data-slot="row"]')!
+			.querySelector<HTMLButtonElement>('button[data-slot="disclosure"]')!;
+		const services = horizontal.querySelector<HTMLButtonElement>(
+			'li[data-key="horizontal-services"] > button[data-slot="primary"]'
+		)!;
+
+		products.focus();
+		products.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		services.focus();
+		services.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await expect.poll(() => services.getAttribute('aria-expanded')).toBe('true');
+		expect(products.getAttribute('aria-expanded')).toBe('false');
+		await userEvent.keyboard('{Escape}');
+		await expect.poll(() => services.getAttribute('aria-expanded')).toBe('false');
+
+		await userEvent.click(products);
+		await expect.poll(() => products.getAttribute('aria-expanded')).toBe('true');
+		const panel = controlledPanel(products)!;
+		await expect
+			.poll(() => document.activeElement)
+			.toBe(panel.querySelector<HTMLAnchorElement>('a[href="/products/overview"]'));
+	});
+
+	it('cancels an unmounted keyboard edge when its menu becomes disabled', async () => {
+		const { component } = await render(NavigationMenuFixture);
+		const horizontal = navigation('Horizontal navigation');
+		const products = horizontal
+			.querySelector<HTMLAnchorElement>('a[href="/products"]')!
+			.closest<HTMLElement>('[data-slot="row"]')!
+			.querySelector<HTMLButtonElement>('button[data-slot="disclosure"]')!;
+		products.focus();
+		products.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		component.setHorizontalDisabled(true);
+		await expect.poll(() => products.disabled).toBe(true);
+		expect(products.getAttribute('aria-expanded')).toBe('false');
+
+		component.setHorizontalDisabled(false);
+		await expect.poll(() => products.getAttribute('aria-expanded')).toBe('true');
+		const panel = controlledPanel(products)!;
+		await expect
+			.poll(() => document.activeElement)
+			.toBe(panel.querySelector<HTMLAnchorElement>('a[href="/products/overview"]'));
+	});
+
 	it('moves Tab from the last panel item to the next real document target, skipping inert More', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const root = navigation('Panel boundary navigation');
 		const source = root.querySelector<HTMLUListElement>(':scope > ul')!;
@@ -369,7 +419,7 @@ describe('ZNavigationMenu production browser contract', () => {
 	});
 
 	it('pins custom panels and never duplicates consumer item, start, end or panel IDs in More', async () => {
-		render(NavigationMenuFixture);
+		await render(NavigationMenuFixture);
 		await tick();
 		const root = navigation('Consumer overflow navigation');
 		const source = root.querySelector<HTMLUListElement>(':scope > ul')!;

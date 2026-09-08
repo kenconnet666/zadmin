@@ -21,6 +21,9 @@
 	const enabledDefault = new Time(9, 30, 15);
 	let enabled = $state<Time | null>(enabledDefault);
 	let enabledChanges = $state(0);
+	let twelveHourChanges = $state(0);
+	let imeChanges = $state(0);
+	let imeHourChanges = $state(0);
 </script>
 
 <ZForm data-testid="time-rejected-form" model={rejectedModel}>
@@ -79,3 +82,64 @@
 	>writes={rejectedWrites}; changes={rejectedChanges}</output
 >
 <output data-testid="time-enabled-counters">changes={enabledChanges}</output>
+
+<form data-testid="time-boundary-form">
+	<ZField label="12 hour time">
+		<ZTimeField
+			aria-label="12 hour time"
+			data-testid="time-us-12"
+			defaultValue={new Time(13, 5, 7)}
+			granularity="second"
+			hourCycle={12}
+			locale="en-US"
+			name="twelveHour"
+			onValueChange={() => (twelveHourChanges += 1)}
+		/>
+	</ZField>
+	<ZField label="RTL time">
+		<ZTimeField
+			aria-label="RTL time"
+			data-testid="time-rtl"
+			defaultValue={new Time(9, 30)}
+			dir="rtl"
+			hourCycle={24}
+			locale="en-US"
+			name="rtl"
+		/>
+	</ZField>
+	<ZField label="Constrained time">
+		<ZTimeField
+			aria-label="Constrained time"
+			data-testid="time-constrained"
+			defaultValue={new Time(9, 30)}
+			locale="en-US"
+			maxValue={new Time(9, 45)}
+			minValue={new Time(9, 30)}
+			name="constrained"
+		/>
+	</ZField>
+	<ZField label="Composed time">
+		<ZTimeField
+			aria-label="Composed time"
+			data-testid="time-ime"
+			defaultValue={new Time(9, 30)}
+			locale="en-US"
+			name="ime"
+			onValueChange={() => (imeChanges += 1)}
+		/>
+	</ZField>
+	<ZField label="Composed hour">
+		<ZTimeField
+			aria-label="Composed hour"
+			data-testid="time-ime-hour"
+			defaultValue={new Time(9)}
+			granularity="hour"
+			locale="en-US"
+			name="imeHour"
+			onValueChange={() => (imeHourChanges += 1)}
+		/>
+	</ZField>
+	<button data-testid="time-ime-external" type="button">External focus</button>
+</form>
+<output data-testid="time-boundary-counters">twelve={twelveHourChanges}; ime={imeChanges}</output>
+<output data-testid="time-ime-hour-counters">changes={imeHourChanges}</output>

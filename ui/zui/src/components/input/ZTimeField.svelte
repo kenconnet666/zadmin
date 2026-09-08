@@ -396,7 +396,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
+	import { getActiveElement, getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import { parseLocalizedNumber } from '../../runtime/number.js';
 
 	let {
@@ -516,6 +516,7 @@
 	let drafts = $state<Partial<Record<TimeSegment, string>>>({});
 	let draftPeriod = $state<TimeDayPeriod | null>(null);
 	let draftInvalid = $state(false);
+	let composingSegments = $state<ReadonlySet<TimeSegment>>(new Set());
 	const visiblePeriod = $derived<TimeDayPeriod>(
 		draftPeriod ?? ((valueState.current?.hour ?? 0) >= 12 ? 'pm' : 'am')
 	);
@@ -760,6 +761,7 @@
 	}
 
 	function handleKey(event: KeyboardEvent, segment: TimeSegment, index: number): void {
+		if (event.isComposing || composingSegments.has(segment)) return;
 		const intent = navigationIntent(
 			event.key,
 			'horizontal',
@@ -782,9 +784,7 @@
 				return;
 			case 'Escape':
 				event.preventDefault();
-				drafts = {};
-				draftPeriod = null;
-				draftInvalid = false;
+				rollbackDraft();
 				return;
 			default:
 				return;
@@ -825,6 +825,7 @@
 		drafts = {};
 		draftPeriod = null;
 		draftInvalid = false;
+		composingSegments = new Set();
 		onFormReset?.();
 	}
 
@@ -832,15 +833,17 @@
 		drafts = {};
 		draftPeriod = null;
 		draftInvalid = false;
+		composingSegments = new Set();
 		syncInputs(valueState.current);
 	}
 
-	function handleInput(
-		event: Event & { currentTarget: HTMLInputElement },
+	function updateDraft(
+		nextDraft: string,
 		segment: TimeSegment,
-		focusIndex: number
+		focusIndex: number,
+		commitWhenComplete: boolean,
+		advanceWhenComplete = true
 	): void {
-		const nextDraft = event.currentTarget.value;
 		drafts = { ...drafts, [segment]: nextDraft };
 		if (valueState.current === null)
 			drafts = Object.fromEntries(
@@ -849,7 +852,7 @@
 					key === segment ? nextDraft : (inputs[inputIndex]?.value ?? '')
 				])
 			) as Partial<Record<TimeSegment, string>>;
-		if (inputs.every((input) => !input?.value)) {
+		if (commitWhenComplete && inputs.every((input) => !input?.value)) {
 			if (!valueState.setFromUser(null)) {
 				rollbackDraft();
 				return;
@@ -859,10 +862,47 @@
 			draftInvalid = false;
 			return;
 		}
-		if (nextDraft.length === 2 && parseSegmentNumber(nextDraft) !== undefined) {
-			commit(false);
-			if (focusIndex < focusOrder.length - 1) move(focusIndex, 'next');
+		if (
+			commitWhenComplete &&
+			nextDraft.length === 2 &&
+			parseSegmentNumber(nextDraft) !== undefined
+		) {
+			if (commit(false) && advanceWhenComplete && focusIndex < focusOrder.length - 1)
+				move(focusIndex, 'next');
 		}
+	}
+
+	function handleInput(
+		event: Event & { currentTarget: HTMLInputElement },
+		segment: TimeSegment,
+		focusIndex: number
+	): void {
+		const composing =
+			composingSegments.has(segment) || ('isComposing' in event && event.isComposing === true);
+		updateDraft(event.currentTarget.value, segment, focusIndex, !composing);
+	}
+
+	function handleCompositionStart(segment: TimeSegment): void {
+		composingSegments = new Set([...composingSegments, segment]);
+	}
+
+	function handleCompositionEnd(
+		event: CompositionEvent & { currentTarget: HTMLInputElement },
+		segment: TimeSegment,
+		focusIndex: number
+	): void {
+		// Copy-on-write composition membership is published only after this local mutation.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const next = new Set(composingSegments);
+		next.delete(segment);
+		composingSegments = next;
+		updateDraft(
+			event.currentTarget.value,
+			segment,
+			focusIndex,
+			true,
+			getActiveElement(event.currentTarget) === event.currentTarget
+		);
 	}
 
 	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
@@ -873,6 +913,7 @@
 			event.currentTarget.contains(event.relatedTarget)
 		)
 			return;
+		if (composingSegments.size > 0) return;
 		commit();
 	}
 
@@ -934,6 +975,8 @@
 				aria-required={resolvedRequired || undefined}
 				onfocus={(event) => event.currentTarget.select()}
 				oninput={(event) => handleInput(event, segment, focusIndex)}
+				oncompositionstart={() => handleCompositionStart(segment)}
+				oncompositionend={(event) => handleCompositionEnd(event, segment, focusIndex)}
 				onkeydown={(event) => handleKey(event, segment, focusIndex)}
 			/>
 		{:else}

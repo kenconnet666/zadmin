@@ -71,7 +71,8 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
-			description: '小时、分钟、秒独立编辑和cycle，完整Time以ISO字符串提交并在reset恢复。',
+			description:
+				'小时、分钟、秒独立编辑和cycle；enabled、readonly、disabled三种表单参与语义以真实FormData区分，并在reset恢复。',
 			id: 'time-field-segments-form',
 			source: formSource,
 			title: '时间segments与表单'
@@ -79,7 +80,8 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 		{
 			component: ModesDemo,
 			covers: ['disabled', 'keyboard', 'readonly', 'variants-and-states'],
-			description: '12/24小时、时间粒度、步长、readonly与disabled保持正交。',
+			description:
+				'通过可操作控件切换12/24小时与时间粒度；固定15分钟/10秒步长由真实键盘cycle演示，readonly与disabled保持正交。',
 			id: 'time-field-modes',
 			source: modesSource,
 			title: '小时制、粒度与步长'

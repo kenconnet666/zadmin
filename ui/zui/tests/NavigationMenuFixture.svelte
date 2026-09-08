@@ -71,11 +71,20 @@
 			label: 'External link',
 			href: 'https://example.com/navigation',
 			external: true
+		},
+		{
+			key: 'horizontal-services',
+			label: 'Services',
+			children: [
+				{ key: 'horizontal-consulting', label: 'Consulting', href: '/services/consulting' },
+				{ key: 'horizontal-support', label: 'Support', href: '/services/support' }
+			]
 		}
 	];
 	let horizontalCurrent = $state<MenuKey | null>('horizontal-home');
 	let horizontalOpenKeys = $state<readonly MenuKey[]>([]);
 	let horizontalOpenChanges = $state(0);
+	let horizontalDisabled = $state(false);
 	let navigateRequests = $state(0);
 	let pendingKey = $state<MenuKey | null>(null);
 	let pendingHref = $state('');
@@ -195,6 +204,9 @@
 	export function removeDynamicMiddle(): void {
 		dynamicItems = dynamicItems.filter((entry) => entry.key !== 'dynamic-middle');
 	}
+	export function setHorizontalDisabled(next: boolean): void {
+		horizontalDisabled = next;
+	}
 </script>
 
 {#snippet consumerItem(
@@ -228,6 +240,7 @@
 		bind:openKeys={horizontalOpenKeys}
 		aria-label="Horizontal navigation"
 		currentKey={horizontalCurrent}
+		disabled={horizontalDisabled}
 		items={horizontalItems}
 		mode="horizontal"
 		overflow={false}
